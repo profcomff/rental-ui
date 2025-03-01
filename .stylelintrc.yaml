@@ -1,0 +1,11 @@
+extends:
+    - stylelint-config-standard
+    - stylelint-config-recommended-vue
+customSyntax: postcss-html
+plugins:
+    - stylelint-use-nesting
+rules:
+    color-function-notation: modern
+    selector-nested-pattern: '&'
+    no-empty-source: null
+    csstools/use-nesting: true
