@@ -1,4 +1,3 @@
-<!-- /home/filipenkovda/src/src/components/ItemTypeCard.vue -->
 <template>
     <v-card border>
         <v-img :src="item.image" height="150" cover></v-img>
@@ -31,7 +30,22 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue' // Добавлен импорт computed
 import type { PropType } from 'vue'
+
+interface RentalSession {
+    id: string
+    status: 'active' | 'reserved' | 'expired'
+    pickupTime?: string
+}
+
+interface RentalItem {
+    id: number
+    name: string
+    image: string
+    available: boolean
+    rentalSession?: RentalSession
+}
 
 const props = defineProps({
     item: {
@@ -39,8 +53,6 @@ const props = defineProps({
         required: true
     }
 })
-
-const emit = defineEmits(['rent', 'cancel'])
 
 const isReserved = computed(() =>
     props.item.rentalSession?.status === 'reserved'
