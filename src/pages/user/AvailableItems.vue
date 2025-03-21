@@ -16,14 +16,19 @@
       <template v-slot:default="{ items }">
         <v-row>
           <v-col v-for="(item, i) in items" :key="i" cols="6" sm="4" md="4">
-            <v-card height="200">
-              <v-img :src="item.raw.image_url" height="150" cover>
-                <template v-if="!item.raw.image_url">
-                  <v-sheet height="100%" color="grey-lighten-3"></v-sheet>
-                </template>
-              </v-img>
-              <v-card-title>{{ item.raw.name }}</v-card-title>
-              <v-card-subtitle>{{ item.raw.description || 'Описание отсутствует' }}</v-card-subtitle>
+            <v-card class="d-flex flex-column">
+              <div class="image-container">
+                <v-img :src="item.raw.image_url" :aspect-ratio="1" contain>
+                  <template v-if="!item.raw.image_url">
+                    <v-sheet height="100%" color="grey-lighten-3"></v-sheet>
+                  </template>
+                </v-img>
+              </div>
+
+              <v-card-title class="text-wrap">{{ item.raw.name }}</v-card-title>
+              <v-card-subtitle class="text-wrap">
+                {{ item.raw.description || 'Описание отсутствует' }}
+              </v-card-subtitle>
             </v-card>
           </v-col>
         </v-row>
@@ -31,6 +36,27 @@
     </v-data-iterator>
   </v-container>
 </template>
+
+<style scoped>
+.image-container {
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+}
+
+.v-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.v-card {
+  height: 100%;
+}
+</style>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
