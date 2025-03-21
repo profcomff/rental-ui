@@ -1,9 +1,15 @@
 import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router';
+import AvailableItems from '@/pages/user/AvailableItems.vue';
 
 const routes: RouteRecordRaw[] = [
 	{
 		path: '/',
 		component: () => import('../pages/MainPage.vue'),
+	},
+	{
+		path: '/user/items',
+		name: 'AvailableItems',
+		component: AvailableItems // Используем прямой импорт
 	},
 ];
 
