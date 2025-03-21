@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-2 justify-center">
+  <v-container class="pa-2 d-flex flex-column align-center">
     <v-data-iterator :items="processedItems" :items-per-page="itemsPerPage">
       <template v-slot:header="{ page, pageCount, prevPage, nextPage }">
         <v-toolbar color="surface-variant">
@@ -14,9 +14,10 @@
       </template>
 
       <template v-slot:default="{ items }">
-        <v-row>
-          <v-col v-for="(item, i) in items" :key="i" cols="6" sm="4" md="4">
-            <v-card class="d-flex flex-column">
+        <v-row class="justify-center" no-gutters style="row-gap: 20px">
+          <v-col v-for="(item, i) in items" :key="i" cols="12" sm="6" md="5" lg="4"
+            class="px-2 mb-4 d-flex justify-center">
+            <v-card class="mx-auto" style="width: 100%; max-width: 300px">
               <div class="image-container">
                 <v-img :src="item.raw.image_url" :aspect-ratio="1" contain>
                   <template v-if="!item.raw.image_url">
@@ -55,6 +56,7 @@
 
 .v-card {
   height: 100%;
+  margin: 0 auto;
 }
 </style>
 
