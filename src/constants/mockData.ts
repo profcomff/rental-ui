@@ -44,4 +44,28 @@ export const mockItemTypes: ItemType[] = [
     image_url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2tQ1_UMNOz_X_g7WoMMyyp8rwtyRHGzh2dg&s',
     description: 'Лучший трекер для команды',
   },
+  {
+    id: 3,
+    name: 'Повербанк на колесах',
+    image_url: 'https://rucars.ru/image/catalog/avtomobili/xiaomi/su7/color/body/pro/xiaomi-su7-pro-2025-blue.jpg',
+    description: 'СЯОМИ ТОП ЗА СВОИ ДЕНЬГИ!',
+  },
+  {
+    id: 4,
+    name: 'Словарь',
+    image_url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKE0Lsagy1YSZ42BEZabS2mBn8HVUePBTimA&s',
+    description: 'мат в СМИ запрещен',
+  },
+  {
+    id: 19,
+    name: 'маленький разраб',
+    image_url: 'https://hb.bizmrg.com/prod.football.msu.ru/player/3684/photo/61687e4339e21_300x300.jpg',
+    description: 'просто маленький разраб Дима',
+  },
+  {
+    id: 5,
+    name: 'ракетки теннисные',
+    image_url: 'https://pingpong73.ru/media/images/articles/professionalnaya-raketka-butterfly.jpg',
+    description: 'для игры в пинг-понг',
+  },
 ];
