@@ -1,42 +1,18 @@
 <script setup lang="ts">
+import { setupAuth } from '@profcomff/api-uilib';
 import { useProfileStore } from './store';
 import { onMounted } from 'vue';
+import { useItemStore } from './store/itemStore';
+import { useTestStore } from './store/testRequestStore';
 
 const profileStore = useProfileStore();
+const itemStore = useItemStore();
+const testStore = useTestStore();
 
 onMounted(() => {
-	profileStore.fromUrl();
+  profileStore.fromUrl();
+  itemStore.requestItemTypes();
+  testStore.init();
+  setupAuth('');
 });
 </script>
-
-<template>
-	<main class="container">
-		<RouterView />
-	</main>
-	<footer>
-		Made by
-		<a href="https://app.profcomff.com"><img src="https://app.profcomff.com/favicon.png" class="logo" /></a>
-		in association with
-		<a href="https://dyakov.space"><img src="https://dyakov.space/files/Icon.svg" class="logo" /></a>
-	</footer>
-</template>
-
-<style scoped>
-.container {
-	width: 100%;
-	height: 100%;
-}
-
-footer {
-	position: sticky;
-	bottom: 0;
-	width: 100%;
-	color: gray;
-	text-align: center;
-
-	& .logo {
-		height: 30px;
-		vertical-align: middle;
-	}
-}
-</style>
