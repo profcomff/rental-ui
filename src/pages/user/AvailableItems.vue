@@ -1,3 +1,4 @@
+<!--ToDo: add buttons and integrate logic from ItemTypeCard-->
 <template>
   <v-container class="pa-2 d-flex flex-column align-center">
     <v-data-iterator :items="processedItems" :items-per-page="itemsPerPage">
