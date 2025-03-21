@@ -9,6 +9,7 @@ const profileStore = useProfileStore();
 const itemStore = useItemStore();
 const testStore = useTestStore();
 
+
 onMounted(() => {
   profileStore.fromUrl();
   itemStore.requestItemTypes();
@@ -16,3 +17,9 @@ onMounted(() => {
   setupAuth('');
 });
 </script>
+
+<template>
+  <v-app> <!-- Обязательный корневой элемент для Vuetify -->
+    <router-view></router-view>
+  </v-app>
+</template>
