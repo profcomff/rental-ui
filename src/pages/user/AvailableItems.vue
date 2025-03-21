@@ -1,6 +1,6 @@
 <template>
   <v-container class="pa-2 justify-center">
-    <v-data-iterator :items="items" :items-per-page="itemsPerPage">
+    <v-data-iterator :items="processedItems" :items-per-page="itemsPerPage">
       <template v-slot:header="{ page, pageCount, prevPage, nextPage }">
         <v-toolbar color="surface-variant">
           <v-toolbar-title class="text-h4">Доступные предметы</v-toolbar-title>
@@ -17,7 +17,11 @@
         <v-row>
           <v-col v-for="(item, i) in items" :key="i" cols="6" sm="4" md="4">
             <v-card height="200">
-              <v-img :src="item.raw.image_url || 'https://image.mel.fm/i/P/P5zrJ8p5uM/1200.jpg'" height="150" cover></v-img>
+              <v-img :src="item.raw.image_url" height="150" cover>
+                <template v-if="!item.raw.image_url">
+                  <v-sheet height="100%" color="grey-lighten-3"></v-sheet>
+                </template>
+              </v-img>
               <v-card-title>{{ item.raw.name }}</v-card-title>
               <v-card-subtitle>{{ item.raw.description || 'Описание отсутствует' }}</v-card-subtitle>
             </v-card>
@@ -31,28 +35,19 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useItemStore } from '@/store/itemStore';
-import type { ItemType } from '@/models/index';
-
-interface DataIteratorItem {
-  raw: ItemType;
-}
 
 const itemStore = useItemStore();
 const itemsPerPage = ref(4);
 
-// Загрузка данных при монтировании компонента
-onMounted(() => {
-  itemStore.requestItemTypes();
+onMounted(async () => {
+  await itemStore.requestItemTypes();
 });
 
-// Используем данные из хранилища вместо моков
-const items = computed<DataIteratorItem[]>(() =>
+const processedItems = computed(() =>
   itemStore.getItemTypes().map(item => ({
-    raw: {
-      ...item,
-      image_url: item.image_url || '/default-image.jpg',
-      description: item.description || 'Описание отсутствует'
-    }
+    ...item,
+    image_url: item.image_url || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_Ii1DL7ODGnKq1PR_YPBYb_107OyaPm5Qwg&s',
+    description: item.description || 'Конь в пальто'
   }))
 );
 
@@ -61,6 +56,6 @@ const seeAllButtonText = computed(() =>
 );
 
 function onClickSeeAll() {
-  itemsPerPage.value = itemsPerPage.value === 4 ? items.value.length : 4;
+  itemsPerPage.value = itemsPerPage.value === 4 ? processedItems.value.length : 4;
 }
 </script>
