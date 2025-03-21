@@ -1,4 +1,5 @@
 import { RentalSession } from '@/models';
+import { ItemType } from '@/models/index';
 
 export const mockRentalRequests: RentalSession[] = [
   {
@@ -29,7 +30,7 @@ export const mockRentalRequests: RentalSession[] = [
   },
 ];
 
-export const mockItemTypes = [
+export const mockItemTypes: ItemType[] = [
   {
     id: 1,
     name: 'Проджект-менеджер',
