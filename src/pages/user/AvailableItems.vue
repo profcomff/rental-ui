@@ -31,7 +31,7 @@
               <!-- Контент карточки -->
               <div class="card-content pa-4 flex-grow-1">
                 <v-card-title class="text-wrap font-weight-bold pb-0 card-title">
-                  {{ item.raw.name }}
+                  {{ item.raw.name || 'название отсутсвует' }}
                 </v-card-title>
                 <v-card-subtitle class="text-wrap pt-1 card-description">
                   {{ item.raw.description || 'Описание отсутствует' }}
