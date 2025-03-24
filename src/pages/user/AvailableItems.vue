@@ -1,15 +1,10 @@
 <template>
   <v-container class="pa-2 d-flex flex-column align-center">
-    <v-data-iterator :items="processedItems" :items-per-page="itemsPerPage">
-      <template v-slot:header="{ page, pageCount, prevPage, nextPage }">
+    <v-data-iterator :items="processedItems" :items-per-page="-1">
+      <template v-slot:header>
         <v-toolbar color="surface-variant">
           <v-toolbar-title class="text-h4">Доступные предметы</v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-btn variant="text" @click="onClickSeeAll">
-            {{ seeAllButtonText }}
-          </v-btn>
-          <v-btn :disabled="page === 1" icon="mdi-chevron-left" variant="tonal" @click="prevPage"></v-btn>
-          <v-btn :disabled="page === pageCount" icon="mdi-chevron-right" variant="tonal" @click="nextPage"></v-btn>
         </v-toolbar>
       </template>
 
@@ -162,7 +157,6 @@ import { useTestStore } from '@/store/testRequestStore';
 
 const itemStore = useItemStore();
 const testStore = useTestStore();
-const itemsPerPage = ref(4);
 const currentUserId = 177;
 const showDialog = ref(false);
 const pendingItem = ref<any>(null);
@@ -276,12 +270,4 @@ const cancelAction = () => {
   showDialog.value = false;
   pendingItem.value = null;
 };
-
-const seeAllButtonText = computed(() =>
-  itemsPerPage.value === 4 ? 'Показать все' : 'Свернуть'
-);
-
-function onClickSeeAll() {
-  itemsPerPage.value = itemsPerPage.value === 4 ? processedItems.value.length : 4;
-}
 </script>
