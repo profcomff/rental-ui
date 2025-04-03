@@ -19,7 +19,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-app> <!-- Обязательный корневой элемент для Vuetify -->
-    <router-view></router-view>
-  </v-app>
+	<main class="main">
+		<RouterView />
+	</main>
 </template>
+
+<style scoped>
+.main {
+	width: min(900px, 100%);
+	margin: 0 auto;
+}
+</style>
