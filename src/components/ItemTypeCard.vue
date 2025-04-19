@@ -2,9 +2,7 @@
     <v-card class="mx-auto rounded-lg d-flex flex-column" style="width: 100%; max-width: 300px; height: 100%;">
         <!-- Изображение с контейнером -->
         <div class="image-container">
-            <v-img
-                :src="itemType.image_url"
-                :aspect-ratio="1" contain>
+            <v-img :src="itemType.image_url" :aspect-ratio="1" contain>
                 <template v-if="!itemType.image_url">
                     <v-sheet height="100%" color="grey-lighten-3"></v-sheet>
                 </template>
@@ -22,22 +20,17 @@
         </div>
 
         <!-- Кнопка и статус -->
-        <v-card-actions class="pa-4 pt-0" style="position: relative;">
-            <div class="status-container">
-                <span v-if="buttonState.text === 'Нет в наличии'" class="status-text">
-                    <span style="padding-left: 9px">нет в</span><br>
-                    <span>наличии</span>
-                </span>
-                <span v-else class="status-text">{{ buttonState.text }}</span>
-            </div>
-
-            <div class="button-container">
-                <v-btn v-if="buttonState.showButton" :disabled="buttonState.disabled" @click="handleButtonClick"
-                    color="primary" class="action-button rounded-sm" variant="tonal">
-                    {{ buttonState.action === 'cancel' ? 'Отменить' : 'Забронировать' }}
-                </v-btn>
-            </div>
-        </v-card-actions>
+        <div class="pa-4 pt-0 action-block">
+            <v-row no-gutters class="ma-0">
+                <v-spacer></v-spacer>
+                <v-col cols="auto" class="pa-0 d-flex align-end">
+                    <v-btn v-if="buttonState.showButton" :disabled="buttonState.disabled" @click="handleButtonClick"
+                        color="primary" class="action-button rounded-sm" variant="tonal">
+                        {{ buttonState.action === 'cancel' ? 'Отменить' : 'Забронировать' }}
+                    </v-btn>
+                </v-col>
+            </v-row>
+        </div>
 
         <!-- Окно подтверждения -->
         <v-dialog v-model="showDialog" max-width="400">
@@ -237,6 +230,7 @@ const cancelAction = () => {
     height: 48px !important;
     border-radius: 8px !important;
     font-family: 'Roboto Flex', sans-serif !important;
+    margin-right: 8px;
 }
 
 .v-dialog .v-card {
