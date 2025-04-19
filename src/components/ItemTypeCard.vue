@@ -3,7 +3,7 @@
         <!-- Изображение с контейнером -->
         <div class="image-container">
             <v-img
-                :src="itemType.image_url || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_Ii1DL7ODGnKq1PR_YPBYb_107OyaPm5Qwg&s'"
+                :src="itemType.image_url"
                 :aspect-ratio="1" contain>
                 <template v-if="!itemType.image_url">
                     <v-sheet height="100%" color="grey-lighten-3"></v-sheet>
@@ -14,10 +14,10 @@
         <!-- Контент карточки -->
         <div class="card-content pa-4 flex-grow-1">
             <v-card-title class="text-wrap font-weight-bold pb-0 card-title">
-                {{ itemType.name || 'Название отсутствует' }}
+                {{ itemType.name }}
             </v-card-title>
             <v-card-subtitle class="text-wrap pt-1 card-description">
-                {{ itemType.description || 'Описание отсутствует' }}
+                {{ itemType.description }}
             </v-card-subtitle>
         </div>
 
@@ -39,7 +39,7 @@
             </div>
         </v-card-actions>
 
-        <!-- Диалоговое окно -->
+        <!-- Окно подтверждения -->
         <v-dialog v-model="showDialog" max-width="400">
             <v-card class="rounded-lg">
                 <v-card-text class="px-4 pb-0">Подтвердите действие</v-card-text>
@@ -76,7 +76,6 @@ const props = defineProps<{
 const testStore = useTestStore();
 const currentUserId = 177;
 
-// Оригинальная логика вычислений остается без изменений
 const userSessions = computed(() => {
     return testStore.getSessions().filter(session =>
         session.item_id === props.itemType.id && session.user_id === currentUserId
