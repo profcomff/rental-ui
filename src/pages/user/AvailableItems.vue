@@ -58,7 +58,6 @@
       </template>
     </v-data-iterator>
 
-    <!-- Модальное окно -->
     <v-dialog v-model="showDialog" max-width="400">
       <v-card class="rounded-lg">
         <!---<v-card-title class="text-h6 px-4 pt-4">Подтвердите действие</v-card-title>-->
