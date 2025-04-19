@@ -38,7 +38,9 @@ const processedItems = computed(() =>
   itemStore.getItemTypes().map(item => ({
     ...item,
     image_url: item.image_url || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_Ii1DL7ODGnKq1PR_YPBYb_107OyaPm5Qwg&s',
-    description: item.description || 'Конь в пальто'
+    //description: item.description || 'Конь в пальто'
+    name: item.name || 'Название отсутствует',
+    description: item.description || 'Описание отсутствует'
   }))
 );
 </script>
