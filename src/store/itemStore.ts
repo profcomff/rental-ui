@@ -4,23 +4,23 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useItemStore = defineStore('items', () => {
-  const itemTypes = ref<ItemType[]>([]);
+	const itemTypes = ref<ItemType[]>([]);
 
-  function requestItemTypes() {
-    itemTypes.value = mockItemTypes;
-  }
+	function requestItemTypes() {
+		itemTypes.value = mockItemTypes;
+	}
 
-  function getItemTypes() {
-    return itemTypes.value;
-  }
+	function getItemTypes() {
+		return itemTypes.value;
+	}
 
-  function getItemType(typeId: number) {
-    return itemTypes.value.find(item => item.id == typeId) ?? undefined;
-  }
+	function getItemType(typeId: number) {
+		return itemTypes.value.find(item => item.id == typeId) ?? undefined;
+	}
 
-  return {
-    requestItemTypes,
-    getItemTypes,
-    getItemType,
-  };
+	return {
+		requestItemTypes,
+		getItemTypes,
+		getItemType,
+	};
 });

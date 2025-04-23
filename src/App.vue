@@ -9,12 +9,11 @@ const profileStore = useProfileStore();
 const itemStore = useItemStore();
 const testStore = useTestStore();
 
-
 onMounted(() => {
-  profileStore.fromUrl();
-  itemStore.requestItemTypes();
-  testStore.init();
-  setupAuth('');
+	profileStore.fromUrl();
+	itemStore.requestItemTypes();
+	testStore.init();
+	setupAuth('');
 });
 </script>
 
