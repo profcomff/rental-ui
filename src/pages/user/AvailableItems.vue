@@ -10,16 +10,9 @@
 
 			<template v-slot:default="{ items }">
 				<v-row class="justify-center" no-gutters style="row-gap: 20px; width: 100%">
-					<v-col
-						v-for="(item, i) in items"
-						:key="i"
-						cols="12"
-						sm="6"
-						md="5"
-						lg="4"
-						class="px-2 mb-4 d-flex justify-center"
-					>
-						<ItemTypeCard :itemType="item.raw" />
+					<v-col v-for="(item, i) in items" :key="i" cols="12" sm="6" md="5" lg="4"
+						class="px-2 mb-4 d-flex justify-center">
+						<ItemTypeCard :itemType="item.raw" class="fill-height" style="height: 100%" />
 					</v-col>
 				</v-row>
 			</template>
