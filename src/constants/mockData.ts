@@ -68,6 +68,11 @@ export const mockItemTypes: ItemType[] = [
 		image_url: 'https://pingpong73.ru/media/images/articles/professionalnaya-raketka-butterfly.jpg',
 		description: 'для игры в пинг-понг',
 	},
+  {
+		id: 16,
+		name: 'Очень длинный-длинный-длинный-просто длиннющий текст',
+    description: 'Очень длинное-длинное-длинное-просто длиннющее описание',
+	},
 	{
 		id: 5,
 		name: 'проверка заглушки',
