@@ -17,10 +17,12 @@ onMounted(async () => {
 const processedItems = computed(() =>
 	itemStore.getItemTypes().map(item => ({
 		...item,
-		image_url: item.image_url || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_Ii1DL7ODGnKq1PR_YPBYb_107OyaPm5Qwg&s',
+		image_url:
+			item.image_url ||
+			'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_Ii1DL7ODGnKq1PR_YPBYb_107OyaPm5Qwg&s',
 		name: item.name || 'Название отсутствует',
-		description: item.description || 'Описание отсутствует'
-	}))
+		description: item.description || 'Описание отсутствует',
+	})),
 );
 
 // Вотчер для отслеживания изменений в данных
@@ -31,7 +33,7 @@ watch(
 			setEqualCardHeights();
 		});
 	},
-	{ deep: true }
+	{ deep: true },
 );
 
 // Функция выравнивания высот карточек
@@ -73,8 +75,16 @@ function setEqualCardHeights() {
 
 			<template v-slot:default="{ items }">
 				<v-row class="items-row" no-gutters>
-					<v-col v-for="(item, i) in items" :key="i" cols="12" sm="6" md="5" lg="4" xl="3"
-						class="item-col d-flex justify-center">
+					<v-col
+						v-for="(item, i) in items"
+						:key="i"
+						cols="12"
+						sm="6"
+						md="5"
+						lg="4"
+						xl="3"
+						class="item-col d-flex justify-center"
+					>
 						<ItemTypeCard :itemType="item.raw" class="fill-height card" ref="itemCards" />
 					</v-col>
 				</v-row>

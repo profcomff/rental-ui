@@ -143,8 +143,14 @@ const cancelAction = () => {
 			<v-row no-gutters class="ma-0">
 				<v-spacer></v-spacer>
 				<v-col cols="auto" class="pa-0 d-flex align-end">
-					<v-btn v-if="buttonState.showButton" :disabled="buttonState.disabled" @click="handleButtonClick"
-						color="primary" class="action-button rounded-sm" variant="tonal">
+					<v-btn
+						v-if="buttonState.showButton"
+						:disabled="buttonState.disabled"
+						@click="handleButtonClick"
+						color="primary"
+						class="action-button rounded-sm"
+						variant="tonal"
+					>
 						{{ buttonState.action === 'cancel' ? 'Отменить' : 'Забронировать' }}
 					</v-btn>
 				</v-col>
@@ -156,12 +162,22 @@ const cancelAction = () => {
 			<v-card class="rounded-lg">
 				<v-card-text class="px-4 pb-0">Подтвердите действие</v-card-text>
 				<v-card-actions class="d-flex justify-end ga-2 pa-4">
-					<v-btn @click="cancelAction" color="error" variant="tonal" size="large"
-						class="auth-edit-button rounded-sm">
+					<v-btn
+						@click="cancelAction"
+						color="error"
+						variant="tonal"
+						size="large"
+						class="auth-edit-button rounded-sm"
+					>
 						Нет
 					</v-btn>
-					<v-btn @click="confirmAction" color="primary" variant="tonal" size="large"
-						class="auth-edit-button rounded-sm">
+					<v-btn
+						@click="confirmAction"
+						color="primary"
+						variant="tonal"
+						size="large"
+						class="auth-edit-button rounded-sm"
+					>
 						Да
 					</v-btn>
 				</v-card-actions>
