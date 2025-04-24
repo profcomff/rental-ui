@@ -1,25 +1,3 @@
-<template>
-	<v-container fluid class="pa-0 d-flex flex-column align-center">
-		<v-data-iterator :items="processedItems" :items-per-page="-1">
-			<template v-slot:header>
-				<v-toolbar color="surface-variant">
-					<v-toolbar-title class="items-title">Доступные предметы</v-toolbar-title>
-					<v-spacer></v-spacer>
-				</v-toolbar>
-			</template>
-
-			<template v-slot:default="{ items }">
-				<v-row class="items-row" no-gutters>
-					<v-col v-for="(item, i) in items" :key="i" cols="12" sm="6" md="5" lg="4" xl="3"
-						class="item-col d-flex justify-center">
-						<ItemTypeCard :itemType="item.raw" class="fill-height card" ref="itemCards" />
-					</v-col>
-				</v-row>
-			</template>
-		</v-data-iterator>
-	</v-container>
-</template>
-
 <script setup lang="ts">
 import { computed, onMounted, ref, watch, nextTick } from 'vue';
 import { useItemStore } from '@/store/itemStore';
@@ -82,6 +60,28 @@ function setEqualCardHeights() {
 	});
 }
 </script>
+
+<template>
+	<v-container fluid class="pa-0 d-flex flex-column align-center">
+		<v-data-iterator :items="processedItems" :items-per-page="-1">
+			<template v-slot:header>
+				<v-toolbar color="surface-variant">
+					<v-toolbar-title class="items-title">Доступные предметы</v-toolbar-title>
+					<v-spacer></v-spacer>
+				</v-toolbar>
+			</template>
+
+			<template v-slot:default="{ items }">
+				<v-row class="items-row" no-gutters>
+					<v-col v-for="(item, i) in items" :key="i" cols="12" sm="6" md="5" lg="4" xl="3"
+						class="item-col d-flex justify-center">
+						<ItemTypeCard :itemType="item.raw" class="fill-height card" ref="itemCards" />
+					</v-col>
+				</v-row>
+			</template>
+		</v-data-iterator>
+	</v-container>
+</template>
 
 <style scoped>
 .items-title {

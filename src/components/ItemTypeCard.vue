@@ -1,56 +1,3 @@
-<template>
-	<v-card class="mx-auto rounded-lg d-flex flex-column" style="width: 100%; max-width: 300px; height: 100%">
-		<!-- Изображение с контейнером -->
-		<div class="image-container">
-			<v-img :src="itemType.image_url" :aspect-ratio="1" contain>
-				<template v-if="!itemType.image_url">
-					<v-sheet height="100%" color="grey-lighten-3"></v-sheet>
-				</template>
-			</v-img>
-		</div>
-
-		<!-- Контент карточки -->
-		<div class="card-content pa-4 flex-grow-1">
-			<v-card-title class="font-weight-bold pb-0 card-title">
-				{{ itemType.name }}
-			</v-card-title>
-			<v-card-subtitle class="pt-1 card-description">
-				{{ itemType.description }}
-			</v-card-subtitle>
-		</div>
-
-		<!-- Кнопка и статус -->
-		<div class="pa-4 pt-0 action-block">
-			<v-row no-gutters class="ma-0">
-				<v-spacer></v-spacer>
-				<v-col cols="auto" class="pa-0 d-flex align-end">
-					<v-btn v-if="buttonState.showButton" :disabled="buttonState.disabled" @click="handleButtonClick"
-						color="primary" class="action-button rounded-sm" variant="tonal">
-						{{ buttonState.action === 'cancel' ? 'Отменить' : 'Забронировать' }}
-					</v-btn>
-				</v-col>
-			</v-row>
-		</div>
-
-		<!-- Окно подтверждения -->
-		<v-dialog v-model="showDialog" max-width="400">
-			<v-card class="rounded-lg">
-				<v-card-text class="px-4 pb-0">Подтвердите действие</v-card-text>
-				<v-card-actions class="d-flex justify-end ga-2 pa-4">
-					<v-btn @click="cancelAction" color="error" variant="tonal" size="large"
-						class="auth-edit-button rounded-sm">
-						Нет
-					</v-btn>
-					<v-btn @click="confirmAction" color="primary" variant="tonal" size="large"
-						class="auth-edit-button rounded-sm">
-						Да
-					</v-btn>
-				</v-card-actions>
-			</v-card>
-		</v-dialog>
-	</v-card>
-</template>
-
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useTestStore } from '@/store/testRequestStore';
@@ -169,6 +116,59 @@ const cancelAction = () => {
 	pendingAction = '';
 };
 </script>
+
+<template>
+	<v-card class="mx-auto rounded-lg d-flex flex-column" style="width: 100%; max-width: 300px; height: 100%">
+		<!-- Изображение с контейнером -->
+		<div class="image-container">
+			<v-img :src="itemType.image_url" :aspect-ratio="1" contain>
+				<template v-if="!itemType.image_url">
+					<v-sheet height="100%" color="grey-lighten-3"></v-sheet>
+				</template>
+			</v-img>
+		</div>
+
+		<!-- Контент карточки -->
+		<div class="card-content pa-4 flex-grow-1">
+			<v-card-title class="font-weight-bold pb-0 card-title">
+				{{ itemType.name }}
+			</v-card-title>
+			<v-card-subtitle class="pt-1 card-description">
+				{{ itemType.description }}
+			</v-card-subtitle>
+		</div>
+
+		<!-- Кнопка и статус -->
+		<div class="pa-4 pt-0 action-block">
+			<v-row no-gutters class="ma-0">
+				<v-spacer></v-spacer>
+				<v-col cols="auto" class="pa-0 d-flex align-end">
+					<v-btn v-if="buttonState.showButton" :disabled="buttonState.disabled" @click="handleButtonClick"
+						color="primary" class="action-button rounded-sm" variant="tonal">
+						{{ buttonState.action === 'cancel' ? 'Отменить' : 'Забронировать' }}
+					</v-btn>
+				</v-col>
+			</v-row>
+		</div>
+
+		<!-- Окно подтверждения -->
+		<v-dialog v-model="showDialog" max-width="400">
+			<v-card class="rounded-lg">
+				<v-card-text class="px-4 pb-0">Подтвердите действие</v-card-text>
+				<v-card-actions class="d-flex justify-end ga-2 pa-4">
+					<v-btn @click="cancelAction" color="error" variant="tonal" size="large"
+						class="auth-edit-button rounded-sm">
+						Нет
+					</v-btn>
+					<v-btn @click="confirmAction" color="primary" variant="tonal" size="large"
+						class="auth-edit-button rounded-sm">
+						Да
+					</v-btn>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
+	</v-card>
+</template>
 
 <style scoped>
 .image-container {
