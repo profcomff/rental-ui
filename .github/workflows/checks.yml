@@ -23,9 +23,6 @@ jobs:
           node-version: '18'
           cache: 'pnpm'
 
-      - name: Update
-        run: pnpm update
-
       - name: Install
         run: pnpm install
 
@@ -47,9 +44,6 @@ jobs:
         with:
           node-version: '18'
           cache: 'pnpm'
-
-      - name: Update
-        run: pnpm update
 
       - name: Install
         run: pnpm install
