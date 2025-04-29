@@ -71,7 +71,10 @@ importers:
         version: 5.50.4(@types/node@22.14.1)(typescript@5.8.3)
       openapi-typescript:
         specifier: ^7.6.1
-        version: 7.6.1(typescript@5.8.3)
+        version: 7.6.1(typescript@5.8.2)
+      postcss-html:
+        specifier: ^1.8.0
+        version: 1.8.0
       postcss-preset-env:
         specifier: ^10.1.5
         version: 10.1.5(postcss@8.5.3)
@@ -86,6 +89,7 @@ importers:
         version: 15.0.0(stylelint@16.18.0(typescript@5.8.3))
       stylelint-config-recommended-vue:
         specifier: ^1.6.0
+        version: 1.6.0(postcss-html@1.8.0)(stylelint@16.15.0(typescript@5.8.2))
         version: 1.6.0(postcss-html@1.7.0)(stylelint@16.18.0(typescript@5.8.3))
       stylelint-config-standard:
         specifier: ^37.0.0
@@ -1874,8 +1878,8 @@ packages:
     peerDependencies:
       postcss: ^8.4
 
-  postcss-html@1.7.0:
-    resolution: {integrity: sha512-MfcMpSUIaR/nNgeVS8AyvyDugXlADjN9AcV7e5rDfrF1wduIAGSkL4q2+wgrZgA3sHVAHLDO9FuauHhZYW2nBw==}
+  postcss-html@1.8.0:
+    resolution: {integrity: sha512-5mMeb1TgLWoRKxZ0Xh9RZDfwUUIqRrcxO2uXO+Ezl1N5lqpCiSU5Gk6+1kZediBfBHFtPCdopr2UZ2SgUsKcgQ==}
     engines: {node: ^12 || >=14}
 
   postcss-image-set-function@7.0.0:
@@ -4163,7 +4167,7 @@ snapshots:
     dependencies:
       postcss: 8.5.3
 
-  postcss-html@1.7.0:
+  postcss-html@1.8.0:
     dependencies:
       htmlparser2: 8.0.2
       js-tokens: 9.0.1
@@ -4458,19 +4462,19 @@ snapshots:
   strip-json-comments@3.1.1: {}
 
   strip-json-comments@5.0.1: {}
-
-  stylelint-config-html@1.1.0(postcss-html@1.7.0)(stylelint@16.18.0(typescript@5.8.3)):
+  
+  stylelint-config-html@1.1.0(postcss-html@1.8.0)(stylelint@16.15.0(typescript@5.8.2)):
     dependencies:
-      postcss-html: 1.7.0
-      stylelint: 16.18.0(typescript@5.8.3)
+      postcss-html: 1.8.0
+      stylelint: 16.15.0(typescript@5.8.2)
 
-  stylelint-config-recommended-vue@1.6.0(postcss-html@1.7.0)(stylelint@16.18.0(typescript@5.8.3)):
+  stylelint-config-recommended-vue@1.6.0(postcss-html@1.8.0)(stylelint@16.15.0(typescript@5.8.2)):
     dependencies:
-      postcss-html: 1.7.0
+      postcss-html: 1.8.0
       semver: 7.7.1
-      stylelint: 16.18.0(typescript@5.8.3)
-      stylelint-config-html: 1.1.0(postcss-html@1.7.0)(stylelint@16.18.0(typescript@5.8.3))
-      stylelint-config-recommended: 15.0.0(stylelint@16.18.0(typescript@5.8.3))
+      stylelint: 16.15.0(typescript@5.8.2)
+      stylelint-config-html: 1.1.0(postcss-html@1.8.0)(stylelint@16.15.0(typescript@5.8.2))
+      stylelint-config-recommended: 15.0.0(stylelint@16.15.0(typescript@5.8.2))
 
   stylelint-config-recommended@15.0.0(stylelint@16.18.0(typescript@5.8.3)):
     dependencies:
