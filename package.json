@@ -39,6 +39,7 @@
 		"eslint-plugin-vue": "^9.33.0",
 		"knip": "^5.50.4",
 		"openapi-typescript": "^7.6.1",
+		"postcss-html": "^1.8.0",
 		"postcss-preset-env": "^10.1.5",
 		"prettier": "^3.5.3",
 		"stylelint": "^16.18.0",

@@ -1,5 +1,5 @@
 import { mockItemTypes } from '@/constants/mockData';
-import { ItemType } from '@/models';
+import { ItemType } from '@/models/index';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 

@@ -1,6 +1,6 @@
 import { RENT_DURATION } from '@/constants';
 import { mockRentalRequests } from '@/constants/mockData';
-import { RentalSession, Strike } from '@/models';
+import { RentalSession, Strike } from '@/models/index';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
@@ -66,7 +66,7 @@ export const useTestStore = defineStore('test', () => {
 		sessions.value[idx].actual_return_ts = Date().toString();
 		sessions.value[idx].status =
 			Date.now() - Date.parse(sessions.value[idx].start_ts ?? Date()) > RENT_DURATION ? 'overdue' : 'returned';
-		return `session ${id} closed with status ${sessions.value[idx].status} `;
+		return `session ${id} closed with status ${sessions.value[idx].status}`;
 	}
 
 	function getStrikeById(id: number) {

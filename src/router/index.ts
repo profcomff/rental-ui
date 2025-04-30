@@ -22,6 +22,10 @@ const routes: RouteRecordRaw[] = [
 		path: '/admin/session/:id(\\d+)',
 		component: () => import('@/pages/admin/SessionView.vue'),
 	},
+	{
+		path: '/user/items',
+		component: () => import('../pages/user/AvailableItems.vue'),
+	},
 ];
 
 export const router = createRouter({
