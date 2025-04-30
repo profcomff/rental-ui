@@ -20,8 +20,9 @@ export interface RentalSession {
 export interface ItemType {
 	id: number;
 	name: string;
-	image_url?: string;
-	description?: string;
+	image_url?: string | null;
+	description?: string | null;
+	free_items_count?: number | null;
 }
 
 export interface Strike {
