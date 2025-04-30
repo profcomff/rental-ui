@@ -14,7 +14,7 @@ export interface RentalSession {
 	end_ts: string | null;
 	actual_return_ts: string | null;
 	status: RentalStatus;
-	strike_id: number | null;
+	// strike_id: number | null;
 }
 
 export interface ItemType {
