@@ -1,4 +1,4 @@
-import apiClient from '@/api';
+import { mockItemTypes } from '@/constants/mockData';
 import { ItemType } from '@/models/index';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
@@ -6,39 +6,16 @@ import { ref } from 'vue';
 export const useItemStore = defineStore('items', () => {
 	const itemTypes = ref<ItemType[]>([]);
 
-	async function requestItemTypes() {
-		const { response, data, error } = await apiClient.GET('/rental/itemtype');
-
-		if (!response.ok && error) {
-			console.log('trying to get item types', error);
-			return;
-		}
-
-		if (data) {
-			console.log(data);
-			itemTypes.value = data;
-		}
-
-		return itemTypes.value;
+	function requestItemTypes() {
+		itemTypes.value = mockItemTypes;
 	}
 
 	function getItemTypes() {
-		// а нужна ли эта функция...
 		return itemTypes.value;
 	}
 
-	async function getItemType(typeId: number) {
-		const { response, data, error } = await apiClient.GET('/rental/itemtype/{id}', {
-			params: { path: { id: typeId } },
-		});
-
-		if (!response.ok && error) {
-			console.log('trying to get item type', typeId, error);
-		}
-
-		if (data) {
-			return data;
-		}
+	function getItemType(typeId: number) {
+		return itemTypes.value.find(item => item.id == typeId) ?? undefined;
 	}
 
 	return {
