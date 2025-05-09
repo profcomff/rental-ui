@@ -5,10 +5,11 @@ import { useTestStore } from '@/store/testRequestStore';
 import { useItemStore } from '@/store/itemStore';
 import { RentalSession } from '@/models';
 import { convertTsToHHMM } from '@/utils';
+import apiClient from '@/api';
 
 const testStore = useTestStore();
 const itemStore = useItemStore();
-const selectedSessions = ref<RentalSession[]>(testStore.getClosedSessions());
+const selectedSessions = ref<RentalSession[]>([]);
 
 const requestedItems = computed(() => {
 	return Array.from(selectedSessions.value, x => itemStore.getItemType(x.item_id));
@@ -17,9 +18,30 @@ const requestedItems = computed(() => {
 const search = ref('');
 const tab = ref('all');
 
-function changeTabs(tab: string) {
+async function getCompleteSessions() {
+	const { response, data, error } = await apiClient.GET('/rental/rental-sessions', {
+		params: {
+			query: {
+				is_canceled: true,
+				is_dismissed: true,
+				is_overdue: true,
+				is_returned: true,
+			},
+		},
+	});
+
+	if (!response.ok && error) {
+		console.log('tried to get all non-active and non-request sessions', error);
+	}
+
+	if (data) {
+		selectedSessions.value = data;
+	}
+}
+
+async function changeTabs(tab: string) {
 	if (tab == 'all') {
-		selectedSessions.value = testStore.getClosedSessions();
+		await getCompleteSessions();
 	}
 	if (tab == 'strikes') {
 		selectedSessions.value = testStore.getStrikedSessions();
