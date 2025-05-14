@@ -73,7 +73,7 @@ export const mockItemTypes: ItemType[] = [
 	{
 		id: 3,
 		name: 'Повербанк на колесах',
-		image_url: 'https://rucars.ru/image/catalog/avtomobili/xiaomi/su7/color/body/pro/xiaomi-su7-pro-2025-blue.jpg',
+		image_url: 'https://www.borderlesscar.com/wp-content/uploads/2024/04/1-7.jpg',
 		description: 'СЯОМИ ТОП ЗА СВОИ ДЕНЬГИ!',
 	},
 	{
