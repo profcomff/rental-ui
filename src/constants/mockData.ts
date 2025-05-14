@@ -28,6 +28,32 @@ export const mockRentalRequests: RentalSession[] = [
 		status: 'reserved',
 		strike_id: null,
 	},
+	{
+		id: 3, // Новая активная сессия
+		user_id: 177,
+		item_id: 3, // Повербанк на колесах
+		admin_open_id: 10, // Пример ID администратора
+		admin_close_id: null,
+		reservation_ts: '2025-03-13T12:01:01.761477', //null, // Активные сессии обычно не имеют reservation_ts
+		start_ts: new Date(Date.now() - 3600000).toISOString(), // Началась час назад
+		end_ts: new Date(Date.now() + (24 * 60 * 60 * 1000 - 3600000)).toISOString(), // Заканчивается через 23 часа
+		actual_return_ts: null,
+		status: 'active',
+		strike_id: null,
+	},
+	{
+		id: 4, // Еще одна новая активная сессия
+		user_id: 177,
+		item_id: 5, // ракетки теннисные (первый экземпляр с id: 5)
+		admin_open_id: 10,
+		admin_close_id: null,
+		reservation_ts: null,
+		start_ts: new Date(Date.now() - (2 * 60 * 60 * 1000)).toISOString(), // Началась 2 часа назад
+		end_ts: new Date(Date.now() + (24 * 60 * 60 * 1000 - (2 * 60 * 60 * 1000))).toISOString(), // Заканчивается через 22 часа
+		actual_return_ts: null,
+		status: 'active',
+		strike_id: null,
+	},
 ];
 
 export const mockItemTypes: ItemType[] = [
@@ -74,7 +100,7 @@ export const mockItemTypes: ItemType[] = [
 		description: 'Очень длинное-длинное-длинное-просто длиннющее описание',
 	},
 	{
-		id: 5,
+		id: 6,
 		name: 'проверка заглушки',
 	},
 ];
