@@ -27,7 +27,7 @@ const routes: RouteRecordRaw[] = [
 		component: () => import('../pages/user/AvailableItems.vue'),
 	},
 	{
-		path: '/user/sessions',
+		path: '/user/active',
 		component: () => import('../pages/user/CurrentSessions.vue'),
 	},
 ];
