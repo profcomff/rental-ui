@@ -26,6 +26,10 @@ const routes: RouteRecordRaw[] = [
 		path: '/user/items',
 		component: () => import('../pages/user/AvailableItems.vue'),
 	},
+	{
+		path: '/user/sessions',
+		component: () => import('../pages/user/CurrentSessions.vue'),
+	},
 ];
 
 export const router = createRouter({
