@@ -1,10 +1,7 @@
+import { refreshData } from '@/utils';
 import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
-	{
-		path: '/',
-		component: () => import('../pages/MainPage.vue'),
-	},
 	{
 		path: '/admin/requests',
 		component: () => import('@/pages/admin/AdminRequests.vue'),
@@ -15,6 +12,10 @@ const routes: RouteRecordRaw[] = [
 		component: () => import('@/pages/admin/AdminActive.vue'),
 	},
 	{
+		path: '/admin/archive',
+		component: () => import('@/pages/admin/AdminArchive.vue'),
+	},
+	{
 		path: '/admin/log',
 		component: () => import('@/pages/admin/AdminLog.vue'),
 	},
@@ -23,8 +24,24 @@ const routes: RouteRecordRaw[] = [
 		component: () => import('@/pages/admin/SessionView.vue'),
 	},
 	{
-		path: '/user/items',
+		path: '/',
 		component: () => import('../pages/user/AvailableItems.vue'),
+	},
+	{
+		path: '/active',
+		component: () => import('../pages/user/CurrentRents.vue'),
+	},
+	{
+		path: '/log',
+		component: () => import('../pages/user/RentJournal.vue'),
+	},
+	{
+		path: '/test',
+		component: () => import('../pages/TestingScreen.vue'),
+	},
+	{
+		path: '/debug',
+		component: () => import('../components/DebugPanel.vue'),
 	},
 ];
 
@@ -33,6 +50,7 @@ export const router = createRouter({
 	routes,
 });
 
-router.beforeEach(to => {
+router.beforeEach(async to => {
 	console.log(to);
+	await refreshData();
 });

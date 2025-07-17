@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { setupAuth } from '@profcomff/api-uilib';
+import apiClient from '@/api';
 
 export const useProfileStore = defineStore('profile', () => {
 	const id = ref<number | null>(null);
@@ -28,6 +30,55 @@ export const useProfileStore = defineStore('profile', () => {
 		}
 	};
 
+	const TVOI_FF_TEST_TOKEN = '';
+
+	async function setupAdminSession(tvff_token: string | null) {
+		setupAuth(tvff_token ?? TVOI_FF_TEST_TOKEN);
+
+		const serviceScopes = [
+			'event.view',
+			'item.create',
+			'item.delete',
+			'item.patch',
+			'item_type.create',
+			'item_type.delete',
+			'session.admin',
+			'strike.create',
+			'strike.delete',
+			'strike.read',
+		];
+		const serviceName = 'rental';
+		const scopes = serviceScopes.map(value => `${serviceName}.${value}`);
+
+		const { response, data, error } = await apiClient.POST('/auth/session', {
+			body: {
+				scopes,
+				expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+			},
+		});
+
+		if (!response.ok && error) {
+			console.log(error);
+			return;
+		}
+
+		if (data) {
+			id.value = data.id;
+			token.value = data.token || '';
+			sessionScopes.value = data.session_scopes ?? [];
+
+			setupAuth(data.token || '');
+			console.log(data.token);
+		}
+	}
+
+	async function setupUserSession(tvff_token: string | null) {
+		setupAuth(tvff_token ?? TVOI_FF_TEST_TOKEN);
+		console.log('user logged');
+	}
+
+	const isLogged = computed(() => token.value && token.value !== '');
+
 	return {
 		id,
 		email,
@@ -39,6 +90,10 @@ export const useProfileStore = defineStore('profile', () => {
 
 		full_name,
 
+		isLogged,
+
 		fromUrl,
+		setupAdminSession,
+		setupUserSession,
 	};
 });

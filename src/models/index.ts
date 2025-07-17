@@ -33,3 +33,13 @@ export interface Strike {
 	session_id: number;
 	created_ts: string;
 }
+
+export interface Event {
+	id: number,
+	user_id?: number | null,
+	admin_id?: number | null,
+	session_id?: number | null,
+	action_type: string,
+	details: object,
+	create_ts: string,
+}
