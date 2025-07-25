@@ -13,7 +13,6 @@ export const mockRentalRequests: RentalSession[] = [
 		end_ts: null,
 		actual_return_ts: null,
 		status: 'reserved',
-		strike_id: null,
 	},
 	{
 		id: 2,
@@ -26,7 +25,6 @@ export const mockRentalRequests: RentalSession[] = [
 		end_ts: null,
 		actual_return_ts: null,
 		status: 'reserved',
-		strike_id: null,
 	},
 ];
 

@@ -7,7 +7,6 @@ import { ref } from 'vue';
 export const useTestStore = defineStore('test', () => {
 	const sessions = ref<RentalSession[]>([]);
 	const strikes = ref<Strike[]>([]);
-	const strikeId = ref(0);
 
 	function init() {
 		sessions.value = mockRentalRequests.slice();
@@ -31,10 +30,6 @@ export const useTestStore = defineStore('test', () => {
 
 	function getClosedSessions() {
 		return sessions.value.filter(item => ['canceled', 'dismissed', 'returned', 'overdue'].includes(item.status));
-	}
-
-	function getStrikedSessions() {
-		return sessions.value.filter(item => item.strike_id !== null);
 	}
 
 	function dismissSession(id: number) {
@@ -77,33 +72,6 @@ export const useTestStore = defineStore('test', () => {
 		return strikes.value;
 	}
 
-	function createStrike(userId: number, adminId: number, reason: string, sessionId: number) {
-		const idx = sessions.value.findIndex(item => item.id == sessionId);
-		if (idx == -1) return 'session not found';
-
-		strikes.value.push({
-			id: strikeId.value,
-			user_id: userId,
-			admin_id: adminId,
-			reason: reason,
-			session_id: sessionId,
-			created_ts: Date.now().toString(),
-		});
-		sessions.value[idx].strike_id = strikeId.value;
-
-		strikeId.value += 1;
-		return `created strike id ${strikeId.value - 1} on session ${sessionId} because ${reason}`;
-	}
-
-	function deleteStrike(id: number) {
-		const idx = sessions.value.findIndex(item => item.strike_id == id);
-		if (idx == -1) return 'session not found';
-
-		strikes.value.splice(id);
-		sessions.value[idx].strike_id = null;
-		return `deleted strike id ${id} on session ${sessions.value[idx].id}`;
-	}
-
 	return {
 		init,
 
@@ -112,7 +80,6 @@ export const useTestStore = defineStore('test', () => {
 		getRequestSessions,
 		getActiveSessions,
 		getClosedSessions,
-		getStrikedSessions,
 
 		dismissSession,
 		startSession,
@@ -120,8 +87,5 @@ export const useTestStore = defineStore('test', () => {
 
 		getStrikeById,
 		getStrikes,
-
-		createStrike,
-		deleteStrike,
 	};
 });

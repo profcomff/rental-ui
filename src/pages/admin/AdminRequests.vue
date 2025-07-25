@@ -5,7 +5,7 @@ import { useAdminStore, useProfileStore } from '@/store';
 import { getCurrentTs } from '@/utils';
 import { onMounted } from 'vue';
 
-const { id: user_id } = useProfileStore();
+const { user_id } = useProfileStore();
 
 onMounted(async () => {
 	await requestAllSessions();

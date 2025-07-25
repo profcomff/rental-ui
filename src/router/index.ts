@@ -46,8 +46,7 @@ const routes: RouteRecordRaw[] = [
 	{
 		path: '/session/:sessionId',
 		component: () => import('../pages/user/UserSessionView.vue'),
-
-	}
+	},
 ];
 
 export const router = createRouter({
