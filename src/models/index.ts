@@ -30,6 +30,16 @@ export interface Strike {
 	user_id: number;
 	admin_id: number;
 	reason: string;
-	session_id: number;
+	session_id?: number | null;
 	created_ts: string;
+}
+
+export interface Event {
+	id: number;
+	user_id?: number | null;
+	admin_id?: number | null;
+	session_id?: number | null;
+	action_type: string;
+	details: object;
+	create_ts: string;
 }

@@ -3,6 +3,7 @@ import { computed, onMounted, ref, watch, nextTick } from 'vue';
 import { useItemStore } from '@/store/itemStore';
 import { useTestStore } from '@/store/testRequestStore';
 import ItemTypeCard from '@/components/ItemTypeCard.vue';
+import UserTabs from '@/components/UserTabs.vue';
 
 const itemStore = useItemStore();
 const testStore = useTestStore();
@@ -64,6 +65,7 @@ function setEqualCardHeights() {
 </script>
 
 <template>
+	<UserTabs current-tab="/" />
 	<v-container fluid class="pa-0 d-flex flex-column align-center">
 		<v-data-iterator :items="processedItems" :items-per-page="-1">
 			<template v-slot:header>

@@ -1,20 +1,19 @@
 <script setup lang="ts">
-import { useProfileStore } from './store';
+import { useProfileStore, useUserRentalStore, useItemStore, useTestStore, useAdminStore } from './store';
 import { onMounted } from 'vue';
-import { useItemStore } from './store/itemStore';
-import { useTestStore } from './store/testRequestStore';
-import { setupAdminSession } from './api';
 
-const profileStore = useProfileStore();
 const itemStore = useItemStore();
+const profileStore = useProfileStore();
+const userStore = useUserRentalStore();
 const testStore = useTestStore();
+const adminStore = useAdminStore();
 
-onMounted(() => {
-	profileStore.fromUrl();
-	itemStore.requestItemTypes();
+onMounted(async () => {
+	await profileStore.setupAdminSession(null);
+	await itemStore.requestItemTypes();
+	await userStore.requestUserSessions();
+	await adminStore.requestAllSessions();
 	testStore.init();
-
-	setupAdminSession();
 });
 </script>
 

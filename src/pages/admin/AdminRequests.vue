@@ -1,50 +1,71 @@
 <script setup lang="ts">
-// import apiClient from '@/api';
-import { useItemStore } from '@/store/itemStore';
-import { computed } from 'vue';
-import { convertTsToHHMM } from '@/utils';
-import { useTestStore } from '@/store/testRequestStore';
+import apiClient from '@/api';
 import AdminTabs from '@/components/AdminTabs.vue';
+import { useAdminStore, useProfileStore } from '@/store';
+import { getCurrentTs } from '@/utils';
+import { onMounted } from 'vue';
 
-const itemStore = useItemStore();
-const testStore = useTestStore();
+const { user_id } = useProfileStore();
 
-const requestedItems = computed(() => {
-	return Array.from(testStore.getRequestSessions(), x => itemStore.getItemType(x.item_id));
+onMounted(async () => {
+	await requestAllSessions();
 });
 
-function dismissRequest(requestId: number) {
-	console.log(testStore.dismissSession(requestId));
+const { sessionsByStatus, requestAllSessions } = useAdminStore();
+
+async function dismissSession(session_id: number) {
+	const { response, data, error } = await apiClient.PATCH('/rental/rental-sessions/{session_id}', {
+		params: {
+			path: { session_id },
+		},
+		body: {
+			status: 'dismissed',
+			end_ts: getCurrentTs(),
+			admin_close_id: user_id,
+		},
+	});
+
+	if (!response.ok && error) {
+		console.log('Ошибка при попытке отказать в бронировании: ', error);
+	} else if (data) {
+		console.log('Сессия отменена: ', data);
+		await requestAllSessions();
+	}
 }
 
-function approveRequest(requestId: number) {
-	console.log(testStore.startSession(requestId, 177))
+async function startRentalSession(session_id: number) {
+	const { response, data, error } = await apiClient.PATCH('/rental/rental-sessions/{session_id}/start', {
+		params: { path: { session_id } },
+	});
+
+	if (!response.ok && error) {
+		console.log('Ошибка при попытке начать сессию: ', error);
+	} else if (data) {
+		console.log('Выдача предмета прошла успешно: ', error);
+		await requestAllSessions();
+	}
 }
+
+getCurrentTs();
 </script>
 
 <template>
-	<AdminTabs current-tab="/admin/requests"/>
-	<v-data-iterator :items="testStore.getRequestSessions()">
-		<template #default="{ items: requests }">
-			<v-card v-for="(req, idx) in requests" :key="req.raw.id">
-				<template #title> {{ req.raw.user_id }} (айди пока нет юзердаты) </template>
-
-				<template #subtitle>
-					{{ requestedItems[idx]?.name }} | В наличии: 7
-					<v-divider />
-					<p>страйки: 0 (тут типа ручка)</p>
-					<p>время: {{ convertTsToHHMM(req.raw.reservation_ts) }}</p>
-				</template>
-
-				<template #prepend>
-					<v-img :src="requestedItems[idx]?.image_url ?? ''" width="100px" />
-				</template>
-
-				<template #actions>
-					<v-btn text="отклонить" @click="dismissRequest(req.raw.id)" />
-					<v-btn text="одобрить" @click="approveRequest(req.raw.id)" />
-				</template>
-			</v-card>
-		</template>
-	</v-data-iterator>
+	<AdminTabs current-tab="/admin/requests" />
+	<h2>Бронь</h2>
+	<ul>
+		<li v-for="session in sessionsByStatus.reserved" :key="session.id">
+			{{ session.id }}. Пользователь {{ session.user_id }}, предмет {{ session.item_id }}, бронь с
+			{{ session.reservation_ts }} | {{ session.status }} |
+			<v-btn text="Отменить" color="secondary" @click="dismissSession(session.id)" />
+			<v-btn text="Выдать" color="primary" @click="startRentalSession(session.id)" />
+		</li>
+	</ul>
+	<h2>Просроченные (Бронь, временно)</h2>
+	<ul>
+		<li v-for="session in sessionsByStatus.overdue" :key="session.id">
+			{{ session.id }}. Пользователь {{ session.user_id }}, предмет {{ session.item_id }}, бронь с
+			{{ session.reservation_ts }} | {{ session.status }}
+			<v-btn text="Отменить" color="secondary" @click="dismissSession(session.id)" />
+		</li>
+	</ul>
 </template>

@@ -15,7 +15,6 @@ export const useItemStore = defineStore('items', () => {
 		}
 
 		if (data) {
-			console.log(data);
 			itemTypes.value = data;
 		}
 
@@ -24,6 +23,7 @@ export const useItemStore = defineStore('items', () => {
 
 	function getItemTypes() {
 		// а нужна ли эта функция...
+		console.log(itemTypes.value);
 		return itemTypes.value;
 	}
 
@@ -42,6 +42,7 @@ export const useItemStore = defineStore('items', () => {
 	}
 
 	return {
+		itemTypes,
 		requestItemTypes,
 		getItemTypes,
 		getItemType,

@@ -13,7 +13,6 @@ export const mockRentalRequests: RentalSession[] = [
 		end_ts: null,
 		actual_return_ts: null,
 		status: 'reserved',
-		strike_id: null,
 	},
 	{
 		id: 2,
@@ -26,7 +25,6 @@ export const mockRentalRequests: RentalSession[] = [
 		end_ts: null,
 		actual_return_ts: null,
 		status: 'reserved',
-		strike_id: null,
 	},
 ];
 
@@ -78,3 +76,24 @@ export const mockItemTypes: ItemType[] = [
 		name: 'проверка заглушки',
 	},
 ];
+
+export const testItemType: ItemType = {
+	id: 0,
+	name: 'Тестовый айтем',
+	description: 'Для тестирования',
+	image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Test.svg/2560px-Test.svg.png',
+	free_items_count: 10,
+};
+
+export const testSession: RentalSession = {
+	id: 0,
+	user_id: 123,
+	item_id: 0,
+	admin_open_id: null,
+	admin_close_id: null,
+	reservation_ts: '10',
+	start_ts: null,
+	end_ts: null,
+	actual_return_ts: null,
+	status: 'returned',
+};

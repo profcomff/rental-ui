@@ -10,11 +10,10 @@ const tab = ref(props.currentTab);
 
 <template>
 	<v-tabs v-model="tab" @update:model-value="$router.push(tab)">
-		<v-tab value="/admin/requests">Заявки</v-tab>
-		<v-tab value="/admin/active">Текущие</v-tab>
-		<v-tab value="/admin/archive">Архив</v-tab>
-		<v-tab value="/admin/log">Журнал действий</v-tab>
-		<v-tab value="/">Пользовательская</v-tab>
+		<v-tab value="/">Аренда</v-tab>
+		<v-tab value="/active">Текущие</v-tab>
+		<v-tab value="/log">Журнал</v-tab>
+		<v-tab value="/admin/">Админка</v-tab>
 		<v-tab value="/debug">Залогиниться</v-tab>
 	</v-tabs>
 </template>
