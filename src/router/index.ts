@@ -20,8 +20,8 @@ const routes: RouteRecordRaw[] = [
 		component: () => import('@/pages/admin/AdminLog.vue'),
 	},
 	{
-		path: '/admin/session/:id(\\d+)',
-		component: () => import('@/pages/admin/SessionView.vue'),
+		path: '/admin/session/:sessionId',
+		component: () => import('@/pages/admin/AdminSessionView.vue'),
 	},
 	{
 		path: '/',
@@ -43,6 +43,11 @@ const routes: RouteRecordRaw[] = [
 		path: '/debug',
 		component: () => import('../components/DebugPanel.vue'),
 	},
+	{
+		path: '/session/:sessionId',
+		component: () => import('../pages/user/UserSessionView.vue'),
+
+	}
 ];
 
 export const router = createRouter({

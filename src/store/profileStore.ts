@@ -4,7 +4,7 @@ import { setupAuth } from '@profcomff/api-uilib';
 import apiClient from '@/api';
 
 export const useProfileStore = defineStore('profile', () => {
-	const id = ref<number | null>(null);
+	const user_id = ref<number | null>(null);
 	const email = ref<string | null>(null);
 	const token = ref<string | null>(null);
 	const groups = ref<number[] | null>(null);
@@ -23,14 +23,14 @@ export const useProfileStore = defineStore('profile', () => {
 			token.value = currToken;
 		}
 		if (currId) {
-			id.value = +currId;
+			user_id.value = +currId;
 		}
 		if (currScopes) {
 			sessionScopes.value = currScopes.split(',');
 		}
 	};
 
-	const TVOI_FF_TEST_TOKEN = '';
+	const TVOI_FF_TEST_TOKEN = ''; // if debugging, paste it here to avoid relogging
 
 	async function setupAdminSession(tvff_token: string | null) {
 		setupAuth(tvff_token ?? TVOI_FF_TEST_TOKEN);
@@ -63,7 +63,7 @@ export const useProfileStore = defineStore('profile', () => {
 		}
 
 		if (data) {
-			id.value = data.id;
+			user_id.value = data.id;
 			token.value = data.token || '';
 			sessionScopes.value = data.session_scopes ?? [];
 
@@ -80,7 +80,7 @@ export const useProfileStore = defineStore('profile', () => {
 	const isLogged = computed(() => token.value && token.value !== '');
 
 	return {
-		id,
+		user_id,
 		email,
 		token,
 		groups,

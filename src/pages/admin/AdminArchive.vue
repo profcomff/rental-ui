@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import AdminTabs from '@/components/AdminTabs.vue';
 import { useAdminStore } from '@/store';
-import { computed, onMounted } from 'vue';
+import { computed, onBeforeMount } from 'vue';
 
-onMounted(async () => {
+onBeforeMount(async () => {
 	await adminStore.requestAllSessions();
 });
 
@@ -16,7 +16,7 @@ const sessions = computed(() => adminStore.allSessions.toSorted((a, b) => a.id -
 	<ul>
 		<li v-for="{ id, user_id, item_id, start_ts, status } in sessions" :key="id">
 			[{{ start_ts ?? 'NO_TIMESTAMP_FOR_END' }}] {{ id }}. User {{ user_id }}, Item {{ item_id }} |
-			{{ status }}
+			{{ status }} -- <a @click="$router.push(`/admin/session/${id}`)">подробнее</a>
 		</li>
 	</ul>
 </template>

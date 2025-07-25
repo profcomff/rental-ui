@@ -13,7 +13,7 @@ const inactiveSessions = computed(() => userRentalStore.inactiveSessions);
 	<h1>Журнал сессий</h1>
 	<ol>
 		<li v-for="session in inactiveSessions" :key="session.id">
-			{{ session.id }}: {{ session.item_id }}, {{ session.end_ts || 'Not ended' }} | {{ session.status }}
+			{{ session.id }}: {{ session.item_id }}, {{ session.end_ts || 'Not ended' }} | {{ session.status }} -- <a @click="$router.push(`/session/${session.id}`)">подробнее</a>
 		</li>
 	</ol>
 </template>
