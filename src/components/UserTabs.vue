@@ -9,7 +9,7 @@ const tab = ref(props.currentTab);
 </script>
 
 <template>
-	<v-tabs v-model="tab" @update:model-value="$router.push(tab)">
+	<v-tabs v-model="tab" bg-color="primary" @update:model-value="$router.push(tab)">
 		<v-tab value="/">Аренда</v-tab>
 		<v-tab value="/active">Текущие</v-tab>
 		<v-tab value="/log">Журнал</v-tab>

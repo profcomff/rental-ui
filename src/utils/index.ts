@@ -1,5 +1,5 @@
 import { RentalSession } from '@/models';
-import { useUserRentalStore } from '@/store';
+import { useUserSessions } from '@/store';
 import { useItemStore } from '@/store';
 
 export function convertTsToHHMM(timestamp: string | null) {
@@ -14,11 +14,13 @@ export function sessionEnded(session: RentalSession) {
 }
 
 export async function refreshData() {
-	const { requestUserSessions } = useUserRentalStore();
+	const userSessions = useUserSessions();
 	const { requestItemTypes } = useItemStore();
 
 	await requestItemTypes();
-	await requestUserSessions();
+	await userSessions.requestAvailable();
+	await userSessions.requestActive();
+	await userSessions.requestJournal();
 }
 
 export function getCurrentTs() {

@@ -1,20 +1,36 @@
 <script setup lang="ts">
+import UserSessionCard from '@/components/UserSessionCard.vue';
 import UserTabs from '@/components/UserTabs.vue';
 
-import { useUserRentalStore } from '@/store';
-import { computed } from 'vue';
+import { useUserSessions } from '@/store';
+import { storeToRefs } from 'pinia';
+import { computed, onMounted, ref } from 'vue';
 
-const userRentalStore = useUserRentalStore();
-const inactiveSessions = computed(() => userRentalStore.inactiveSessions);
+const tab = ref<'all' | 'strikes'>('all');
+const userSession = useUserSessions();
+const { journalPageSessions } = storeToRefs(userSession);
+const strikedSessions = computed(() => journalPageSessions.value.filter(i => !!i.strike_id));
+
+const selectedItems = ref(journalPageSessions.value);
+
+function switchMode(value: 'all' | 'strikes') {
+	if (value === 'all') {
+		selectedItems.value = journalPageSessions.value;
+	} else if (value === 'strikes') {
+		selectedItems.value = strikedSessions.value;
+	}
+}
+
+onMounted(async () => {
+	await userSession.requestJournal();
+});
 </script>
 
 <template>
 	<UserTabs current-tab="/log" />
-	<h1>Журнал сессий</h1>
-	<ol>
-		<li v-for="session in inactiveSessions" :key="session.id">
-			{{ session.id }}: {{ session.item_id }}, {{ session.end_ts || 'Not ended' }} | {{ session.status }} --
-			<a @click="$router.push(`/session/${session.id}`)">подробнее</a>
-		</li>
-	</ol>
+	<v-tabs v-model="tab" selected-class="bg-primary" @update:model-value="switchMode(tab)">
+		<v-tab value="all">Все</v-tab>
+		<v-tab value="strikes">Страйки</v-tab>
+	</v-tabs>
+	<UserSessionCard v-for="session in selectedItems" :key="session.id" :session="session" />
 </template>

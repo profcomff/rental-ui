@@ -1,5 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import UserSessionCard from '@/components/UserSessionCard.vue';
+</script>
 
 <template>
-	<div>Page for testing</div>
+	<UserSessionCard></UserSessionCard>
 </template>

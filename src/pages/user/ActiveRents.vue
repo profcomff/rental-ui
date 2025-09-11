@@ -1,21 +1,21 @@
 <script setup lang="ts">
 import UserTabs from '@/components/UserTabs.vue';
-import { computed } from 'vue';
-import { useUserRentalStore } from '@/store';
+import { onMounted } from 'vue';
+import { useUserSessions } from '@/store';
 import UserItemButton from '@/components/UserItemButton.vue';
 import { testItemType } from '@/constants/mockData';
 import TextTimer from '@/components/TextTimer.vue';
 
-const userRentalStore = useUserRentalStore();
-const activeSessions = computed(() => userRentalStore.activeSessions);
-const reservedSessions = computed(() => userRentalStore.reservedSessions);
+const userRentalStore = useUserSessions();
+
+onMounted(userRentalStore.requestActive());
 </script>
 
 <template>
 	<UserTabs current-tab="/active" />
 	<h1>Активные сессии</h1>
 	<ol>
-		<li v-for="session in activeSessions" :key="session.id">
+		<li v-for="session in userRentals" :key="session.id">
 			{{ session.id }}: {{ session.item_id }}, {{ session.reservation_ts }} | {{ session.status }}
 		</li>
 	</ol>
