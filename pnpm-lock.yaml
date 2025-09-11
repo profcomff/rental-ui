@@ -34,8 +34,8 @@ importers:
         specifier: ^7.4.47
         version: 7.4.47
       '@profcomff/api-uilib':
-        specifier: ^2025.4.30
-        version: 2025.4.30
+        specifier: ^2025.9.11
+        version: 2025.9.11
       '@types/node':
         specifier: ^22.15.3
         version: 22.15.3
@@ -644,8 +644,8 @@ packages:
     resolution: {integrity: sha512-ROFF39F6ZrnzSUEmQQZUar0Jt4xVoP9WnDRdWwF4NNcXs3xBTLgBUDoOwW141y1jP+S8nahIbdxbFC7IShw9Iw==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
-  '@profcomff/api-uilib@2025.4.30':
-    resolution: {integrity: sha512-fW1UH/zEYbuT6YHhplC4ZHsusHNKqkKzqo8jqZeCXQzLH9cu8FutKq7FlgxCWQEAt0Vd+VIQhXjH9CrJIZLMXg==}
+  '@profcomff/api-uilib@2025.9.11':
+    resolution: {integrity: sha512-wwc0ayI7qgEQ2RRFlgtXT3N5rP4y2iQUXHYckBQlgchoqTyHSFfEnpDzZoBC+8ZTMzGVROJiOBPVHgvuongtmA==}
 
   '@redocly/ajv@8.11.2':
     resolution: {integrity: sha512-io1JpnwtIcvojV7QKDUSIuMN/ikdOUd1ReEnUnMKGfDVridQZ31J0MmIuqwuRjWDZfmvr+Q0MqCcfHM2gTivOg==}
@@ -2896,7 +2896,7 @@ snapshots:
 
   '@pkgr/core@0.2.4': {}
 
-  '@profcomff/api-uilib@2025.4.30':
+  '@profcomff/api-uilib@2025.9.11':
     dependencies:
       openapi-fetch: 0.10.6
 
