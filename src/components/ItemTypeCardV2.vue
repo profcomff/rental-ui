@@ -2,7 +2,8 @@
 import { ItemType, RentalSession } from '@/models';
 import TextTimer from './TextTimer.vue';
 import { useUserSessions } from '@/store';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+import ConfirmDialogue from './ConfirmDialogue.vue';
 
 const props = defineProps<{
 	itemType: ItemType;
@@ -71,14 +72,35 @@ const buttonStates = {
 	},
 };
 
+const dialogActive = ref(false);
+const dialogTitle = ref('');
+const dialogSubitle = ref<string | undefined>();
+
 async function handleButtonClick() {
 	switch (state.value) {
 		case 'available':
-			await reserveItem(props.itemType.id);
+			dialogTitle.value = 'Забронировать?';
+			dialogSubitle.value = 'Забрать вещь нужно будет в течение 15 минут';
+			dialogActive.value = true;
 			return;
 		case 'active':
 		case 'overdue':
 			console.log('Тут будет конец аренды');
+			return;
+		case 'reserved':
+			dialogTitle.value = 'Отменить бронь?';
+			dialogSubitle.value = 'Повторно забронировать вы сможете только через 15 минут';
+			dialogActive.value = true;
+			return;
+		default:
+			console.log('Нет доступных действий');
+	}
+}
+
+async function handleDialogConfirm() {
+	switch (state.value) {
+		case 'available':
+			await reserveItem(props.itemType.id);
 			return;
 		case 'reserved':
 			if (!props.session || !props.session.id) {
@@ -87,8 +109,6 @@ async function handleButtonClick() {
 			}
 			await cancelReservation(props.session.id);
 			return;
-		default:
-			console.log('Нет доступных действий');
 	}
 }
 </script>
@@ -141,6 +161,14 @@ async function handleButtonClick() {
 			</div>
 		</v-card-actions>
 	</v-card>
+
+	<ConfirmDialogue
+		v-model="dialogActive"
+		:title="dialogTitle"
+		:description="dialogSubitle"
+		@confirm="handleDialogConfirm"
+		@cancel="dialogActive = false"
+	/>
 </template>
 
 <style lang="css" scoped></style>
