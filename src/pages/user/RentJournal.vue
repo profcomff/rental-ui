@@ -28,9 +28,20 @@ onMounted(async () => {
 
 <template>
 	<UserTabs current-tab="/log" />
-	<v-tabs v-model="tab" selected-class="bg-primary" @update:model-value="switchMode(tab)">
-		<v-tab value="all">Все</v-tab>
-		<v-tab value="strikes">Страйки</v-tab>
+	<v-tabs
+		class="my-2"
+		align-tabs="center"
+		v-model="tab"
+		selected-class="bg-primary"
+		@update:model-value="switchMode(tab)"
+	>
+		<v-tab variant="elevated" value="all">Все</v-tab>
+		<v-tab variant="elevated" value="strikes">Страйки</v-tab>
 	</v-tabs>
-	<UserSessionCard v-for="session in selectedItems" :key="session.id" :session="session" />
+	<UserSessionCard
+		v-for="session in selectedItems"
+		:key="session.id"
+		:session="session"
+		@click="$router.push(`/session/${session.id}`)"
+	/>
 </template>

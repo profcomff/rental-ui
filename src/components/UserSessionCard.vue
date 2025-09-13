@@ -2,6 +2,7 @@
 import { RentalSession } from '@/models';
 import { useItemStore } from '@/store';
 import { computed, onMounted } from 'vue';
+import StrikeChip from './StrikeChip.vue';
 
 const props = defineProps<{
 	session: RentalSession;
@@ -32,7 +33,7 @@ onMounted(() => {
 		<template #subtitle>#{{ session.id }}</template>
 		<template #item>{{ new Date(Date.parse(session.reservation_ts)).toLocaleString() }}</template>
 		<template #append>
-			<v-chip color="red" variant="flat" density="compact" v-if="session.strike_id">Страйк</v-chip>
+			<StrikeChip v-if="!!session.strike_id" />
 		</template>
 	</v-card>
 </template>
