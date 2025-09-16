@@ -17,6 +17,8 @@ onMounted(async () => {
 	<main class="main">
 		<Suspense>
 			<RouterView />
+
+			<template #fallback> Loading... </template>
 		</Suspense>
 	</main>
 </template>

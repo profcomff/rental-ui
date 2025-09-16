@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, PropType } from 'vue';
 
+type Tab = '/' | '/active' | '/log' | '/admin/' | '/debug';
 const props = defineProps({
-	currentTab: { type: String, required: true },
+	currentTab: { type: String as PropType<Tab>, required: true },
 });
 
 const tab = ref(props.currentTab);

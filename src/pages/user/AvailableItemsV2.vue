@@ -21,7 +21,7 @@ onMounted(async () => {
 
 <template>
 	<UserTabs current-tab="/" />
-	<div class="column-container">
+	<div class="column-container px-2">
 		<v-col class="d-flex flex-column align-center pa-0">
 			<ItemTypeCardV2
 				v-for="item in itemTypesOdd"

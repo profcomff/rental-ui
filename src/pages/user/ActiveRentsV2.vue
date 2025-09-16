@@ -28,7 +28,7 @@ onMounted(async () => {
 
 <template>
 	<UserTabs current-tab="/active" />
-	<div class="column-container">
+	<div v-if="activeItemTypes.length > 0" class="column-container px-2">
 		<v-col class="d-flex flex-column align-center pa-0">
 			<ItemTypeCardV2
 				v-for="item in itemTypesOdd"
@@ -46,6 +46,7 @@ onMounted(async () => {
 			/>
 		</v-col>
 	</div>
+	<p v-else class="pa-2">Нет активных сессий!</p>
 </template>
 
 <style lang="css" scoped>

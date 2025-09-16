@@ -114,7 +114,7 @@ async function handleDialogConfirm() {
 </script>
 
 <template>
-	<v-card class="my-2 py-1" min-width="min(47vw, 344px)" max-width="344px" rounded="lg" variant="elevated">
+	<v-card class="my-2 py-1" min-width="min(40vw, 300px)" max-width="344px" rounded="lg" variant="elevated">
 		<v-card-title>
 			<div class="d-flex justify-space-between align-center">
 				<p class="font-weight-bold text-wrap">{{ itemType.name }}</p>

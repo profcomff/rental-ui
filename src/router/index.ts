@@ -56,5 +56,4 @@ export const router = createRouter({
 
 router.beforeEach(async to => {
 	console.log(to);
-	await refreshData();
 });

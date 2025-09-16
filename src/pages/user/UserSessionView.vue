@@ -4,6 +4,7 @@ import apiClient from '@/api';
 import { RentalSession } from '@/models';
 import { useRoute } from 'vue-router';
 import StrikeChip from '@/components/StrikeChip.vue';
+import UserTabs from '@/components/UserTabs.vue';
 
 const session = ref<RentalSession>();
 console.log('HI');
@@ -25,6 +26,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
+	<UserTabs current-tab="/log" />
 	<v-card variant="flat">
 		<template #prepend>
 			<div>
