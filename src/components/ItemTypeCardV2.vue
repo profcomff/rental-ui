@@ -4,6 +4,7 @@ import TextTimer from './TextTimer.vue';
 import { useItemStore, useUserSessions } from '@/store';
 import { computed, ref } from 'vue';
 import ConfirmDialogue from './ConfirmDialogue.vue';
+import { RESERVATION_TIME_MS } from '@/constants';
 
 const props = defineProps<{
 	itemType: ItemType;
@@ -135,7 +136,10 @@ async function handleDialogConfirm() {
 				class="d-flex justify-space-between align-center mt-2"
 			>
 				<p>{{ state === 'reserved' ? 'До окончания' : 'Бронь через' }}:</p>
-				<TextTimer :duration="10" :start-time="new Date()" />
+				<TextTimer
+					:duration="RESERVATION_TIME_MS"
+					:start-time="new Date(Date.parse(session?.reservation_ts) + 3 * 60 * 60 * 1000)"
+				/>
 			</div>
 		</v-card-subtitle>
 

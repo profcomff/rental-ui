@@ -8,7 +8,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['time-ran-out']);
 
-console.log(props.startTime);
+console.log('start time: ' + props.startTime);
 
 const duration = computed(() => props.duration);
 const endTs = computed(() => props.startTime.getTime() + duration.value);
