@@ -42,6 +42,7 @@ onMounted(async () => {
 		v-for="session in selectedItems"
 		:key="session.id"
 		:session="session"
+		class="my-2"
 		@click="$router.push(`/session/${session.id}`)"
 	/>
 </template>

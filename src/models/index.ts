@@ -32,7 +32,7 @@ export interface Strike {
 	admin_id: number;
 	reason: string;
 	session_id?: number | null;
-	created_ts: string;
+	create_ts: string;
 }
 
 export interface Event {

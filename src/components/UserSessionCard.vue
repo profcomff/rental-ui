@@ -18,7 +18,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<v-card variant="elevated" max-width="500px" rounded="lg">
+	<v-card variant="elevated" rounded="lg">
 		<template #prepend>
 			<div>
 				<v-img
