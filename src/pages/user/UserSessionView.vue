@@ -7,6 +7,7 @@ import StrikeChip from '@/components/StrikeChip.vue';
 import UserTabs from '@/components/UserTabs.vue';
 import { ItemType } from '@/models';
 import { convertTsToDateTime } from '@/utils';
+import { useItemStore } from '@/store';
 
 const session = ref<RentalSession>();
 const itemType = ref<ItemType>();
@@ -56,8 +57,9 @@ onBeforeMount(async () => {
 					aspect-ratio="16/9"
 					cover
 					width="150"
+					:height="String(150 * 9 / 16)"
 					rounded="lg"
-					src="https://pulsephotography.com.au/wp-content/uploads/2017/10/16x9-placeholder.jpg"
+					:src="useItemStore().constructPictureUrl(itemType?.image_url)"
 				></v-img>
 			</div>
 		</template>

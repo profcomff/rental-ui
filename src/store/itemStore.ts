@@ -36,6 +36,12 @@ export const useItemStore = defineStore('items', () => {
 		}
 	}
 
+	function constructPictureUrl(url: string | null | undefined) {
+		return url && url.includes('.jpg')
+			? url
+			: 'https://pulsephotography.com.au/wp-content/uploads/2017/10/16x9-placeholder.jpg';
+	}
+
 	function populateItemSessionMap(sessions: RentalSession[]) {
 		const allItemTypeIds = [...new Set(itemTypes.value.map(item => item.id))];
 		for (const typeId of allItemTypeIds) {
@@ -48,6 +54,7 @@ export const useItemStore = defineStore('items', () => {
 		itemTypeLatestSession,
 		requestItemTypes,
 		getItemType,
+		constructPictureUrl,
 		populateItemSessionMap,
 	};
 });

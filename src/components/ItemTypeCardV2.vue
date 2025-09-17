@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ItemType, RentalSession } from '@/models';
 import TextTimer from './TextTimer.vue';
-import { useUserSessions } from '@/store';
+import { useItemStore, useUserSessions } from '@/store';
 import { computed, ref } from 'vue';
 import ConfirmDialogue from './ConfirmDialogue.vue';
 
@@ -123,11 +123,7 @@ async function handleDialogConfirm() {
 		</v-card-title>
 
 		<v-img
-			:src="
-				itemType.image_url && itemType.image_url.includes('.jpg')
-					? itemType.image_url
-					: 'https://pulsephotography.com.au/wp-content/uploads/2017/10/16x9-placeholder.jpg'
-			"
+			:src="useItemStore().constructPictureUrl(itemType.image_url)"
 			cover
 			aspect-ratio="16/9"
 			max-height="193.5px"
