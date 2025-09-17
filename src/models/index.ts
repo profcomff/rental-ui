@@ -7,6 +7,7 @@ export interface RentalSession {
 	id: number;
 	user_id: number;
 	item_id: number;
+	item_type_id: number;
 	admin_open_id: number | null;
 	admin_close_id: number | null;
 	reservation_ts: string;
@@ -14,7 +15,7 @@ export interface RentalSession {
 	end_ts: string | null;
 	actual_return_ts: string | null;
 	status: RentalStatus;
-	// strike_id: number | null;
+	strike_id: number | null;
 }
 
 export interface ItemType {
@@ -31,7 +32,7 @@ export interface Strike {
 	admin_id: number;
 	reason: string;
 	session_id?: number | null;
-	created_ts: string;
+	create_ts: string;
 }
 
 export interface Event {
@@ -43,3 +44,5 @@ export interface Event {
 	details: object;
 	create_ts: string;
 }
+
+export type ItemTypeStatus = 'available' | 'cooldown' | 'reserved' | 'active' | 'unavailable' | 'overdue';

@@ -25,11 +25,11 @@ const routes: RouteRecordRaw[] = [
 	},
 	{
 		path: '/',
-		component: () => import('../pages/user/AvailableItems.vue'),
+		component: () => import('../pages/user/AvailableItemsV2.vue'),
 	},
 	{
 		path: '/active',
-		component: () => import('../pages/user/CurrentRents.vue'),
+		component: () => import('../pages/user/ActiveRentsV2.vue'),
 	},
 	{
 		path: '/log',
@@ -56,5 +56,4 @@ export const router = createRouter({
 
 router.beforeEach(async to => {
 	console.log(to);
-	await refreshData();
 });

@@ -89,6 +89,23 @@ export const useAdminStore = defineStore('admin', () => {
 		allEvents.value = data ?? [];
 	}
 
+	async function makeAllAvailable() {
+		const { data, error } = await apiClient.GET('/rental/item');
+		if (error) {
+			console.log('error when getting all items' + error);
+			return;
+		}
+		for (const i of data) {
+			const { data: itemData, error: itemError } = await apiClient.PATCH('/rental/item/{id}', {
+				params: { path: { id: i.id }, query: { is_available: true } },
+			});
+			if (itemError) {
+				console.log('Could not make item' + i.id + 'available');
+			}
+			console.log(data);
+		}
+	}
+
 	return {
 		allSessions,
 		sessionsByStatus,
@@ -97,5 +114,7 @@ export const useAdminStore = defineStore('admin', () => {
 
 		allEvents,
 		requestEvents,
+
+		makeAllAvailable,
 	};
 });

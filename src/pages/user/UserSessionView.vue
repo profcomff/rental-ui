@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import SessionInfo from '@/components/SessionInfo.vue';
 import { ref, onBeforeMount } from 'vue';
 import apiClient from '@/api';
-import { RentalSession } from '@/models';
+import { RentalSession, Strike } from '@/models';
 import { useRoute } from 'vue-router';
+import StrikeChip from '@/components/StrikeChip.vue';
+import UserTabs from '@/components/UserTabs.vue';
+import { ItemType } from '@/models';
+import { convertTsToDateTime } from '@/utils';
+import { useItemStore } from '@/store';
 
 const session = ref<RentalSession>();
-console.log('HI');
+const itemType = ref<ItemType>();
+const strike = ref<Strike>();
 
 onBeforeMount(async () => {
 	const { params } = useRoute();
@@ -17,17 +22,99 @@ onBeforeMount(async () => {
 
 	if (error) {
 		console.log('Ошибка при попытке запроса сессии:', error);
+		return;
+	}
+	session.value = data;
+
+	const { data: itemData, error: itemError } = await apiClient.GET('/rental/itemtype/{id}', {
+		params: { path: { id: session.value!.item_type_id } },
+	});
+	if (itemError) {
+		console.log('Ошибка при попытке запроса предмета:', itemError);
+		return;
 	}
 
-	console.log(data);
-	session.value = data;
+	itemType.value = itemData;
+
+	const { data: strikeData, error: strikeError } = await apiClient.GET('/rental/strike', {
+		params: { query: { session_id: data.id } },
+	});
+	if (strikeError) {
+		console.log('Ошибка при попытке запроса страйка', strikeError);
+		return;
+	}
+
+	strike.value = strikeData[0];
 });
 </script>
 
 <template>
-	<template v-if="session">
-		<SessionInfo :session="session" />
-	</template>
+	<UserTabs current-tab="/log" />
+	<v-card variant="flat">
+		<template #prepend>
+			<div>
+				<v-img
+					aspect-ratio="16/9"
+					cover
+					width="150"
+					:height="String(150 * 9 / 16)"
+					rounded="lg"
+					:src="useItemStore().constructPictureUrl(itemType?.image_url)"
+				></v-img>
+			</div>
+		</template>
+
+		<template #title>
+			<p class="text-body-2 font-weight-bold">{{ itemType?.name }}</p>
+		</template>
+
+		<template #subtitle>
+			<p class="text-body-1 font-weight-bold text-black opacity-100">N{{ session ? session.id : '-' }}</p>
+		</template>
+
+		<template #item>
+			<StrikeChip v-if="strike" />
+		</template>
+
+		<template #text>
+			<v-row>
+				<v-col>
+					<p>Дата и время брони</p>
+					<p class="font-weight-bold text-body-1">{{ convertTsToDateTime(session?.reservation_ts) }}</p>
+				</v-col>
+				<v-col>
+					<p>Дата и время окончания сессии</p>
+					<p class="font-weight-bold text-body-1">{{ convertTsToDateTime(session?.end_ts) }}</p>
+				</v-col>
+			</v-row>
+			<v-row>
+				<v-col>
+					<p>Статус сессии</p>
+				</v-col>
+				<v-col>
+					<p class="font-weight-bold text-body-1">
+						{{ session?.strike_id === null ? 'Завершена' : 'Завершена со страйком' }}
+					</p>
+				</v-col>
+			</v-row>
+			<v-row>
+				<v-col>
+					<p>Выдал</p>
+					<p class="font-weight-bold text-body-1">{{ session?.admin_open_id }}</p>
+				</v-col>
+				<v-col>
+					<p>Принял</p>
+					<p class="font-weight-bold text-body-1">{{ session?.admin_close_id }}</p>
+				</v-col>
+			</v-row>
+			<v-row>
+				<v-col>
+					<p>Комментарий к сессии</p>
+					<p class="font-weight-bold text-body-1">{{ strike?.reason }}</p>
+				</v-col>
+			</v-row>
+		</template>
+	</v-card>
 </template>
 
 <style lang="css" scoped></style>

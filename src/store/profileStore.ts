@@ -30,7 +30,8 @@ export const useProfileStore = defineStore('profile', () => {
 		}
 	};
 
-	const TVOI_FF_TEST_TOKEN = ''; // if debugging, paste it here to avoid relogging
+	const TVOI_FF_TEST_TOKEN =
+		'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNzciLCJpc3MiOiJodHRwczovL2FwcC50ZXN0LnByb2Zjb21mZi5jb20iLCJpYXQiOjE3NTgxMTM2ODcsImV4cCI6MTc2MDcwNTY4N30.l-q7PQ83J9IUQE8hElcNIqja-_B5uSiygoUg9RUfa28RVqmHpCeXTdvGymP8PjniVZ55x3XXu0Z869Bx22bChDFCkDYWkZV0itDeMWt4axqpZ6K6KdVjMHYOIXbEQEApVvMFp-aBaTdpPtxZlmrIZF_OIqic6fffqMbIf_2QNt6gQYqHjpZbK9NtbTA1R-o6oGxVEcIZcffEOGmjvziM7XmWkCOxyqXHUBHdWKZjkrS0nX4LQcpCGaTK6YLNsMS3Ef5SdCOu5KqO7tE0cLcXRYN7SDmlKgETp_CBXIa-ko4b_yIE79iK9D5GtCMpdBPYNpGgw6a2NRGD7RAsVAiLYQ'; // if debugging, paste it here to avoid relogging
 
 	async function setupAdminSession(tvff_token: string | null) {
 		setupAuth(tvff_token ?? TVOI_FF_TEST_TOKEN);

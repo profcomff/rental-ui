@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useProfileStore } from '@/store';
+import { useAdminStore, useProfileStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import UserTabs from './UserTabs.vue';
 import AdminTabs from './AdminTabs.vue';
@@ -48,4 +48,6 @@ async function setupSession() {
 		<a href="https://app.test.profcomff.com/admin" target="_blank">Посмотреть токен</a>
 		<v-btn text="Создать сессию" density="compact" @click="setupSession"></v-btn>
 	</v-form>
+
+	<v-btn @click="useAdminStore().makeAllAvailable">ALL ITEMS AVAILABLE</v-btn>
 </template>
