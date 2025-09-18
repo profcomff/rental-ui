@@ -57,7 +57,7 @@ onBeforeMount(async () => {
 					aspect-ratio="16/9"
 					cover
 					width="150"
-					:height="String(150 * 9 / 16)"
+					:height="String((150 * 9) / 16)"
 					rounded="lg"
 					:src="useItemStore().constructPictureUrl(itemType?.image_url)"
 				></v-img>
