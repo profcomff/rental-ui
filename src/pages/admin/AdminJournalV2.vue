@@ -30,7 +30,7 @@ function switchMode(tab: 'finished' | 'cancelled') {
 </script>
 
 <template>
-	<AdminTabs current-tab="/admin/archive" />
+	<AdminTabs current-tab="/admin/journal" />
 	<v-tabs
 		class="my-2"
 		align-tabs="center"
@@ -38,8 +38,8 @@ function switchMode(tab: 'finished' | 'cancelled') {
 		selected-class="bg-primary"
 		@update:model-value="switchMode(tab)"
 	>
-		<v-tab variant="elevated" value="finished">Все</v-tab>
-		<v-tab variant="elevated" value="cancelled">Страйки</v-tab>
+		<v-tab variant="elevated" value="finished">Завершенные</v-tab>
+		<v-tab variant="elevated" value="cancelled">Отмененные</v-tab>
 	</v-tabs>
 	<AdminSessionCard v-for="s in selectedSessions" :key="s.id" :session="s" location="journal" />
 </template>

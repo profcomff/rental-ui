@@ -9,9 +9,12 @@ const props = defineProps({
 const emit = defineEmits(['time-ran-out']);
 
 console.log('start time: ' + props.startTime);
+console.log(props.startTime.getTimezoneOffset());
 
 const duration = computed(() => props.duration);
-const endTs = computed(() => props.startTime.getTime() + duration.value);
+const endTs = computed(
+	() => props.startTime.getTime() + duration.value - props.startTime.getTimezoneOffset() * 60 * 1000,
+);
 const nowTs = ref(Date.now());
 const timeToShow = computed(() => {
 	const theTime = endTs.value - nowTs.value;

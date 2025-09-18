@@ -20,8 +20,6 @@ const state = computed(() => {
 				return 'overdue';
 			case 'reserved':
 				return 'reserved';
-			case 'canceled':
-				return 'cooldown';
 		}
 	}
 
@@ -131,10 +129,7 @@ async function handleDialogConfirm() {
 		></v-img>
 
 		<v-card-subtitle>
-			<div
-				v-if="state === 'reserved' || state === 'cooldown'"
-				class="d-flex justify-space-between align-center mt-2"
-			>
+			<div v-if="state === 'reserved'" class="d-flex justify-space-between align-center mt-2">
 				<p>{{ state === 'reserved' ? 'До окончания' : 'Бронь через' }}:</p>
 				<TextTimer
 					:duration="RESERVATION_TIME_MS"

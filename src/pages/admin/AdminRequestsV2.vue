@@ -11,7 +11,7 @@ onMounted(async () => {
 });
 
 const adminStore = useAdminStore();
-const { requestReservedPageSessions, startSession, dismissSession } = adminStore;
+const { requestReservedPageSessions } = adminStore;
 const { reservedPageSessions } = storeToRefs(adminStore);
 
 getCurrentTs();
@@ -24,7 +24,5 @@ getCurrentTs();
 		:key="s.id"
 		:session="s"
 		location="requests"
-		@cancel="dismissSession(s.id)"
-		@confirm="startSession(s.id)"
 	/>
 </template>

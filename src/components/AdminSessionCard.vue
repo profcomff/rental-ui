@@ -1,38 +1,92 @@
 <script setup lang="ts">
 import { RentalSession } from '@/models';
 import StrikeChip from './StrikeChip.vue';
+import { computed, onMounted, ref } from 'vue';
+import { useAdminStore, useItemStore } from '@/store';
+import { storeToRefs } from 'pinia';
+import TextTimer from './TextTimer.vue';
+import { RESERVATION_TIME_MS } from '@/constants';
+import { convertTsToDateTime } from '@/utils';
+import ConfirmDialogue from './ConfirmDialogue.vue';
 
-defineProps<{
+const props = defineProps<{
 	location: 'requests' | 'active' | 'journal';
 	session: RentalSession;
 }>();
+
+onMounted(async () => {
+	await itemStore.requestItemTypes();
+});
+
+const itemStore = useItemStore();
+const { itemTypes } = storeToRefs(itemStore);
+const itemType = computed(() => itemTypes.value.find(i => i.id === props.session.item_type_id));
+const adminStore = useAdminStore();
+
+const statusToDateTimeText = {
+	reserved: 'До конца брони',
+	active: 'До конца аренды',
+	overdue: 'Просрочено с',
+	returned: 'Дата и время',
+	canceled: 'Дата и время',
+	expired: 'Дата и время',
+	dismissed: 'Дата и время',
+} as const;
+const dateTimeText = computed(() => statusToDateTimeText[props.session.status]);
+
+function handleRefuseClick() {
+	if (props.location === 'requests') {
+		requestRefuseDialog.value = true;
+	} else if (props.location === 'active') {
+		activeRefuseDialog.value = true;
+	}
+}
+
+function handleAcceptClick() {
+	if (props.location === 'requests') {
+		requestAcceptDialog.value = true;
+	} else if (props.location === 'active') {
+		activeAcceptDialog.value = true;
+	}
+}
+
+const requestRefuseDialog = ref(false);
+const requestAcceptDialog = ref(false);
+const activeRefuseDialog = ref(false);
+const activeAcceptDialog = ref(false);
 </script>
 
 <template>
-	<v-card>
+	<v-card
+		@click="
+			() => {
+				location === 'journal' && $router.push(`/admin/session/${session.id}`);
+			}
+		"
+	>
 		<template #prepend>
 			<div>
 				<v-img
 					min-width="100"
 					aspect-ratio="1"
 					cover
-					src="https://pulsephotography.com.au/wp-content/uploads/2017/10/16x9-placeholder.jpg"
+					:src="itemStore.constructPictureUrl(itemType?.image_url)"
 				></v-img>
 			</div>
 		</template>
 
 		<template #title>
-			<p class="text-wrap">Зарядка</p>
+			<p class="text-wrap">{{ itemType?.name ?? 'Что-то' }}</p>
 		</template>
 		<template #subtitle>
-			<p class="text-wrap">Иванов Иван Иванович</p>
+			<p class="text-wrap">Пользователь {{ session.user_id }}</p>
 		</template>
 		<template #item>N{{ session.id }}</template>
 
 		<template #append>
 			<div>
-				<StrikeChip v-if="session.status === 'overdue'" text="Просроч"></StrikeChip>
-				<StrikeChip v-if="session.strike_id" text="Страйк"></StrikeChip>
+				<StrikeChip v-if="session.status === 'overdue'" text="Просроч" />
+				<StrikeChip v-if="!!session.strike_id" text="Страйк" />
 			</div>
 		</template>
 
@@ -40,40 +94,101 @@ defineProps<{
 			<v-row>
 				<v-col>
 					<div>
-						<p>Время до окончания брони</p>
-						<p class="font-weight-bold">10:49</p>
+						<p>{{ dateTimeText }}</p>
+						<TextTimer
+							v-if="session.status === 'reserved'"
+							:duration="RESERVATION_TIME_MS"
+							:start-time="new Date(Date.parse(session.reservation_ts))"
+						/>
+						<TextTimer
+							v-else-if="session.status === 'active'"
+							:duration="RESERVATION_TIME_MS * 2"
+							:start-time="new Date(Date.parse(session.start_ts ?? '0'))"
+						/>
+						<p v-else class="font-weight-bold">{{ convertTsToDateTime(session.end_ts) }}</p>
 					</div>
 				</v-col>
 				<v-col cols="3">
 					<div>
 						<p>Страйки</p>
-						<p class="font-weight-bold">Да</p>
+						<p class="font-weight-bold">{{ !!session.strike_id ? 'Да' : 'Нет' }}</p>
 					</div>
 				</v-col>
 				<v-col cols="3">
 					<div>
 						<p>В наличии</p>
-						<p class="font-weight-bold">Да</p>
+						<p class="font-weight-bold">{{ (itemType?.free_items_count ?? -1) > 0 ? 'Да' : 'Нет' }}</p>
 					</div>
 				</v-col>
 			</v-row>
 		</template>
 
 		<template #actions>
-			<v-row>
+			<v-row v-if="location !== 'journal'">
 				<v-col class="d-flex justify-center">
-					<v-btn color="danger font-weight-bold " variant="tonal" block @click="$emit('cancel')">
-						Отклонить
+					<v-btn color="danger font-weight-bold " variant="tonal" block @click="handleRefuseClick">
+						{{ location === 'requests' ? 'Отклонить' : 'Завершить со страйком' }}
 					</v-btn>
 				</v-col>
 				<v-col class="d-flex justify-center">
-					<v-btn color="primary font-weight-bold" variant="tonal" block @click="$emit('confirm')">
-						Принять
+					<v-btn color="primary font-weight-bold" variant="tonal" block @click="handleAcceptClick">
+						{{ location === 'requests' ? 'Принять' : 'Завершить' }}
 					</v-btn>
 				</v-col>
 			</v-row>
 		</template>
 	</v-card>
+
+	<ConfirmDialogue
+		v-model="requestRefuseDialog"
+		title="Причина отказа"
+		:description="`Отказ для сессии N${session.id}`"
+		@cancel="requestRefuseDialog = false"
+		@confirm="
+			async () => {
+				await adminStore.dismissSession(session.id);
+				requestRefuseDialog = false;
+			}
+		"
+	/>
+
+	<ConfirmDialogue
+		v-model="requestAcceptDialog"
+		title="Выдать предмет"
+		@cancel="requestAcceptDialog = false"
+		@confirm="
+			async () => {
+				await adminStore.startSession(session.id);
+				requestAcceptDialog = false;
+			}
+		"
+	/>
+
+	<ConfirmDialogue
+		v-model="activeRefuseDialog"
+		title="Завершить прокат?"
+		:description="`Завершить прокат N${session.id}`"
+		@cancel="activeRefuseDialog = false"
+		@confirm="
+			async () => {
+				await adminStore.returnWithStrikeSession(session.id, '123');
+				activeRefuseDialog = false;
+			}
+		"
+	/>
+
+	<ConfirmDialogue
+		v-model="activeAcceptDialog"
+		title="Завершить со страйком?"
+		:description="`Причина страйка для проката N${session.id}`"
+		@cancel="activeAcceptDialog = false"
+		@confirm="
+			async () => {
+				await adminStore.returnSession(session.id);
+				activeAcceptDialog = false;
+			}
+		"
+	/>
 </template>
 
 <style lang="css" scoped></style>

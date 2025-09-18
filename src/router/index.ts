@@ -11,7 +11,7 @@ const routes: RouteRecordRaw[] = [
 		component: () => import('@/pages/admin/AdminActiveV2.vue'),
 	},
 	{
-		path: '/admin/archive',
+		path: '/admin/journal',
 		component: () => import('@/pages/admin/AdminJournalV2.vue'),
 	},
 	{
