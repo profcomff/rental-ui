@@ -19,6 +19,13 @@ const { finishedPageSessions, cancelledPageSessions } = storeToRefs(adminStore);
 
 const selectedSessions = ref<RentalSession[]>([]);
 
+const userId = ref<string>();
+async function handleSearchById() {
+	await requestFinishedPageSessions(userId.value === '' ? undefined : Number(userId.value));
+	await requestCancelledPageSessions(userId.value === '' ? undefined : Number(userId.value));
+	switchMode(tab.value);
+}
+
 const tab = ref<'finished' | 'cancelled'>('finished');
 function switchMode(tab: 'finished' | 'cancelled') {
 	if (tab === 'finished') {
@@ -31,6 +38,14 @@ function switchMode(tab: 'finished' | 'cancelled') {
 
 <template>
 	<AdminTabs current-tab="/admin/journal" />
+	<v-text-field
+		v-model="userId"
+		class="my-2"
+		placeholder="Поиск студента (по id)"
+		:prepend-inner-icon="'mdi-magnify'"
+		variant="outlined"
+		@update:model-value="handleSearchById"
+	></v-text-field>
 	<v-tabs
 		class="my-2"
 		align-tabs="center"

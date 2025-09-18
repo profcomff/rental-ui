@@ -47,12 +47,13 @@ export const useAdminStore = defineStore('admin', () => {
 		console.log(data);
 	}
 
-	async function requestActivePageSessions() {
+	async function requestActivePageSessions(user_id?: number) {
 		const { data, error } = await apiClient.GET('/rental/rental-sessions', {
 			params: {
 				query: {
 					is_active: true,
 					is_overdue: true,
+					user_id,
 				},
 			},
 		});
@@ -91,11 +92,12 @@ export const useAdminStore = defineStore('admin', () => {
 		console.log(data);
 	}
 
-	async function requestFinishedPageSessions() {
+	async function requestFinishedPageSessions(user_id?: number) {
 		const { data, error } = await apiClient.GET('/rental/rental-sessions', {
 			params: {
 				query: {
 					is_returned: true,
+					user_id,
 				},
 			},
 		});
@@ -106,13 +108,14 @@ export const useAdminStore = defineStore('admin', () => {
 		finishedPageSessions.value = data;
 	}
 
-	async function requestCancelledPageSessions() {
+	async function requestCancelledPageSessions(user_id?: number) {
 		const { data, error } = await apiClient.GET('/rental/rental-sessions', {
 			params: {
 				query: {
 					is_canceled: true,
 					is_dismissed: true,
 					is_expired: true,
+					user_id,
 				},
 			},
 		});

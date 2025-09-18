@@ -42,6 +42,12 @@ export const vuetify = createVuetify({
 		VCheckbox: {
 			color: 'rgb(0, 1, 76)',
 		},
+		VTextField: {
+			hideDetails: 'auto',
+			density: 'compact',
+			variant: 'outlined',
+			autocomplete: 'suppress',
+		},
 	},
 	theme: {
 		defaultTheme: 'profcomffLight',

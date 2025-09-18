@@ -35,25 +35,17 @@ async function changeFreeItems() {
 			:src="useItemStore().constructPictureUrl(itemType.image_url)"
 		></v-img>
 		<v-card-actions>
-			<v-btn
-				:icon="'mdi-minus'"
-				@click="
-					() => {
-						--freeItems;
-						changeFreeItems();
-					}
-				"
-			></v-btn>
-			<v-text-field v-model="freeItems" @change="changeFreeItems"></v-text-field>
-			<v-btn
-				:icon="'mdi-plus'"
-				@click="
-					() => {
-						++freeItems;
-						changeFreeItems();
-					}
-				"
-			></v-btn>
+			<v-number-input
+				v-model="freeItems"
+				control-variant="split"
+				variant="outlined"
+				hide-details="auto"
+				bg-color="primary"
+				icon-color="white"
+				@change="changeFreeItems"
+				@update:focused="changeFreeItems"
+			>
+			</v-number-input>
 		</v-card-actions>
 	</v-card>
 </template>

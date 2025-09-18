@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RentalSession } from '@/models';
 import StrikeChip from './StrikeChip.vue';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, onUpdated, ref } from 'vue';
 import { useAdminStore, useItemStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import TextTimer from './TextTimer.vue';
@@ -16,6 +16,10 @@ const props = defineProps<{
 }>();
 
 onMounted(async () => {
+	await itemStore.requestItemTypes();
+});
+
+onUpdated(async () => {
 	await itemStore.requestItemTypes();
 });
 
@@ -58,13 +62,7 @@ const activeAcceptDialog = ref(false);
 </script>
 
 <template>
-	<v-card
-		@click="
-			() => {
-				location === 'journal' && $router.push(`/admin/session/${session.id}`);
-			}
-		"
-	>
+	<v-card class="my-2">
 		<template #prepend>
 			<div>
 				<v-img
@@ -109,7 +107,7 @@ const activeAcceptDialog = ref(false);
 						<p v-else class="font-weight-bold">{{ convertTsToDateTime(session.end_ts) }}</p>
 					</div>
 				</v-col>
-				<v-col cols="3">
+				<v-col v-if="location !== 'journal'" cols="3">
 					<div>
 						<p>Страйки</p>
 						<p class="font-weight-bold">{{ !!session.strike_id ? 'Да' : 'Нет' }}</p>
@@ -118,7 +116,7 @@ const activeAcceptDialog = ref(false);
 				<v-col cols="3">
 					<div>
 						<p>В наличии</p>
-						<p class="font-weight-bold">{{ (itemType?.free_items_count ?? 0) }}</p>
+						<p class="font-weight-bold">{{ itemType?.free_items_count ?? 0 }}</p>
 					</div>
 				</v-col>
 			</v-row>
@@ -137,6 +135,9 @@ const activeAcceptDialog = ref(false);
 					</v-btn>
 				</v-col>
 			</v-row>
+			<v-btn v-else block color="primary" variant="tonal" @click="$router.push(`/admin/session/${session.id}`)"
+				>Подробнее</v-btn
+			>
 		</template>
 	</v-card>
 
