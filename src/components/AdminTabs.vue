@@ -12,7 +12,7 @@ const tab = ref(props.currentTab);
 	<v-tabs v-model="tab" @update:model-value="$router.push(tab)">
 		<v-tab value="/admin/requests">Заявки</v-tab>
 		<v-tab value="/admin/active">Текущие</v-tab>
-		<v-tab value="/admin/archive">Архив</v-tab>
+		<v-tab value="/admin/journal">Архив</v-tab>
 		<v-tab value="/admin/log">Журнал действий</v-tab>
 		<v-tab value="/">Пользовательская</v-tab>
 		<v-tab value="/debug">Залогиниться</v-tab>

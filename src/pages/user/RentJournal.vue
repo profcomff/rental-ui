@@ -23,6 +23,7 @@ function switchMode(value: 'all' | 'strikes') {
 
 onMounted(async () => {
 	await userSession.requestJournal();
+	selectedItems.value = journalPageSessions.value;
 });
 </script>
 

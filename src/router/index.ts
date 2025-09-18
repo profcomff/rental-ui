@@ -3,16 +3,16 @@ import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router';
 const routes: RouteRecordRaw[] = [
 	{
 		path: '/admin/requests',
-		component: () => import('@/pages/admin/AdminRequests.vue'),
+		component: () => import('@/pages/admin/AdminRequestsV2.vue'),
 		alias: ['/admin', '/admin/'],
 	},
 	{
 		path: '/admin/active',
-		component: () => import('@/pages/admin/AdminActive.vue'),
+		component: () => import('@/pages/admin/AdminActiveV2.vue'),
 	},
 	{
 		path: '/admin/archive',
-		component: () => import('@/pages/admin/AdminArchive.vue'),
+		component: () => import('@/pages/admin/AdminJournalV2.vue'),
 	},
 	{
 		path: '/admin/log',

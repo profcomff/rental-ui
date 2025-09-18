@@ -73,7 +73,7 @@ onBeforeMount(async () => {
 		</template>
 
 		<template #item>
-			<StrikeChip v-if="strike" />
+			<StrikeChip v-if="strike" text="Страйк"/>
 		</template>
 
 		<template #text>
