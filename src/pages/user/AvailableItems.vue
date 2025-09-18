@@ -16,7 +16,7 @@ onMounted(async () => {
 });
 
 const processedItems = computed(() =>
-	itemStore.getItemTypes().map(item => ({
+	itemStore..map(item => ({
 		...item,
 		image_url:
 			item.image_url ||

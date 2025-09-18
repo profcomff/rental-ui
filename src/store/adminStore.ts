@@ -11,6 +11,7 @@ export const useAdminStore = defineStore('admin', () => {
 	const activeSessions = ref<RentalSession[]>([]);
 	const overdueSessions = ref<RentalSession[]>([]);
 	const returnedSessions = ref<RentalSession[]>([]);
+	const expiredSessions = ref<RentalSession[]>([]);
 
 	const allEvents = ref<Event[]>([]);
 
@@ -21,6 +22,7 @@ export const useAdminStore = defineStore('admin', () => {
 		active: activeSessions,
 		overdue: overdueSessions,
 		returned: returnedSessions,
+		expired: expiredSessions,
 	};
 
 	watch(allSessions, value => {
@@ -96,13 +98,12 @@ export const useAdminStore = defineStore('admin', () => {
 			return;
 		}
 		for (const i of data) {
-			const { data: itemData, error: itemError } = await apiClient.PATCH('/rental/item/{id}', {
+			const { error: itemError } = await apiClient.PATCH('/rental/item/{id}', {
 				params: { path: { id: i.id }, query: { is_available: true } },
 			});
 			if (itemError) {
 				console.log('Could not make item' + i.id + 'available');
 			}
-			console.log(data);
 		}
 	}
 

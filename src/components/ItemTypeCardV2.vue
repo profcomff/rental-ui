@@ -138,7 +138,7 @@ async function handleDialogConfirm() {
 				<p>{{ state === 'reserved' ? 'До окончания' : 'Бронь через' }}:</p>
 				<TextTimer
 					:duration="RESERVATION_TIME_MS"
-					:start-time="new Date(Date.parse(session?.reservation_ts) + 3 * 60 * 60 * 1000)"
+					:start-time="new Date(Date.parse(session?.reservation_ts ?? '0') + 3 * 60 * 60 * 1000)"
 				/>
 			</div>
 		</v-card-subtitle>

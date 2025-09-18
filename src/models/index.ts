@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const RentalStatusList = ['reserved', 'active', 'canceled', 'overdue', 'returned', 'dismissed'] as const;
+const RentalStatusList = ['reserved', 'active', 'canceled', 'overdue', 'returned', 'dismissed', 'expired'] as const;
 
 export type RentalStatus = (typeof RentalStatusList)[number];
 
@@ -15,7 +15,7 @@ export interface RentalSession {
 	end_ts: string | null;
 	actual_return_ts: string | null;
 	status: RentalStatus;
-	strike_id: number | null;
+	strike_id?: number | null;
 }
 
 export interface ItemType {
