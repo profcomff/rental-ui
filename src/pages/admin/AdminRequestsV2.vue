@@ -19,10 +19,5 @@ getCurrentTs();
 
 <template>
 	<AdminTabs current-tab="/admin/requests" />
-	<AdminSessionCard
-		v-for="s in reservedPageSessions"
-		:key="s.id"
-		:session="s"
-		location="requests"
-	/>
+	<AdminSessionCard v-for="s in reservedPageSessions" :key="s.id" :session="s" location="requests" />
 </template>

@@ -1,0 +1,61 @@
+<script setup lang="ts">
+import apiClient from '@/api';
+import { ItemType } from '@/models';
+import { useItemStore } from '@/store';
+import { onMounted, ref } from 'vue';
+
+const props = defineProps<{
+	itemType: ItemType;
+}>();
+
+const freeItems = ref(0);
+onMounted(() => {
+	freeItems.value = props.itemType.free_items_count ?? 0;
+});
+
+async function changeFreeItems() {
+	const { data, error } = await apiClient.PATCH('/rental/itemtype/available/{id}', {
+		params: { path: { id: props.itemType.id }, query: { count: freeItems.value } },
+	});
+	if (error) {
+		console.log('error when setting free items, ', error);
+		return;
+	}
+	freeItems.value = data.items_changed;
+}
+</script>
+
+<template>
+	<v-card width="30vw" class="ma-2">
+		<v-card-title class="text-wrap">{{ itemType.name }}</v-card-title>
+		<v-img
+			cover
+			aspect-ratio="16/9"
+			:height="`${(30 * 9) / 16}vw`"
+			:src="useItemStore().constructPictureUrl(itemType.image_url)"
+		></v-img>
+		<v-card-actions>
+			<v-btn
+				:icon="'mdi-minus'"
+				@click="
+					() => {
+						--freeItems;
+						changeFreeItems();
+					}
+				"
+			></v-btn>
+			<v-text-field v-model="freeItems" @change="changeFreeItems"></v-text-field>
+			<v-btn
+				:icon="'mdi-plus'"
+				@click="
+					() => {
+						++freeItems;
+						changeFreeItems();
+					}
+				"
+			></v-btn>
+		</v-card-actions>
+	</v-card>
+</template>
+
+<style lang="css" scoped></style>

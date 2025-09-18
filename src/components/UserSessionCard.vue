@@ -33,7 +33,7 @@ onMounted(() => {
 		<template #subtitle>#{{ session.id }}</template>
 		<template #item>{{ new Date(Date.parse(session.reservation_ts)).toLocaleString() }}</template>
 		<template #append>
-			<StrikeChip v-if="!!session.strike_id" text="Страйк"/>
+			<StrikeChip v-if="!!session.strike_id" text="Страйк" />
 		</template>
 	</v-card>
 </template>

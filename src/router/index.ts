@@ -15,6 +15,10 @@ const routes: RouteRecordRaw[] = [
 		component: () => import('@/pages/admin/AdminJournalV2.vue'),
 	},
 	{
+		path: '/admin/items',
+		component: () => import('@/pages/admin/AdminItems.vue'),
+	},
+	{
 		path: '/admin/log',
 		component: () => import('@/pages/admin/AdminLog.vue'),
 	},

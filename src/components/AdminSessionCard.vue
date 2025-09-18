@@ -118,7 +118,7 @@ const activeAcceptDialog = ref(false);
 				<v-col cols="3">
 					<div>
 						<p>В наличии</p>
-						<p class="font-weight-bold">{{ (itemType?.free_items_count ?? -1) > 0 ? 'Да' : 'Нет' }}</p>
+						<p class="font-weight-bold">{{ (itemType?.free_items_count ?? 0) }}</p>
 					</div>
 				</v-col>
 			</v-row>
@@ -126,12 +126,12 @@ const activeAcceptDialog = ref(false);
 
 		<template #actions>
 			<v-row v-if="location !== 'journal'">
-				<v-col class="d-flex justify-center">
+				<v-col class="d-flex justify-center pr-1">
 					<v-btn color="danger font-weight-bold " variant="tonal" block @click="handleRefuseClick">
 						{{ location === 'requests' ? 'Отклонить' : 'Завершить со страйком' }}
 					</v-btn>
 				</v-col>
-				<v-col class="d-flex justify-center">
+				<v-col class="d-flex justify-center pl-1">
 					<v-btn color="primary font-weight-bold" variant="tonal" block @click="handleAcceptClick">
 						{{ location === 'requests' ? 'Принять' : 'Завершить' }}
 					</v-btn>

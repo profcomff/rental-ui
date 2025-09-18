@@ -33,19 +33,23 @@ function handleCancel() {
 </script>
 
 <template>
-	<v-dialog width="90vw" max-width="300px" v-model="model">
-		<v-card>
-			<v-card-title class="text-center">{{ title }}</v-card-title>
+	<v-dialog width="90vw" max-width="400px" v-model="model">
+		<v-card rounded="lg">
+			<v-card-title class="text-center font-weight-bold">{{ title }}</v-card-title>
 			<v-card-subtitle class="text-center">{{ description }}</v-card-subtitle>
-			<v-card-text>
-				<v-chip-group></v-chip-group>
+			<v-card-text class="pa-2">
+				<v-chip-group selected-class="bg-primary" column class="text-caption">
+					<v-chip>Сломан</v-chip>
+					<v-chip>Украден</v-chip>
+					<v-chip>Просрочено</v-chip>
+				</v-chip-group>
 				<h4>Комментарий/другое</h4>
-				<v-text-field v-model="reason"></v-text-field>
+				<v-text-field v-model="reason" hide-details="auto"></v-text-field>
 			</v-card-text>
 			<v-card-actions>
-				<div class="d-flex flex-column w-100">
-					<v-btn block color="primary" @click="handleConfirm">{{ confirmText }}</v-btn>
-					<v-btn block @click="handleCancel">{{ cancelText }}</v-btn>
+				<div class="d-flex flex-column ga-2 w-100">
+					<v-btn block color="primary" variant="flat" @click="handleConfirm">{{ confirmText }}</v-btn>
+					<v-btn block color="primary" variant="tonal" @click="handleCancel">{{ cancelText }}</v-btn>
 				</div>
 			</v-card-actions>
 		</v-card>
