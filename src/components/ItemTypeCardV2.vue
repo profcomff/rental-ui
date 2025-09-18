@@ -3,7 +3,7 @@ import { ItemType, RentalSession } from '@/models';
 import TextTimer from './TextTimer.vue';
 import { useItemStore, useUserSessions } from '@/store';
 import { computed, ref } from 'vue';
-import ConfirmDialogue from './ConfirmDialogue.vue';
+import ConfirmDialogue from './ConfirmDialog.vue';
 import { RESERVATION_TIME_MS } from '@/constants';
 
 const props = defineProps<{

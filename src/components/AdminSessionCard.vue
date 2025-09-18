@@ -7,7 +7,8 @@ import { storeToRefs } from 'pinia';
 import TextTimer from './TextTimer.vue';
 import { RESERVATION_TIME_MS } from '@/constants';
 import { convertTsToDateTime } from '@/utils';
-import ConfirmDialogue from './ConfirmDialogue.vue';
+import ReasonDialog from './ReasonDialog.vue';
+import ConfirmDialog from './ConfirmDialog.vue';
 
 const props = defineProps<{
 	location: 'requests' | 'active' | 'journal';
@@ -139,7 +140,7 @@ const activeAcceptDialog = ref(false);
 		</template>
 	</v-card>
 
-	<ConfirmDialogue
+	<ConfirmDialog
 		v-model="requestRefuseDialog"
 		title="Причина отказа"
 		:description="`Отказ для сессии N${session.id}`"
@@ -152,7 +153,7 @@ const activeAcceptDialog = ref(false);
 		"
 	/>
 
-	<ConfirmDialogue
+	<ConfirmDialog
 		v-model="requestAcceptDialog"
 		title="Выдать предмет"
 		@cancel="requestAcceptDialog = false"
@@ -164,20 +165,20 @@ const activeAcceptDialog = ref(false);
 		"
 	/>
 
-	<ConfirmDialogue
+	<ReasonDialog
 		v-model="activeRefuseDialog"
 		title="Завершить прокат?"
 		:description="`Завершить прокат N${session.id}`"
 		@cancel="activeRefuseDialog = false"
 		@confirm="
-			async () => {
-				await adminStore.returnWithStrikeSession(session.id, '123');
+			async reason => {
+				await adminStore.returnWithStrikeSession(session.id, reason);
 				activeRefuseDialog = false;
 			}
 		"
 	/>
 
-	<ConfirmDialogue
+	<ConfirmDialog
 		v-model="activeAcceptDialog"
 		title="Завершить со страйком?"
 		:description="`Причина страйка для проката N${session.id}`"
