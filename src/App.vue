@@ -6,6 +6,7 @@ const itemStore = useItemStore();
 const profileStore = useProfileStore();
 
 onMounted(async () => {
+	// if (import.meta.env.MODE === 'development') await profileStore.setupAdminSession(null)
 	await profileStore.setupAdminSession(null);
 	await itemStore.requestItemTypes();
 });

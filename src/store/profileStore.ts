@@ -79,6 +79,7 @@ export const useProfileStore = defineStore('profile', () => {
 	}
 
 	const isLogged = computed(() => token.value && token.value !== '');
+	const isAdmin = computed(() => sessionScopes.value?.includes('rental.session.admin'));
 
 	return {
 		user_id,
@@ -92,6 +93,7 @@ export const useProfileStore = defineStore('profile', () => {
 		full_name,
 
 		isLogged,
+		isAdmin,
 
 		fromUrl,
 		setupAdminSession,
