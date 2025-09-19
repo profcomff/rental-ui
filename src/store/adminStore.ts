@@ -1,81 +1,129 @@
 import apiClient from '@/api';
-import { Event, RentalSession, RentalStatus } from '@/models/index';
+import { Event, RentalSession } from '@/models/index';
 import { defineStore } from 'pinia';
-import { ref, Ref, watch } from 'vue';
+import { ref } from 'vue';
 
 export const useAdminStore = defineStore('admin', () => {
-	const allSessions = ref<RentalSession[]>([]);
-	const reservedSessions = ref<RentalSession[]>([]);
-	const canceledSessions = ref<RentalSession[]>([]);
-	const dismissedSessions = ref<RentalSession[]>([]);
-	const activeSessions = ref<RentalSession[]>([]);
-	const overdueSessions = ref<RentalSession[]>([]);
-	const returnedSessions = ref<RentalSession[]>([]);
+	const reservedPageSessions = ref<RentalSession[]>([]);
+	const activePageSessions = ref<RentalSession[]>([]);
+	const finishedPageSessions = ref<RentalSession[]>([]);
+	const cancelledPageSessions = ref<RentalSession[]>([]);
 
 	const allEvents = ref<Event[]>([]);
 
-	const sessionsByStatus: Record<RentalStatus, Ref<RentalSession[]>> = {
-		reserved: reservedSessions,
-		canceled: canceledSessions,
-		dismissed: dismissedSessions,
-		active: activeSessions,
-		overdue: overdueSessions,
-		returned: returnedSessions,
-	};
-
-	watch(allSessions, value => {
-		let type: keyof typeof sessionsByStatus;
-		for (type in sessionsByStatus) {
-			sessionsByStatus[type].value = value.filter(s => s.status == type);
+	async function requestReservedPageSessions() {
+		const { data, error } = await apiClient.GET('/rental/rental-sessions', {
+			params: { query: { is_reserved: true } },
+		});
+		if (error) {
+			console.log('error when getting requested sessions' + error);
+			return;
 		}
-	});
+		reservedPageSessions.value = data;
+	}
 
-	async function requestAllSessions() {
-		const { response, data, error } = await apiClient.GET('/rental/rental-sessions', {
+	async function startSession(session_id: number) {
+		const { data, error } = await apiClient.PATCH('/rental/rental-sessions/{session_id}/start', {
+			params: { path: { session_id } },
+		});
+		if (error) {
+			console.log('error when getting requested sessions' + error);
+			return;
+		}
+		console.log(data);
+	}
+
+	async function dismissSession(session_id: number) {
+		const { data, error } = await apiClient.PATCH('/rental/rental-sessions/{session_id}', {
+			params: { path: { session_id } },
+			body: {
+				status: 'dismissed',
+			},
+		});
+		if (error) {
+			console.log('error when dismissing session, ' + error);
+			return;
+		}
+		console.log(data);
+	}
+
+	async function requestActivePageSessions(user_id?: number) {
+		const { data, error } = await apiClient.GET('/rental/rental-sessions', {
 			params: {
 				query: {
-					is_reserved: true,
-					is_canceled: true,
-					is_dismissed: true,
 					is_active: true,
 					is_overdue: true,
-					is_returned: true,
+					user_id,
 				},
 			},
 		});
-
-		if (!response.ok && error) {
-			console.log('Что-то не так с запросом всех сессий: ', error);
+		if (error) {
+			console.log('error when requesting active page sessions' + error);
 			return;
 		}
-
-		allSessions.value = data ?? [];
-
-		return true;
+		activePageSessions.value = data;
 	}
 
-	async function requestSessions(session_statuses: RentalStatus[]) {
-		const sessionStatusQuery = {
-			is_reserved: session_statuses.includes('reserved') ? true : false,
-			is_canceled: session_statuses.includes('canceled') ? true : false,
-			is_dismissed: session_statuses.includes('dismissed') ? true : false,
-			is_active: session_statuses.includes('active') ? true : false,
-			is_overdue: session_statuses.includes('overdue') ? true : false,
-			is_returned: session_statuses.includes('returned') ? true : false,
-		};
-
-		const { response, data, error } = await apiClient.GET('/rental/rental-sessions', {
-			params: { query: { ...sessionStatusQuery } },
+	async function returnSession(session_id: number) {
+		const { data, error } = await apiClient.PATCH('/rental/rental-sessions/{session_id}/return', {
+			params: { path: { session_id } },
 		});
-
-		if (!response.ok && error) {
-			console.log('Ошибка при запросе сессий со статусами', session_statuses, error);
+		if (error) {
+			console.log('error when confirming return' + error);
 			return;
 		}
+		console.log(data);
+	}
 
-		for (const status in session_statuses) {
-			sessionsByStatus[status as RentalStatus].value = data?.filter(s => s.status == status) ?? [];
+	async function returnWithStrikeSession(session_id: number, strike_reason: string) {
+		const { data, error } = await apiClient.PATCH('/rental/rental-sessions/{session_id}/return', {
+			params: {
+				path: { session_id },
+				query: {
+					with_strike: true,
+					strike_reason,
+				},
+			},
+		});
+		if (error) {
+			console.log('error when trying to confirm return with strike', error);
+			return;
 		}
+		console.log(data);
+	}
+
+	async function requestFinishedPageSessions(user_id?: number) {
+		const { data, error } = await apiClient.GET('/rental/rental-sessions', {
+			params: {
+				query: {
+					is_returned: true,
+					user_id,
+				},
+			},
+		});
+		if (error) {
+			console.log('error when requesting finished sessions', error);
+			return;
+		}
+		finishedPageSessions.value = data;
+	}
+
+	async function requestCancelledPageSessions(user_id?: number) {
+		const { data, error } = await apiClient.GET('/rental/rental-sessions', {
+			params: {
+				query: {
+					is_canceled: true,
+					is_dismissed: true,
+					is_expired: true,
+					user_id,
+				},
+			},
+		});
+		if (error) {
+			console.log('error when requesting cancelled sessions', error);
+			return;
+		}
+		cancelledPageSessions.value = data;
 	}
 
 	async function requestEvents() {
@@ -96,21 +144,31 @@ export const useAdminStore = defineStore('admin', () => {
 			return;
 		}
 		for (const i of data) {
-			const { data: itemData, error: itemError } = await apiClient.PATCH('/rental/item/{id}', {
+			const { error: itemError } = await apiClient.PATCH('/rental/item/{id}', {
 				params: { path: { id: i.id }, query: { is_available: true } },
 			});
 			if (itemError) {
 				console.log('Could not make item' + i.id + 'available');
 			}
-			console.log(data);
 		}
 	}
 
 	return {
-		allSessions,
-		sessionsByStatus,
-		requestAllSessions,
-		requestSessions,
+		reservedPageSessions,
+		requestReservedPageSessions,
+		startSession,
+
+		activePageSessions,
+		requestActivePageSessions,
+		returnSession,
+		returnWithStrikeSession,
+
+		finishedPageSessions,
+		cancelledPageSessions,
+		requestFinishedPageSessions,
+		requestCancelledPageSessions,
+
+		dismissSession,
 
 		allEvents,
 		requestEvents,

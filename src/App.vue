@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { useProfileStore, useItemStore, useTestStore } from './store';
+import { useProfileStore, useItemStore } from './store';
 import { onMounted } from 'vue';
 
 const itemStore = useItemStore();
 const profileStore = useProfileStore();
-const testStore = useTestStore();
 
 onMounted(async () => {
+	// if (import.meta.env.MODE === 'development') await profileStore.setupAdminSession(null)
 	await profileStore.setupAdminSession(null);
 	await itemStore.requestItemTypes();
-	testStore.init();
 });
 </script>
 

@@ -9,17 +9,17 @@ const props = defineProps({
 const emit = defineEmits(['time-ran-out']);
 
 console.log('start time: ' + props.startTime);
+console.log(props.startTime.getTimezoneOffset());
 
 const duration = computed(() => props.duration);
-const endTs = computed(() => props.startTime.getTime() + duration.value);
+const endTs = computed(
+	() => props.startTime.getTime() + duration.value - props.startTime.getTimezoneOffset() * 60 * 1000,
+);
 const nowTs = ref(Date.now());
 const timeToShow = computed(() => {
 	const theTime = endTs.value - nowTs.value;
 	return theTime < 0 ? 0 : theTime;
 });
-
-console.log(new Date(endTs.value));
-console.log(new Date(Date.now()));
 
 function handleClockUpdate() {
 	nowTs.value = Date.now();
@@ -36,5 +36,5 @@ onUnmounted(() => clearInterval(intervalId));
 </script>
 
 <template>
-	<span>{{ (timeToShow / 1000).toFixed(0) }}</span>
+	<span>{{ (timeToShow / 1000).toFixed(0) }} с</span>
 </template>

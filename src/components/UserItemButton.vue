@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue';
 import { ItemType, RentalSession } from '@/models';
 import apiClient from '@/api';
-import { refreshData } from '@/utils';
+// import { refreshData } from '@/utils';
 
 const props = defineProps<{
 	itemType: ItemType;
@@ -32,7 +32,7 @@ async function reserveItem(itemTypeId: number) {
 	}
 
 	showDialog.value = false;
-	await refreshData();
+	// await refreshData();
 	return data;
 }
 
@@ -47,7 +47,7 @@ async function cancelReservation(session_id: number) {
 	}
 
 	showDialog.value = false;
-	await refreshData();
+	// await refreshData();
 	return data;
 }
 

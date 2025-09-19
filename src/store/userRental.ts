@@ -57,7 +57,7 @@ export const useUserSessions = defineStore('user-sessions', () => {
 
 	async function _requestSessions(statuses: RentalStatus[]): Promise<RentalSession[]> {
 		const { data, error } = await apiClient.GET('/rental/rental-sessions/user/me', {
-			params: { query: { ..._createOptions(statuses) } },
+			params: { query: { ..._createOptions(statuses) } as never },
 		});
 		if (error) {
 			console.log('error when requesting user sessions', error);

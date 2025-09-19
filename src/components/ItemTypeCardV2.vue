@@ -3,7 +3,7 @@ import { ItemType, RentalSession } from '@/models';
 import TextTimer from './TextTimer.vue';
 import { useItemStore, useUserSessions } from '@/store';
 import { computed, ref } from 'vue';
-import ConfirmDialogue from './ConfirmDialogue.vue';
+import ConfirmDialogue from './ConfirmDialog.vue';
 import { RESERVATION_TIME_MS } from '@/constants';
 
 const props = defineProps<{
@@ -20,8 +20,6 @@ const state = computed(() => {
 				return 'overdue';
 			case 'reserved':
 				return 'reserved';
-			case 'canceled':
-				return 'cooldown';
 		}
 	}
 
@@ -102,6 +100,7 @@ async function handleDialogConfirm() {
 	switch (state.value) {
 		case 'available':
 			await reserveItem(props.itemType.id);
+			await useUserSessions().requestAvailable();
 			return;
 		case 'reserved':
 			if (!props.session || !props.session.id) {
@@ -109,6 +108,7 @@ async function handleDialogConfirm() {
 				return;
 			}
 			await cancelReservation(props.session.id);
+			await useUserSessions().requestAvailable();
 			return;
 	}
 }
@@ -131,14 +131,11 @@ async function handleDialogConfirm() {
 		></v-img>
 
 		<v-card-subtitle>
-			<div
-				v-if="state === 'reserved' || state === 'cooldown'"
-				class="d-flex justify-space-between align-center mt-2"
-			>
+			<div v-if="state === 'reserved'" class="d-flex justify-space-between align-center mt-2">
 				<p>{{ state === 'reserved' ? 'До окончания' : 'Бронь через' }}:</p>
 				<TextTimer
 					:duration="RESERVATION_TIME_MS"
-					:start-time="new Date(Date.parse(session?.reservation_ts) + 3 * 60 * 60 * 1000)"
+					:start-time="new Date(Date.parse(session?.reservation_ts ?? '0'))"
 				/>
 			</div>
 		</v-card-subtitle>

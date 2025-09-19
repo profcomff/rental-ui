@@ -27,13 +27,13 @@ function handleCancel() {
 
 <template>
 	<v-dialog width="90vw" max-width="300px" v-model="model">
-		<v-card>
-			<v-card-title class="text-center">{{ title }}</v-card-title>
+		<v-card rounded="lg">
+			<v-card-title class="text-center font-weight-bold">{{ title }}</v-card-title>
 			<v-card-subtitle class="text-center">{{ description }}</v-card-subtitle>
 			<v-card-actions>
-				<div class="d-flex flex-column w-100">
-					<v-btn block color="primary" @click="handleConfirm">{{ confirmText }}</v-btn>
-					<v-btn block @click="handleCancel">{{ cancelText }}</v-btn>
+				<div class="d-flex flex-column ga-2 mt-2 w-100">
+					<v-btn block color="primary" variant="flat" @click="handleConfirm">{{ confirmText }}</v-btn>
+					<v-btn block color="primary" varinat="tonal" @click="handleCancel">{{ cancelText }}</v-btn>
 				</div>
 			</v-card-actions>
 		</v-card>
