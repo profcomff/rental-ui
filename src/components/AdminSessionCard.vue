@@ -149,6 +149,8 @@ const activeAcceptDialog = ref(false);
 		@confirm="
 			async () => {
 				await adminStore.dismissSession(session.id);
+				if (location === 'requests') await adminStore.requestReservedPageSessions();
+				if (location === 'active') await adminStore.requestActivePageSessions();
 				requestRefuseDialog = false;
 			}
 		"
@@ -161,6 +163,8 @@ const activeAcceptDialog = ref(false);
 		@confirm="
 			async () => {
 				await adminStore.startSession(session.id);
+				if (location === 'requests') await adminStore.requestReservedPageSessions();
+				if (location === 'active') await adminStore.requestActivePageSessions();
 				requestAcceptDialog = false;
 			}
 		"
@@ -174,6 +178,8 @@ const activeAcceptDialog = ref(false);
 		@confirm="
 			async reason => {
 				await adminStore.returnWithStrikeSession(session.id, reason);
+				if (location === 'requests') await adminStore.requestReservedPageSessions();
+				if (location === 'active') await adminStore.requestActivePageSessions();
 				activeRefuseDialog = false;
 			}
 		"
@@ -187,6 +193,8 @@ const activeAcceptDialog = ref(false);
 		@confirm="
 			async () => {
 				await adminStore.returnSession(session.id);
+				if (location === 'requests') await adminStore.requestReservedPageSessions();
+				if (location === 'active') await adminStore.requestActivePageSessions();
 				activeAcceptDialog = false;
 			}
 		"

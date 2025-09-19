@@ -100,6 +100,7 @@ async function handleDialogConfirm() {
 	switch (state.value) {
 		case 'available':
 			await reserveItem(props.itemType.id);
+			await useUserSessions().requestAvailable();
 			return;
 		case 'reserved':
 			if (!props.session || !props.session.id) {
@@ -107,6 +108,7 @@ async function handleDialogConfirm() {
 				return;
 			}
 			await cancelReservation(props.session.id);
+			await useUserSessions().requestAvailable();
 			return;
 	}
 }
@@ -133,7 +135,7 @@ async function handleDialogConfirm() {
 				<p>{{ state === 'reserved' ? 'До окончания' : 'Бронь через' }}:</p>
 				<TextTimer
 					:duration="RESERVATION_TIME_MS"
-					:start-time="new Date(Date.parse(session?.reservation_ts ?? '0') + 3 * 60 * 60 * 1000)"
+					:start-time="new Date(Date.parse(session?.reservation_ts ?? '0'))"
 				/>
 			</div>
 		</v-card-subtitle>

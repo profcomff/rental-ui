@@ -21,9 +21,6 @@ const timeToShow = computed(() => {
 	return theTime < 0 ? 0 : theTime;
 });
 
-console.log(new Date(endTs.value));
-console.log(new Date(Date.now()));
-
 function handleClockUpdate() {
 	nowTs.value = Date.now();
 	if (timeToShow.value <= 0) {
@@ -39,5 +36,5 @@ onUnmounted(() => clearInterval(intervalId));
 </script>
 
 <template>
-	<span>{{ (timeToShow / 1000).toFixed(0) }}</span>
+	<span>{{ (timeToShow / 1000).toFixed(0) }} с</span>
 </template>
