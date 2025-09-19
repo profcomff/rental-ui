@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useAdminStore, useProfileStore } from '@/store';
+import { useProfileStore } from '@/store';
 import { storeToRefs } from 'pinia';
-import UserTabs from './UserTabs.vue';
-import AdminTabs from './AdminTabs.vue';
 
 const { setupUserSession, setupAdminSession } = useProfileStore();
 const { token } = storeToRefs(useProfileStore());
@@ -25,10 +23,6 @@ async function setupSession() {
 </script>
 
 <template>
-	<h2>Юзерское</h2>
-	<UserTabs current-tab="/debug" />
-	<h2>Админское</h2>
-	<AdminTabs current-tab="/debug" />
 	<h3>Текущая сессия:</h3>
 	<p>{{ currentToken }}</p>
 	<v-form>
@@ -45,9 +39,11 @@ async function setupSession() {
 			density="compact"
 			autocomplete="off"
 		/>
-		<a href="https://app.test.profcomff.com/admin" target="_blank">Посмотреть токен</a>
+		<p>
+			<a href="https://app.test.profcomff.com/admin" target="_blank">Посмотреть токен</a>
+		</p>
 		<v-btn text="Создать сессию" density="compact" @click="setupSession"></v-btn>
-	</v-form>
 
-	<v-btn @click="useAdminStore().makeAllAvailable">ALL ITEMS AVAILABLE</v-btn>
+		<v-btn @click="$router.push('/')" density="compact" color="primary">В приложение</v-btn>
+	</v-form>
 </template>

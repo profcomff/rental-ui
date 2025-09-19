@@ -39,10 +39,6 @@ const routes: RouteRecordRaw[] = [
 		component: () => import('../pages/user/RentJournal.vue'),
 	},
 	{
-		path: '/test',
-		component: () => import('../pages/TestingScreen.vue'),
-	},
-	{
 		path: '/debug',
 		component: () => import('../components/DebugPanel.vue'),
 	},
