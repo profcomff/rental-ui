@@ -32,7 +32,7 @@ function handleCancel() {
 			<v-card-subtitle class="text-center">{{ description }}</v-card-subtitle>
 			<v-card-actions>
 				<div class="d-flex flex-column ga-2 mt-2 w-100">
-					<v-btn block color="primary" variant="flat"  @click="handleConfirm">{{ confirmText }}</v-btn>
+					<v-btn block color="primary" variant="flat" @click="handleConfirm">{{ confirmText }}</v-btn>
 					<v-btn block color="primary" varinat="tonal" @click="handleCancel">{{ cancelText }}</v-btn>
 				</div>
 			</v-card-actions>
