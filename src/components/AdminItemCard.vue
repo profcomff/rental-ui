@@ -21,7 +21,7 @@ async function changeFreeItems() {
 		console.log('error when setting free items, ', error);
 		return;
 	}
-	freeItems.value = data.items_changed;
+	freeItems.value = data.total_available;
 }
 </script>
 
