@@ -3,7 +3,6 @@ import { computed, ref } from 'vue';
 import { ItemType, RentalSession } from '@/models';
 import apiClient from '@/api';
 import { useToastStore } from '@/store';
-// import { refreshData } from '@/utils';
 
 const toastStore = useToastStore();
 
@@ -38,7 +37,7 @@ async function reserveItem(itemTypeId: number) {
 	}
 
 	showDialog.value = false;
-	// await refreshData();
+
 	return data;
 }
 
@@ -56,7 +55,7 @@ async function cancelReservation(session_id: number) {
 	}
 
 	showDialog.value = false;
-	// await refreshData();
+
 	return data;
 }
 

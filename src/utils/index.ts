@@ -27,16 +27,6 @@ export function sessionEnded(session: RentalSession) {
 	return ['canceled', 'dismissed', 'returned', 'overdue'].includes(session.status);
 }
 
-// export async function refreshData() {
-// 	const userSessions = useUserSessions();
-// 	const { requestItemTypes } = useItemStore();
-
-// 	await requestItemTypes();
-// 	await userSessions.requestAvailable();
-// 	await userSessions.requestActive();
-// 	await userSessions.requestJournal();
-// }
-
 export function getCurrentTs() {
 	const date = new Date();
 	return date.toISOString();

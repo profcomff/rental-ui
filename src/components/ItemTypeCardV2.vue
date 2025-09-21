@@ -113,7 +113,7 @@ async function handleDialogConfirm() {
 				return;
 			}
 			await cancelReservation(props.session.id);
-			await useUserSessions().requestAvailable();
+			await useUserSessions().requestActive();
 			return;
 	}
 }
@@ -129,10 +129,11 @@ async function handleDialogConfirm() {
 		</v-card-title>
 
 		<v-img
+			ref="itemImage"
 			:src="useItemStore().constructPictureUrl(itemType.image_url)"
 			cover
+			max-height="168.75px"
 			aspect-ratio="16/9"
-			max-height="193.5px"
 		></v-img>
 
 		<v-card-subtitle>
