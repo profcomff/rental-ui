@@ -28,11 +28,9 @@ export const useProfileStore = defineStore('profile', () => {
 		if (currScopes) {
 			sessionScopes.value = currScopes.split(',');
 		}
+
+		setupAuth(token.value ?? undefined);
 	};
-
-	const setupSession() {
-
-	}
 
 	const TVOI_FF_TEST_TOKEN = import.meta.env.VITE_TVOI_FF_TOKEN;
 

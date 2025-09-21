@@ -6,7 +6,8 @@ const itemStore = useItemStore();
 const profileStore = useProfileStore();
 
 onMounted(async () => {
-	await profileStore.setupDevAdminSession(null);
+	profileStore.fromUrl();
+	// await profileStore.setupDevAdminSession(null); // uncomment if debugging
 	await itemStore.requestItemTypes();
 });
 </script>
