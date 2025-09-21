@@ -2,7 +2,9 @@
 import { computed, ref } from 'vue';
 import { ItemType, RentalSession } from '@/models';
 import apiClient from '@/api';
-// import { refreshData } from '@/utils';
+import { useToastStore } from '@/store';
+
+const toastStore = useToastStore();
 
 const props = defineProps<{
 	itemType: ItemType;
@@ -22,32 +24,38 @@ const defaultButtonState = {
 } as UserItemButtonState;
 
 async function reserveItem(itemTypeId: number) {
-	const { response, data, error } = await apiClient.POST('/rental/rental-sessions/{item_type_id}', {
+	const { data, error } = await apiClient.POST('/rental/rental-sessions/{item_type_id}', {
 		params: { path: { item_type_id: itemTypeId } },
 	});
 
-	if (!response.ok && error) {
-		console.log('Возникла ошибка при попытке забронировать: ', error);
+	if (error) {
+		toastStore.error({
+			title: 'Ошибка при попытке забронировать',
+			description: error.detail,
+		});
 		return null;
 	}
 
 	showDialog.value = false;
-	// await refreshData();
+
 	return data;
 }
 
 async function cancelReservation(session_id: number) {
-	const { response, data, error } = await apiClient.DELETE('/rental/rental-sessions/{session_id}/cancel', {
+	const { data, error } = await apiClient.DELETE('/rental/rental-sessions/{session_id}/cancel', {
 		params: { path: { session_id } },
 	});
 
-	if (!response.ok && error) {
-		console.log('Возникла ошибка при попытке отменить бронь: ' + error);
+	if (error) {
+		toastStore.error({
+			title: 'Возникла ошибка при попытке отменить бронь',
+			description: error.detail,
+		});
 		return;
 	}
 
 	showDialog.value = false;
-	// await refreshData();
+
 	return data;
 }
 
@@ -104,7 +112,10 @@ const buttonState = computed(() => {
 async function processAction(action: ((id: number) => Promise<RentalSession> | null) | undefined) {
 	showDialog.value = true;
 	if (!action) {
-		console.log('У кнопки не назначено действие');
+		toastStore.error({
+			title: 'У кнопки не назначено действие',
+			description: 'Расскажите нам, как вы это сделали :)',
+		});
 		return;
 	}
 

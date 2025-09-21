@@ -2,15 +2,19 @@ import { RentalSession, RentalStatus } from '@/models';
 import { defineStore } from 'pinia';
 import apiClient from '@/api';
 import { ref } from 'vue';
+import { useToastStore } from './toastStore';
+import { useItemStore } from './itemStore';
 
 export const useUserSessions = defineStore('user-sessions', () => {
+	const toastStore = useToastStore();
+	const itemStore = useItemStore();
+
 	const availablePageSessions = ref<RentalSession[]>([]);
 	const activePageSessions = ref<RentalSession[]>([]);
 	const journalPageSessions = ref<RentalSession[]>([]);
 
 	async function requestAvailable() {
 		availablePageSessions.value = await _requestSessions(['active', 'canceled', 'reserved', 'overdue']);
-		console.log(availablePageSessions.value);
 	}
 
 	async function requestActive() {
@@ -26,10 +30,15 @@ export const useUserSessions = defineStore('user-sessions', () => {
 			params: { path: { item_type_id } },
 		});
 		if (error) {
-			console.log('Ошибка при попытке забронировать предмет', error);
+			toastStore.error({
+				title: 'Ошибка при попытке забронировать предмет',
+				description: error.detail,
+			});
 			return;
 		}
-		console.log(data);
+		toastStore.success({
+			title: `Предмет ${itemStore.itemTypes.find(i => i.id === item_type_id)?.name ?? item_type_id} забронирован`,
+		});
 		return data;
 	}
 
@@ -38,10 +47,12 @@ export const useUserSessions = defineStore('user-sessions', () => {
 			params: { path: { session_id } },
 		});
 		if (error) {
-			console.log('Ошибка при попытке отменить сессию', error);
+			toastStore.error({ title: 'Ошибка при попытке отменить сессию', description: error.detail });
 			return;
 		}
-		console.log(data);
+		toastStore.success({
+			title: `Бронь ${session_id} отменена`,
+		});
 		return data;
 	}
 
@@ -60,7 +71,8 @@ export const useUserSessions = defineStore('user-sessions', () => {
 			params: { query: { ..._createOptions(statuses) } as never },
 		});
 		if (error) {
-			console.log('error when requesting user sessions', error);
+			console.log(error);
+			toastStore.error({ title: 'error when requesting user sessions', description: error.detail });
 			return [];
 		}
 		return (data as RentalSession[]).sort((a, b) => Date.parse(b.reservation_ts) - Date.parse(a.reservation_ts));

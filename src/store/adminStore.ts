@@ -2,8 +2,11 @@ import apiClient from '@/api';
 import { Event, RentalSession } from '@/models/index';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { useToastStore } from './toastStore';
 
 export const useAdminStore = defineStore('admin', () => {
+	const toastStore = useToastStore();
+
 	const reservedPageSessions = ref<RentalSession[]>([]);
 	const activePageSessions = ref<RentalSession[]>([]);
 	const finishedPageSessions = ref<RentalSession[]>([]);
@@ -16,7 +19,7 @@ export const useAdminStore = defineStore('admin', () => {
 			params: { query: { is_reserved: true } },
 		});
 		if (error) {
-			console.log('error when getting requested sessions' + error);
+			toastStore.error({ title: 'error when getting requested sessions', description: error.detail });
 			return;
 		}
 		reservedPageSessions.value = data;
@@ -27,10 +30,10 @@ export const useAdminStore = defineStore('admin', () => {
 			params: { path: { session_id } },
 		});
 		if (error) {
-			console.log('error when getting requested sessions' + error);
+			toastStore.error({ title: 'error when getting requested sessions', description: error.detail });
 			return;
 		}
-		console.log(data);
+		toastStore.success({ title: `Сессия ${data.id} начата` });
 	}
 
 	async function dismissSession(session_id: number) {
@@ -41,10 +44,10 @@ export const useAdminStore = defineStore('admin', () => {
 			},
 		});
 		if (error) {
-			console.log('error when dismissing session, ' + error);
+			toastStore.error({ title: 'error when dismissing session, ', description: error.detail });
 			return;
 		}
-		console.log(data);
+		toastStore.warning({ title: `Сессия ${data.id} отменена` });
 	}
 
 	async function requestActivePageSessions(user_id?: number) {
@@ -58,7 +61,10 @@ export const useAdminStore = defineStore('admin', () => {
 			},
 		});
 		if (error) {
-			console.log('error when requesting active page sessions' + error);
+			toastStore.error({
+				title: 'error when requesting active page sessions',
+				description: error.detail,
+			});
 			return;
 		}
 		activePageSessions.value = data;
@@ -69,10 +75,10 @@ export const useAdminStore = defineStore('admin', () => {
 			params: { path: { session_id } },
 		});
 		if (error) {
-			console.log('error when confirming return' + error);
+			toastStore.error({ title: 'error when confirming return', description: error.detail });
 			return;
 		}
-		console.log(data);
+		toastStore.success({ title: `Сессия ${data.id} завершена` });
 	}
 
 	async function returnWithStrikeSession(session_id: number, strike_reason: string) {
@@ -86,10 +92,13 @@ export const useAdminStore = defineStore('admin', () => {
 			},
 		});
 		if (error) {
-			console.log('error when trying to confirm return with strike', error);
+			toastStore.error({
+				title: 'error when trying to confirm return with strike',
+				description: error.detail,
+			});
 			return;
 		}
-		console.log(data);
+		toastStore.success({ title: `Сессия ${data.id} завершена со страйком ${data.strike_id}` });
 	}
 
 	async function requestFinishedPageSessions(user_id?: number) {
@@ -102,7 +111,10 @@ export const useAdminStore = defineStore('admin', () => {
 			},
 		});
 		if (error) {
-			console.log('error when requesting finished sessions', error);
+			toastStore.error({
+				title: 'error when requesting finished sessions',
+				description: error.detail,
+			});
 			return;
 		}
 		finishedPageSessions.value = data;
@@ -120,37 +132,24 @@ export const useAdminStore = defineStore('admin', () => {
 			},
 		});
 		if (error) {
-			console.log('error when requesting cancelled sessions', error);
+			toastStore.error({
+				title: 'error when requesting cancelled sessions',
+				description: error.detail,
+			});
 			return;
 		}
 		cancelledPageSessions.value = data;
 	}
 
 	async function requestEvents() {
-		const { response, data, error } = await apiClient.GET('/rental/event');
+		const { data, error } = await apiClient.GET('/rental/event');
 
-		if (!response.ok && error) {
-			console.log('Ошибка при попытке получить ивенты', error);
+		if (error) {
+			toastStore.error({ title: 'Ошибка при попытке получить ивенты', description: error.detail });
 			return;
 		}
 
 		allEvents.value = data ?? [];
-	}
-
-	async function makeAllAvailable() {
-		const { data, error } = await apiClient.GET('/rental/item');
-		if (error) {
-			console.log('error when getting all items' + error);
-			return;
-		}
-		for (const i of data) {
-			const { error: itemError } = await apiClient.PATCH('/rental/item/{id}', {
-				params: { path: { id: i.id }, query: { is_available: true } },
-			});
-			if (itemError) {
-				console.log('Could not make item' + i.id + 'available');
-			}
-		}
 	}
 
 	return {
@@ -172,7 +171,5 @@ export const useAdminStore = defineStore('admin', () => {
 
 		allEvents,
 		requestEvents,
-
-		makeAllAvailable,
 	};
 });

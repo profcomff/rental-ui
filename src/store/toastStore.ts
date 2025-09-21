@@ -4,7 +4,7 @@ import { ref } from 'vue';
 export type Toast = {
 	id: number;
 	title: string;
-	description?: string;
+	description?: string | { loc: (string | number)[]; msg: string; type: string }[];
 	state: 'success' | 'error' | 'warning';
 	timeout?: number;
 };

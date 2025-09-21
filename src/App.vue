@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ToastQueue from './components/ToastQueue.vue';
 import { useProfileStore, useItemStore } from './store';
 import { onMounted } from 'vue';
 
@@ -6,8 +7,8 @@ const itemStore = useItemStore();
 const profileStore = useProfileStore();
 
 onMounted(async () => {
-	// if (import.meta.env.MODE === 'development') await profileStore.setupAdminSession(null)
-	await profileStore.setupAdminSession(null);
+	profileStore.fromUrl();
+	// await profileStore.setupDevAdminSession(null); // uncomment if debugging
 	await itemStore.requestItemTypes();
 });
 </script>
@@ -20,6 +21,7 @@ onMounted(async () => {
 			<template #fallback> Loading... </template>
 		</Suspense>
 	</main>
+	<ToastQueue />
 </template>
 
 <style scoped>

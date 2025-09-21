@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import apiClient from '@/api';
 import { ItemType } from '@/models';
-import { useItemStore } from '@/store';
+import { useItemStore, useToastStore } from '@/store';
 import { onMounted, ref } from 'vue';
+
+const toastStore = useToastStore();
 
 const props = defineProps<{
 	itemType: ItemType;
@@ -18,7 +20,7 @@ async function changeFreeItems() {
 		params: { path: { id: props.itemType.id }, query: { count: freeItems.value } },
 	});
 	if (error) {
-		console.log('error when setting free items, ', error);
+		toastStore.error({ title: 'error when setting free items, ', description: error.detail });
 		return;
 	}
 	freeItems.value = data.total_available;
