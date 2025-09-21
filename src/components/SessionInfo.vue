@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import apiClient from '@/api';
 import { RentalSession, Strike } from '@/models';
+import { useToastStore } from '@/store';
 import { onMounted, ref } from 'vue';
+
+const toastStore = useToastStore();
 
 const { session } = defineProps<{ session: RentalSession }>();
 
@@ -13,10 +16,14 @@ onMounted(async () => {
 	});
 
 	if (error) {
-		console.log('Ошибка при попытке получить страйки для сессии', error);
+		toastStore.error({
+			title: 'Ошибка при попытке получить страйки для сессии',
+			description: error.detail,
+		});
+		return;
 	}
 
-	strikes.value = data!;
+	strikes.value = data;
 });
 </script>
 

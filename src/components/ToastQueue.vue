@@ -28,7 +28,6 @@ watch(
 		if (newQueue.length > 0 && !visible.value) {
 			visible.value = true;
 		}
-		console.log(toastIcon);
 	},
 	{ deep: true },
 );

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RentalSession } from '@/models';
 import { useItemStore } from '@/store';
-import { computed, onMounted } from 'vue';
+import { computed } from 'vue';
 import StrikeChip from './StrikeChip.vue';
 
 const props = defineProps<{
@@ -10,11 +10,6 @@ const props = defineProps<{
 
 const itemStore = useItemStore();
 const itemType = computed(() => itemStore.itemTypes.find(i => i.id === props.session.item_type_id));
-
-onMounted(() => {
-	console.log(itemStore.itemTypes);
-	console.log(itemType.value?.name);
-});
 </script>
 
 <template>

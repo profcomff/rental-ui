@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { ref, computed, onUnmounted } from 'vue';
 import { RESERVATION_TIME_MS } from '@/constants';
+import { useToastStore } from '@/store';
+
+const toastStore = useToastStore();
 
 const props = defineProps({
 	duration: { type: Number, required: true, default: RESERVATION_TIME_MS },
 	startTime: { type: Date, required: true },
 });
 const emit = defineEmits(['time-ran-out']);
-
-console.log('start time: ' + props.startTime);
-console.log(props.startTime.getTimezoneOffset());
 
 const duration = computed(() => props.duration);
 const endTs = computed(
@@ -25,7 +25,7 @@ function handleClockUpdate() {
 	nowTs.value = Date.now();
 	if (timeToShow.value <= 0) {
 		emit('time-ran-out');
-		console.log('time ran out');
+		toastStore.warning({ title: 'Время брони вышло' });
 		clearInterval(intervalId);
 	}
 }

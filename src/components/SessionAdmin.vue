@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import apiClient from '@/api';
 import { RentalSession } from '@/models';
-import { useProfileStore } from '@/store';
+import { useProfileStore, useToastStore } from '@/store';
 import { ref } from 'vue';
 
 const { session } = defineProps<{ session: RentalSession }>();
 const { user_id } = useProfileStore();
+const toastStore = useToastStore();
 
 const strikeReason = ref('');
 
@@ -20,11 +21,10 @@ async function postStrike() {
 	});
 
 	if (error) {
-		console.log('Ошибка при попытке создать страйк: ', error);
+		toastStore.error({ title: 'Ошибка при попытке создать страйк: ', description: error.detail });
 		return;
 	}
-
-	console.log('Страйк успешно создан: ', data);
+	toastStore.success({ title: 'Страйк создан: ' + data.id });
 }
 </script>
 

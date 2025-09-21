@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ToastQueue from './components/ToastQueue.vue';
 import { useProfileStore, useItemStore } from './store';
 import { onMounted } from 'vue';
 
@@ -20,6 +21,7 @@ onMounted(async () => {
 			<template #fallback> Loading... </template>
 		</Suspense>
 	</main>
+	<ToastQueue />
 </template>
 
 <style scoped>

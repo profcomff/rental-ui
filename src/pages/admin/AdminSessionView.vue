@@ -6,8 +6,10 @@ import { useRoute } from 'vue-router';
 import StrikeChip from '@/components/StrikeChip.vue';
 import { ItemType } from '@/models';
 import { convertTsToDateTime } from '@/utils';
-import { useItemStore } from '@/store';
+import { useItemStore, useToastStore } from '@/store';
 import AdminTabs from '@/components/AdminTabs.vue';
+
+const toastStore = useToastStore();
 
 const session = ref<RentalSession>();
 const itemType = ref<ItemType>();
@@ -21,7 +23,7 @@ onBeforeMount(async () => {
 	});
 
 	if (error) {
-		console.log('Ошибка при попытке запроса сессии:', error);
+		toastStore.error({ title: 'Ошибка при попытке запроса сессии:', description: error.detail });
 		return;
 	}
 	session.value = data;
@@ -30,7 +32,7 @@ onBeforeMount(async () => {
 		params: { path: { id: session.value!.item_type_id } },
 	});
 	if (itemError) {
-		console.log('Ошибка при попытке запроса предмета:', itemError);
+		toastStore.error({ title: 'Ошибка при попытке запроса предмета:', description: itemError.detail });
 		return;
 	}
 
@@ -40,7 +42,7 @@ onBeforeMount(async () => {
 		params: { query: { session_id: data.id } },
 	});
 	if (strikeError) {
-		console.log('Ошибка при попытке запроса страйка', strikeError);
+		toastStore.error({ title: 'Ошибка при попытке запроса страйка', description: strikeError.detail });
 		return;
 	}
 

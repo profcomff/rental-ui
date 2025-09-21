@@ -2,8 +2,11 @@ import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { setupAuth } from '@profcomff/api-uilib';
 import apiClient from '@/api';
+import { useToastStore } from './toastStore';
 
 export const useProfileStore = defineStore('profile', () => {
+	const toastStore = useToastStore();
+
 	const user_id = ref<number | null>(null);
 	const email = ref<string | null>(null);
 	const token = ref<string | null>(null);
@@ -52,33 +55,31 @@ export const useProfileStore = defineStore('profile', () => {
 		];
 		const serviceName = 'rental';
 		const scopes = serviceScopes.map(value => `${serviceName}.${value}`);
-		console.log(scopes);
 
-		const { response, data, error } = await apiClient.POST('/auth/session', {
+		const { data, error } = await apiClient.POST('/auth/session', {
 			body: {
 				scopes,
 				expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
 			},
 		});
 
-		if (!response.ok && error) {
-			console.log(error);
+		if (error) {
+			toastStore.error({ title: 'Ошибка при попытке авторизоваться', description: error.detail });
 			return;
 		}
+		user_id.value = data.id;
+		token.value = data.token || '';
+		sessionScopes.value = data.session_scopes ?? [];
 
-		if (data) {
-			user_id.value = data.id;
-			token.value = data.token || '';
-			sessionScopes.value = data.session_scopes ?? [];
+		setupAuth(data.token || '');
 
-			setupAuth(data.token || '');
-			console.log(data.token);
-		}
+		toastStore.success({ title: 'Админская сессия начата успешно, токен в консоли' });
+		console.log(token);
 	}
 
 	async function setupDevUserSession(tvff_token: string | null) {
 		setupAuth(tvff_token ?? TVOI_FF_TEST_TOKEN);
-		console.log('user logged');
+		toastStore.success({ title: 'Юзерская сессия начата успешно' });
 	}
 
 	const isLogged = computed(() => token.value && token.value !== '');

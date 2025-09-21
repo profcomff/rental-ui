@@ -2,8 +2,10 @@ import apiClient from '@/api';
 import { ItemType, RentalSession } from '@/models/index';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { useToastStore } from './toastStore';
 
 export const useItemStore = defineStore('items', () => {
+	const toastStore = useToastStore();
 	const itemTypes = ref<ItemType[]>([]);
 	const itemTypeLatestSession = ref<{ [n: number]: RentalSession | undefined }>({});
 
@@ -11,7 +13,7 @@ export const useItemStore = defineStore('items', () => {
 		const { data, error } = await apiClient.GET('/rental/itemtype');
 
 		if (error) {
-			console.log('trying to get item types', error);
+			toastStore.error({ title: 'trying to get item types', description: error });
 			return;
 		}
 
@@ -28,7 +30,8 @@ export const useItemStore = defineStore('items', () => {
 		});
 
 		if (error) {
-			console.log('trying to get item type', typeId, error);
+			toastStore.error({ title: 'trying to get item type' + typeId, description: error.detail });
+			return;
 		}
 
 		if (data) {

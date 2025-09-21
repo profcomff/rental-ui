@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ItemType, RentalSession } from '@/models';
 import TextTimer from './TextTimer.vue';
-import { useItemStore, useUserSessions } from '@/store';
+import { useItemStore, useToastStore, useUserSessions } from '@/store';
 import { computed, ref } from 'vue';
 import ConfirmDialogue from './ConfirmDialog.vue';
 import { RESERVATION_TIME_MS } from '@/constants';
+
+const toastStore = useToastStore();
 
 const props = defineProps<{
 	itemType: ItemType;
@@ -84,7 +86,10 @@ async function handleButtonClick() {
 			return;
 		case 'active':
 		case 'overdue':
-			console.log('Тут будет конец аренды');
+			toastStore.warning({
+				title: 'Для завершения сессии обратитесь в 2-39',
+				description: `Назовите админку код сессии ${props.session?.id}`,
+			});
 			return;
 		case 'reserved':
 			dialogTitle.value = 'Отменить бронь?';
@@ -92,7 +97,7 @@ async function handleButtonClick() {
 			dialogActive.value = true;
 			return;
 		default:
-			console.log('Нет доступных действий');
+			toastStore.error({ title: 'Нет доступных действий' });
 	}
 }
 
@@ -104,7 +109,7 @@ async function handleDialogConfirm() {
 			return;
 		case 'reserved':
 			if (!props.session || !props.session.id) {
-				console.log('Ошибка при попытке отменить сессию - нет айди');
+				toastStore.error({ title: 'Ошибка при попытке отменить сессию -- сессия не определена' });
 				return;
 			}
 			await cancelReservation(props.session.id);
