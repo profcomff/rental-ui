@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import { useProfileStore } from '@/store';
 import { storeToRefs } from 'pinia';
 
-const { setupUserSession, setupAdminSession } = useProfileStore();
+const { setupDevUserSession, setupDevAdminSession } = useProfileStore();
 const { token } = storeToRefs(useProfileStore());
 const sessionType = ref<'user' | 'admin'>('user');
 const tvff_token = ref<string>('');
@@ -13,10 +13,10 @@ const currentToken = computed(() => token);
 async function setupSession() {
 	switch (sessionType.value) {
 		case 'user':
-			await setupUserSession(tvff_token.value);
+			await setupDevUserSession(tvff_token.value);
 			break;
 		case 'admin':
-			await setupAdminSession(tvff_token.value);
+			await setupDevAdminSession(tvff_token.value);
 			break;
 	}
 }

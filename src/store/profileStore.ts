@@ -30,9 +30,13 @@ export const useProfileStore = defineStore('profile', () => {
 		}
 	};
 
+	const setupSession() {
+
+	}
+
 	const TVOI_FF_TEST_TOKEN = import.meta.env.VITE_TVOI_FF_TOKEN;
 
-	async function setupAdminSession(tvff_token: string | null) {
+	async function setupDevAdminSession(tvff_token: string | null) {
 		setupAuth(tvff_token ?? TVOI_FF_TEST_TOKEN);
 
 		const serviceScopes = [
@@ -50,6 +54,7 @@ export const useProfileStore = defineStore('profile', () => {
 		];
 		const serviceName = 'rental';
 		const scopes = serviceScopes.map(value => `${serviceName}.${value}`);
+		console.log(scopes);
 
 		const { response, data, error } = await apiClient.POST('/auth/session', {
 			body: {
@@ -73,7 +78,7 @@ export const useProfileStore = defineStore('profile', () => {
 		}
 	}
 
-	async function setupUserSession(tvff_token: string | null) {
+	async function setupDevUserSession(tvff_token: string | null) {
 		setupAuth(tvff_token ?? TVOI_FF_TEST_TOKEN);
 		console.log('user logged');
 	}
@@ -96,7 +101,7 @@ export const useProfileStore = defineStore('profile', () => {
 		isAdmin,
 
 		fromUrl,
-		setupAdminSession,
-		setupUserSession,
+		setupDevAdminSession,
+		setupDevUserSession,
 	};
 });
