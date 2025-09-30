@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-export type Toast = {
+type Toast = {
 	id: number;
 	title: string;
 	description?: string | { loc: (string | number)[]; msg: string; type: string }[];

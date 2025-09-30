@@ -45,5 +45,3 @@ export interface Event {
 	details: object;
 	create_ts: string;
 }
-
-export type ItemTypeStatus = 'available' | 'cooldown' | 'reserved' | 'active' | 'unavailable' | 'overdue';

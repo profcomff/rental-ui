@@ -63,7 +63,7 @@ export const useUserSessions = defineStore('user-sessions', () => {
 		for (const status of statuses) {
 			result[`is_${status}` as keyof _StatusOptions] = true;
 		}
-		console.log(result)
+		console.log(result);
 		return result;
 	}
 
