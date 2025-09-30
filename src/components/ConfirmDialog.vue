@@ -29,7 +29,7 @@ function handleCancel() {
 	<v-dialog width="90vw" max-width="300px" v-model="model">
 		<v-card rounded="lg">
 			<v-card-title class="text-center font-weight-bold">{{ title }}</v-card-title>
-			<v-card-subtitle class="text-center">{{ description }}</v-card-subtitle>
+			<v-card-subtitle class="text-center text-wrap">{{ description }}</v-card-subtitle>
 			<v-card-actions>
 				<div class="d-flex flex-column ga-2 mt-2 w-100">
 					<v-btn block color="primary" variant="flat" @click="handleConfirm">{{ confirmText }}</v-btn>

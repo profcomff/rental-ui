@@ -61,8 +61,9 @@ export const useUserSessions = defineStore('user-sessions', () => {
 	function _createOptions(statuses: RentalStatus[]): _StatusOptions {
 		const result = {} as _StatusOptions;
 		for (const status of statuses) {
-			result[status as keyof _StatusOptions] = true;
+			result[`is_${status}` as keyof _StatusOptions] = true;
 		}
+		console.log(result);
 		return result;
 	}
 

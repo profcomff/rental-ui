@@ -8,7 +8,7 @@ const profileStore = useProfileStore();
 
 onMounted(async () => {
 	profileStore.fromUrl();
-	// await profileStore.setupDevAdminSession(null); // uncomment if debugging
+	if (import.meta.env.MODE === 'development') await profileStore.setupDevAdminSession(null); // uncomment if debugging
 	await itemStore.requestItemTypes();
 });
 </script>

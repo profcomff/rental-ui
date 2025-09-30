@@ -23,7 +23,8 @@ export interface ItemType {
 	name: string;
 	image_url?: string | null;
 	description?: string | null;
-	free_items_count?: number | null;
+	available_items_count?: number | null;
+	availability?: boolean | null;
 }
 
 export interface Strike {
@@ -44,5 +45,3 @@ export interface Event {
 	details: object;
 	create_ts: string;
 }
-
-export type ItemTypeStatus = 'available' | 'cooldown' | 'reserved' | 'active' | 'unavailable' | 'overdue';
