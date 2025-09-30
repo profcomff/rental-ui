@@ -23,7 +23,8 @@ export interface ItemType {
 	name: string;
 	image_url?: string | null;
 	description?: string | null;
-	free_items_count?: number | null;
+	available_items_count?: number | null;
+	availability?: boolean | null;
 }
 
 export interface Strike {

@@ -116,7 +116,7 @@ const activeAcceptDialog = ref(false);
 				<v-col cols="3">
 					<div>
 						<p>В наличии</p>
-						<p class="font-weight-bold">{{ itemType?.free_items_count ?? 0 }}</p>
+						<p class="font-weight-bold">{{ itemType?.available_items_count ?? 0 }}</p>
 					</div>
 				</v-col>
 			</v-row>
