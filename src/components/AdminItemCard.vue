@@ -12,7 +12,7 @@ const props = defineProps<{
 
 const freeItems = ref(0);
 onMounted(() => {
-	freeItems.value = props.itemType.free_items_count ?? 0;
+	freeItems.value = props.itemType.available_items_count ?? 0;
 });
 
 async function changeFreeItems() {

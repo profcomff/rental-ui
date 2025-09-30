@@ -61,7 +61,7 @@ async function cancelReservation(session_id: number) {
 
 const buttonState = computed(() => {
 	const isEnoughItems = computed(() => {
-		const itemCount = ref(props.itemType.free_items_count);
+		const itemCount = ref(props.itemType.available_items_count);
 		if (!itemCount.value) return false;
 
 		return itemCount.value > 0;

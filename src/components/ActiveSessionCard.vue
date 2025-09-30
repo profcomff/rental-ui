@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ItemType, RentalSession } from '@/models';
+import { RentalSession } from '@/models';
 import TextTimer from './TextTimer.vue';
 import { useItemStore, useToastStore, useUserSessions } from '@/store';
 import { computed, ref } from 'vue';
@@ -9,44 +9,27 @@ import { RESERVATION_TIME_MS } from '@/constants';
 const toastStore = useToastStore();
 
 const props = defineProps<{
-	itemType: ItemType;
-	session: RentalSession | undefined;
+	session: RentalSession;
 }>();
 
-const state = computed(() => {
-	if (props.session) {
-		switch (props.session.status) {
-			case 'active':
-				return 'active';
-			case 'overdue':
-				return 'overdue';
-			case 'reserved':
-				return 'reserved';
-		}
-	}
+const itemType = computed(() => useItemStore().itemTypes.find(i => i.id === props.session.item_type_id));
 
-	const isItemAvailable = computed(() => {
-		return props.itemType.available_items_count && props.itemType.available_items_count > 0;
-	});
-	if (!isItemAvailable.value) return 'unavailable';
-	return 'available';
+const state = computed(() => {
+	switch (props.session.status) {
+		case 'active':
+			return 'active';
+		case 'overdue':
+			return 'overdue';
+		case 'reserved':
+			return 'reserved';
+		default:
+			return 'active';
+	}
 });
 
-const { reserveItem, cancelReservation } = useUserSessions();
+const { cancelReservation } = useUserSessions();
 
 const buttonStates = {
-	available: {
-		text: 'Забронировать',
-		color: 'primary',
-		tooltip: null,
-		disabled: false,
-	},
-	cooldown: {
-		text: 'Забронировать',
-		color: 'disabled',
-		tooltip: 'Вы не забрали предмет, поэтому повторная бронь доступна лишь спустя время',
-		disabled: true,
-	},
 	reserved: {
 		text: 'Отмена брони',
 		color: 'danger',
@@ -58,12 +41,6 @@ const buttonStates = {
 		color: 'danger',
 		tooltip: null,
 		disabled: false,
-	},
-	unavailable: {
-		text: 'Недоступен',
-		color: 'disabled',
-		tooltip: null,
-		disabled: true,
 	},
 	overdue: {
 		text: 'Просрочен',
@@ -79,17 +56,13 @@ const dialogSubitle = ref<string | undefined>();
 
 async function handleButtonClick() {
 	switch (state.value) {
-		case 'available':
-			dialogTitle.value = 'Забронировать?';
-			dialogSubitle.value = 'Забрать вещь нужно будет в течение 15 минут';
-			dialogActive.value = true;
-			return;
 		case 'active':
 		case 'overdue':
 			toastStore.warning({
 				title: 'Для завершения сессии обратитесь в 2-39',
 				description: `Назовите админку код сессии ${props.session?.id}`,
 			});
+			await useUserSessions().requestActive();
 			return;
 		case 'reserved':
 			dialogTitle.value = 'Отменить бронь?';
@@ -103,10 +76,6 @@ async function handleButtonClick() {
 
 async function handleDialogConfirm() {
 	switch (state.value) {
-		case 'available':
-			await reserveItem(props.itemType.id);
-			await useUserSessions().requestAvailable();
-			return;
 		case 'reserved':
 			if (!props.session || !props.session.id) {
 				toastStore.error({ title: 'Ошибка при попытке отменить сессию -- сессия не определена' });
@@ -123,14 +92,14 @@ async function handleDialogConfirm() {
 	<v-card class="my-2 py-1" min-width="min(40vw, 300px)" max-width="344px" rounded="lg" variant="elevated">
 		<v-card-title>
 			<div class="d-flex justify-space-between align-center">
-				<p class="font-weight-bold text-wrap">{{ itemType.name }}</p>
+				<p class="font-weight-bold text-wrap">{{ itemType?.name }}</p>
 				<v-btn icon="mdi-arrow-right" variant="flat" density="compact"></v-btn>
 			</div>
 		</v-card-title>
 
 		<v-img
 			ref="itemImage"
-			:src="useItemStore().constructPictureUrl(itemType.image_url)"
+			:src="useItemStore().constructPictureUrl(itemType?.image_url)"
 			cover
 			max-height="168.75px"
 			aspect-ratio="16/9"
@@ -153,13 +122,6 @@ async function handleDialogConfirm() {
 					v-bind="buttonStates[state]"
 					variant="tonal"
 					@click="handleButtonClick"
-				></v-btn>
-				<v-btn
-					v-if="buttonStates[state].tooltip"
-					:color="buttonStates[state].color"
-					variant="text"
-					density="comfortable"
-					icon="mdi-information-outline"
 				></v-btn>
 			</div>
 		</v-card-actions>

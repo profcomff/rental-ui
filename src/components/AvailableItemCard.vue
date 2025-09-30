@@ -1,38 +1,21 @@
 <script setup lang="ts">
-import { ItemType, RentalSession } from '@/models';
-import TextTimer from './TextTimer.vue';
+import { ItemType } from '@/models';
 import { useItemStore, useToastStore, useUserSessions } from '@/store';
 import { computed, ref } from 'vue';
 import ConfirmDialogue from './ConfirmDialog.vue';
-import { RESERVATION_TIME_MS } from '@/constants';
 
 const toastStore = useToastStore();
 
 const props = defineProps<{
 	itemType: ItemType;
-	session: RentalSession | undefined;
 }>();
 
 const state = computed(() => {
-	if (props.session) {
-		switch (props.session.status) {
-			case 'active':
-				return 'active';
-			case 'overdue':
-				return 'overdue';
-			case 'reserved':
-				return 'reserved';
-		}
-	}
-
-	const isItemAvailable = computed(() => {
-		return props.itemType.available_items_count && props.itemType.available_items_count > 0;
-	});
-	if (!isItemAvailable.value) return 'unavailable';
-	return 'available';
+	if (!props.itemType.available_items_count) return 'unavailable';
+	return props.itemType.available_items_count > 0 ? 'available' : 'unavailable';
 });
 
-const { reserveItem, cancelReservation } = useUserSessions();
+const { reserveItem } = useUserSessions();
 
 const buttonStates = {
 	available: {
@@ -46,18 +29,6 @@ const buttonStates = {
 		color: 'disabled',
 		tooltip: 'Вы не забрали предмет, поэтому повторная бронь доступна лишь спустя время',
 		disabled: true,
-	},
-	reserved: {
-		text: 'Отмена брони',
-		color: 'danger',
-		tooltip: 'Нажмите, чтобы отменить бронь',
-		disabled: false,
-	},
-	active: {
-		text: 'Завершить аренду',
-		color: 'danger',
-		tooltip: null,
-		disabled: false,
 	},
 	unavailable: {
 		text: 'Недоступен',
@@ -84,18 +55,6 @@ async function handleButtonClick() {
 			dialogSubitle.value = 'Забрать вещь нужно будет в течение 15 минут';
 			dialogActive.value = true;
 			return;
-		case 'active':
-		case 'overdue':
-			toastStore.warning({
-				title: 'Для завершения сессии обратитесь в 2-39',
-				description: `Назовите админку код сессии ${props.session?.id}`,
-			});
-			return;
-		case 'reserved':
-			dialogTitle.value = 'Отменить бронь?';
-			dialogSubitle.value = 'Повторно забронировать вы сможете только через 15 минут';
-			dialogActive.value = true;
-			return;
 		default:
 			toastStore.error({ title: 'Нет доступных действий' });
 	}
@@ -106,21 +65,21 @@ async function handleDialogConfirm() {
 		case 'available':
 			await reserveItem(props.itemType.id);
 			await useUserSessions().requestAvailable();
-			return;
-		case 'reserved':
-			if (!props.session || !props.session.id) {
-				toastStore.error({ title: 'Ошибка при попытке отменить сессию -- сессия не определена' });
-				return;
-			}
-			await cancelReservation(props.session.id);
-			await useUserSessions().requestActive();
+			await useItemStore().requestItemTypes();
 			return;
 	}
 }
 </script>
 
 <template>
-	<v-card class="my-2 py-1" min-width="min(40vw, 300px)" max-width="344px" rounded="lg" variant="elevated">
+	<v-card
+		v-if="itemType.availability"
+		class="my-2 py-1"
+		min-width="min(40vw, 300px)"
+		max-width="344px"
+		rounded="lg"
+		variant="elevated"
+	>
 		<v-card-title>
 			<div class="d-flex justify-space-between align-center">
 				<p class="font-weight-bold text-wrap">{{ itemType.name }}</p>
@@ -135,16 +94,6 @@ async function handleDialogConfirm() {
 			max-height="168.75px"
 			aspect-ratio="16/9"
 		></v-img>
-
-		<v-card-subtitle>
-			<div v-if="state === 'reserved'" class="d-flex justify-space-between align-center mt-2">
-				<p>{{ state === 'reserved' ? 'До окончания' : 'Бронь через' }}:</p>
-				<TextTimer
-					:duration="RESERVATION_TIME_MS"
-					:start-time="new Date(Date.parse(session?.reservation_ts ?? '0'))"
-				/>
-			</div>
-		</v-card-subtitle>
 
 		<v-card-actions>
 			<div class="d-flex align-center w-100">
