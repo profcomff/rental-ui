@@ -36,7 +36,7 @@ onBeforeMount(async () => {
 		return;
 	}
 
-	itemType.value = itemData;
+	itemType.value = itemData as ItemType;
 
 	const { data: strikeData, error: strikeError } = await apiClient.GET('/rental/strike', {
 		params: { query: { session_id: data.id } },

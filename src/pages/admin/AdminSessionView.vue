@@ -6,14 +6,39 @@ import { useRoute } from 'vue-router';
 import StrikeChip from '@/components/StrikeChip.vue';
 import { ItemType } from '@/models';
 import { convertTsToDateTime } from '@/utils';
-import { useItemStore, useToastStore } from '@/store';
+import { useAdminStore, useItemStore, useToastStore } from '@/store';
 import AdminTabs from '@/components/AdminTabs.vue';
+import ConfirmDialog from '@/components/ConfirmDialog.vue';
+import ReasonDialog from '@/components/ReasonDialog.vue';
 
 const toastStore = useToastStore();
+const adminStore = useAdminStore();
 
 const session = ref<RentalSession>();
 const itemType = ref<ItemType>();
 const strike = ref<Strike>();
+const hasStrikes = ref(false);
+
+function handleRefuse() {
+	if (session?.value && session.value.status === 'reserved') {
+		reserveRefuseDialog.value = true;
+	} else {
+		activeRefuseDialog.value = true;
+	}
+}
+
+function handleAccept() {
+	if (session?.value && session.value.status === 'reserved') {
+		reserveAcceptDialog.value = true;
+	} else {
+		activeAcceptDialog.value = true;
+	}
+}
+
+const reserveRefuseDialog = ref(false);
+const reserveAcceptDialog = ref(false);
+const activeRefuseDialog = ref(false);
+const activeAcceptDialog = ref(false);
 
 onBeforeMount(async () => {
 	const { params } = useRoute();
@@ -36,7 +61,7 @@ onBeforeMount(async () => {
 		return;
 	}
 
-	itemType.value = itemData;
+	itemType.value = itemData as ItemType;
 
 	const { data: strikeData, error: strikeError } = await apiClient.GET('/rental/strike', {
 		params: { query: { session_id: data.id } },
@@ -47,6 +72,16 @@ onBeforeMount(async () => {
 	}
 
 	strike.value = strikeData[0];
+
+	const { data: userStrikes, error: userError } = await apiClient.GET('/rental/strike/user/{user_id}', {
+		params: { path: { user_id: session.value.user_id } },
+	});
+	if (userError) {
+		toastStore.error({ title: 'Ошибка при попытке запроса страйка', description: userError.detail });
+		return;
+	}
+
+	hasStrikes.value = userStrikes.length > 0;
 });
 </script>
 
@@ -114,9 +149,9 @@ onBeforeMount(async () => {
 					<v-card block>
 						<template #prepend></template>
 
-						<template #title>Иванов Иван Иванович</template>
-						<template #subtitle>ID1234 +7 999 999-99-99</template>
-						<template #item>Страйки: да</template>
+						<template #title>{{ session?.user_fullname ?? 'Неизвестен' }}</template>
+						<template #subtitle>ID1234 {{ session?.user_phone ?? 'Нет телефона' }}</template>
+						<template #item>Страйки: {{ hasStrikes ? 'да' : 'нет' }}</template>
 
 						<template #text>
 							<v-row>
@@ -140,7 +175,100 @@ onBeforeMount(async () => {
 				</v-col>
 			</v-row>
 		</template>
+
+		<template #actions>
+			<div v-if="session?.status === 'reserved'">
+				<v-btn color="primary" text="Выдать" @click="handleAccept"></v-btn>
+				<v-btn color="danger" text="Отказать" @click="handleRefuse"></v-btn>
+			</div>
+			<div v-else-if="session?.status === 'active'">
+				<v-btn color="primary" text="Завершить" @click="handleAccept"></v-btn>
+				<v-btn color="danger" text="Завершить со страйком" @click="handleRefuse"></v-btn>
+			</div>
+			<div v-else-if="session?.status === 'overdue'">
+				<v-btn color="danger" text="Завершить со страйком" @click="handleRefuse"></v-btn>
+			</div>
+		</template>
 	</v-card>
+
+	<ConfirmDialog
+		v-model="reserveRefuseDialog"
+		title="Причина отказа"
+		:description="`Отказ для сессии N${session?.id}`"
+		@cancel="reserveRefuseDialog = false"
+		@confirm="
+			async () => {
+				if (!session || !session.id) {
+					toastStore.error({ title: 'session id is undefined' });
+					reserveRefuseDialog = false;
+					return;
+				}
+				await adminStore.dismissSession(session?.id);
+				if (session?.status === 'reserved') await adminStore.requestReservedPageSessions();
+				if (session?.status === 'active') await adminStore.requestActivePageSessions();
+				reserveRefuseDialog = false;
+			}
+		"
+	/>
+
+	<ConfirmDialog
+		v-model="reserveAcceptDialog"
+		title="Выдать предмет"
+		@cancel="reserveAcceptDialog = false"
+		@confirm="
+			async () => {
+				if (!session || !session.id) {
+					toastStore.error({ title: 'session id is undefined' });
+					reserveAcceptDialog = false;
+					return;
+				}
+				await adminStore.startSession(session?.id);
+				if (session?.status === 'reserved') await adminStore.requestReservedPageSessions();
+				if (session?.status === 'active') await adminStore.requestActivePageSessions();
+				reserveAcceptDialog = false;
+			}
+		"
+	/>
+
+	<ReasonDialog
+		v-model="activeRefuseDialog"
+		title="Завершить прокат со страйком?"
+		:description="`Причина страйка для проката N${session?.id}`"
+		@cancel="activeRefuseDialog = false"
+		@confirm="
+			async (reason: string) => {
+				if (!session || !session.id) {
+					toastStore.error({ title: 'session id is undefined' });
+					activeRefuseDialog = false;
+					return;
+				}
+				await adminStore.returnWithStrikeSession(session?.id, reason);
+				if (session?.status === 'reserved') await adminStore.requestReservedPageSessions();
+				if (session?.status === 'active') await adminStore.requestActivePageSessions();
+				activeRefuseDialog = false;
+			}
+		"
+	/>
+
+	<ConfirmDialog
+		v-model="activeAcceptDialog"
+		title="Завершить аренду?"
+		:description="`Завершить прокат N${session?.id}`"
+		@cancel="activeAcceptDialog = false"
+		@confirm="
+			async () => {
+				if (!session || !session.id) {
+					toastStore.error({ title: 'session id is undefined' });
+					activeAcceptDialog = false;
+					return;
+				}
+				await adminStore.returnSession(session?.id);
+				if (session?.status === 'reserved') await adminStore.requestReservedPageSessions();
+				if (session?.status === 'active') await adminStore.requestActivePageSessions();
+				activeAcceptDialog = false;
+			}
+		"
+	/>
 </template>
 
 <style lang="css" scoped></style>
