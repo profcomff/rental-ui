@@ -40,7 +40,7 @@ function switchMode(tab: 'finished' | 'cancelled') {
 	<AdminTabs current-tab="/admin/journal" />
 	<v-text-field
 		v-model="userId"
-		class="my-2"
+		class="my-2 mx-3"
 		placeholder="Поиск студента (по id)"
 		:prepend-inner-icon="'mdi-magnify'"
 		variant="outlined"

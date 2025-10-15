@@ -78,7 +78,7 @@ const activeAcceptDialog = ref(false);
 			<p class="text-wrap">{{ itemType?.name ?? 'Что-то' }}</p>
 		</template>
 		<template #subtitle>
-			<p class="text-wrap">Пользователь {{ session?.user_fullname ?? session?.user_id ?? 'unknown' }}</p>
+			<p class="text-wrap">{{ session?.user_fullname ?? `user ${session?.user_id ?? 'unkown'}` }}</p>
 		</template>
 		<template #item>N{{ session.id }}</template>
 
@@ -91,7 +91,7 @@ const activeAcceptDialog = ref(false);
 
 		<template #text>
 			<v-row>
-				<v-col>
+				<v-col cols="5">
 					<div>
 						<p>{{ dateTimeText }}</p>
 						<TextTimer
@@ -104,6 +104,9 @@ const activeAcceptDialog = ref(false);
 							:duration="RESERVATION_TIME_MS * 2"
 							:start-time="new Date(Date.parse(session.start_ts ?? '0'))"
 						/>
+						<p v-else-if="session.status === 'overdue'" class="font-weight-bold">
+							{{ convertTsToDateTime(session.deadline_ts) }}
+						</p>
 						<p v-else class="font-weight-bold">{{ convertTsToDateTime(session.end_ts) }}</p>
 					</div>
 				</v-col>
@@ -113,7 +116,7 @@ const activeAcceptDialog = ref(false);
 						<p class="font-weight-bold">{{ !!session.strike_id ? 'Да' : 'Нет' }}</p>
 					</div>
 				</v-col>
-				<v-col cols="3">
+				<v-col cols="4">
 					<div>
 						<p>В наличии</p>
 						<p class="font-weight-bold">{{ itemType?.available_items_count ?? 0 }}</p>
@@ -171,31 +174,31 @@ const activeAcceptDialog = ref(false);
 	/>
 
 	<ReasonDialog
-		v-model="activeAcceptDialog"
-		title="Завершить прокат?"
-		:description="`Завершить прокат N${session.id}`"
-		@cancel="activeAcceptDialog = false"
+		v-model="activeRefuseDialog"
+		title="Завершить прокат со страйком?"
+		:description="`Причина страйка для проката N${session.id}`"
+		@cancel="activeRefuseDialog = false"
 		@confirm="
 			async reason => {
 				await adminStore.returnWithStrikeSession(session.id, reason);
 				if (location === 'requests') await adminStore.requestReservedPageSessions();
 				if (location === 'active') await adminStore.requestActivePageSessions();
-				activeAcceptDialog = false;
+				activeRefuseDialog = false;
 			}
 		"
 	/>
 
 	<ConfirmDialog
-		v-model="activeRefuseDialog"
-		title="Завершить со страйком?"
-		:description="`Причина страйка для проката N${session.id}`"
-		@cancel="activeRefuseDialog = false"
+		v-model="activeAcceptDialog"
+		title="Завершить аренду?"
+		:description="`Завершить прокат N${session.id}`"
+		@cancel="activeAcceptDialog = false"
 		@confirm="
 			async () => {
 				await adminStore.returnSession(session.id);
 				if (location === 'requests') await adminStore.requestReservedPageSessions();
 				if (location === 'active') await adminStore.requestActivePageSessions();
-				activeRefuseDialog = false;
+				activeAcceptDialog = false;
 			}
 		"
 	/>

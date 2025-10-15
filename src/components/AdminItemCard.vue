@@ -37,6 +37,7 @@ async function changeFreeItems() {
 			:src="useItemStore().constructPictureUrl(itemType.image_url)"
 		></v-img>
 		<v-card-actions>
+			<div class="d-flex"></div>
 			<v-number-input
 				v-model="freeItems"
 				control-variant="split"
