@@ -26,7 +26,7 @@ const itemType = computed(() => itemStore.itemTypes.find(i => i.id === props.ses
 		</template>
 		<template #title>{{ itemType?.name }}</template>
 		<template #subtitle>#{{ session.id }}</template>
-		<template #item>{{ new Date(Date.parse(session.reservation_ts)).toLocaleString() }}</template>
+		<template #item>{{ new Date(Date.parse(session.reservation_ts)).toLocaleDateString('ru-RU') }}</template>
 		<template #append>
 			<StrikeChip v-if="!!session.strike_id" text="Страйк" />
 		</template>

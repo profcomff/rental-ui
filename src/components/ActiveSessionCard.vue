@@ -5,6 +5,7 @@ import { useItemStore, useToastStore, useUserSessions } from '@/store';
 import { computed, ref } from 'vue';
 import ConfirmDialogue from './ConfirmDialog.vue';
 import { RESERVATION_TIME_MS } from '@/constants';
+import StrikeChip from './StrikeChip.vue';
 
 const toastStore = useToastStore();
 
@@ -97,13 +98,17 @@ async function handleDialogConfirm() {
 			</div>
 		</v-card-title>
 
-		<v-img
-			ref="itemImage"
-			:src="useItemStore().constructPictureUrl(itemType?.image_url)"
-			cover
-			max-height="168.75px"
-			aspect-ratio="16/9"
-		></v-img>
+		<div>
+			<v-img
+				ref="itemImage"
+				:src="useItemStore().constructPictureUrl(itemType?.image_url)"
+				cover
+				max-height="168.75px"
+				aspect-ratio="16/9"
+			>
+				<StrikeChip class="position-relative" style="top: 3px; left: 3px" text="Просрочено"></StrikeChip>
+			</v-img>
+		</div>
 
 		<v-card-subtitle>
 			<div v-if="state === 'reserved'" class="d-flex justify-space-between align-center mt-2">

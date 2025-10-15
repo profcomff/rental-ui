@@ -6,9 +6,9 @@
 		style="height: 60px; line-height: 20px"
 		rounded="0"
 	>
-		<div class="d-flex pr-4 py-2 mr-4 border-e-md text-green">
+		<div class="d-flex pr-4 py-2 mr-4 border-e-md text-green align-center">
 			<v-icon class="mx-2" :icon="'mdi-emoticon-happy-outline'" size="24"></v-icon>
-			{{ 0 }}
+			<span class="text-body-1">{{ 0 }}</span>
 		</div>
 		<span class="ml-2">Перед бронированием ознакомьтесь с <a>правилами</a></span>
 	</v-card>
