@@ -78,7 +78,7 @@ const activeAcceptDialog = ref(false);
 			<p class="text-wrap">{{ itemType?.name ?? 'Что-то' }}</p>
 		</template>
 		<template #subtitle>
-			<p class="text-wrap">Пользователь {{ session.user_id }}</p>
+			<p class="text-wrap">Пользователь {{ session?.user_fullname ?? session?.user_id ?? 'unknown' }}</p>
 		</template>
 		<template #item>N{{ session.id }}</template>
 
@@ -171,31 +171,31 @@ const activeAcceptDialog = ref(false);
 	/>
 
 	<ReasonDialog
-		v-model="activeRefuseDialog"
+		v-model="activeAcceptDialog"
 		title="Завершить прокат?"
 		:description="`Завершить прокат N${session.id}`"
-		@cancel="activeRefuseDialog = false"
+		@cancel="activeAcceptDialog = false"
 		@confirm="
 			async reason => {
 				await adminStore.returnWithStrikeSession(session.id, reason);
 				if (location === 'requests') await adminStore.requestReservedPageSessions();
 				if (location === 'active') await adminStore.requestActivePageSessions();
-				activeRefuseDialog = false;
+				activeAcceptDialog = false;
 			}
 		"
 	/>
 
 	<ConfirmDialog
-		v-model="activeAcceptDialog"
+		v-model="activeRefuseDialog"
 		title="Завершить со страйком?"
 		:description="`Причина страйка для проката N${session.id}`"
-		@cancel="activeAcceptDialog = false"
+		@cancel="activeRefuseDialog = false"
 		@confirm="
 			async () => {
 				await adminStore.returnSession(session.id);
 				if (location === 'requests') await adminStore.requestReservedPageSessions();
 				if (location === 'active') await adminStore.requestActivePageSessions();
-				activeAcceptDialog = false;
+				activeRefuseDialog = false;
 			}
 		"
 	/>

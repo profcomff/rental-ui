@@ -36,7 +36,7 @@ onBeforeMount(async () => {
 		return;
 	}
 
-	itemType.value = itemData;
+	itemType.value = itemData as ItemType;
 
 	const { data: strikeData, error: strikeError } = await apiClient.GET('/rental/strike', {
 		params: { query: { session_id: data.id } },
@@ -114,8 +114,8 @@ onBeforeMount(async () => {
 					<v-card block>
 						<template #prepend></template>
 
-						<template #title>Иванов Иван Иванович</template>
-						<template #subtitle>ID1234 +7 999 999-99-99</template>
+						<template #title>{{ session?.user_fullname ?? 'Неизвестен' }}</template>
+						<template #subtitle>ID1234 {{ session?.user_phone ?? 'Нет телефона' }}</template>
 						<template #item>Страйки: да</template>
 
 						<template #text>
