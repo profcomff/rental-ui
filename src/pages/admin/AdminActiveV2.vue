@@ -30,5 +30,5 @@ async function handleSearchById() {
 		variant="outlined"
 		@update:model-value="handleSearchById"
 	></v-text-field>
-	<AdminSessionCard v-for="s in activePageSessions" :key="s.id" location="active" :session="s"/>
+	<AdminSessionCard v-for="s in activePageSessions" :key="s.id" location="active" :session="s" />
 </template>
