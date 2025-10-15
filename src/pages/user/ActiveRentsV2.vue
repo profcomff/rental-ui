@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ActiveSessionCard from '@/components/ActiveSessionCard.vue';
+import StatusBar from '@/components/StatusBar.vue';
 import UserTabs from '@/components/UserTabs.vue';
 import { useItemStore, useUserSessions } from '@/store';
 import { storeToRefs } from 'pinia';
@@ -32,6 +33,7 @@ onMounted(async () => {
 
 <template>
 	<UserTabs current-tab="/active" />
+	<StatusBar></StatusBar>
 	<div v-if="activePageSessions.length > 0" class="column-container px-2">
 		<v-col class="d-flex flex-column align-center pa-0">
 			<ActiveSessionCard v-for="s in evenActivePageSessions" :key="s.id" :session="s" />

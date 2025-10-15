@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AvailableItemCard from '@/components/AvailableItemCard.vue';
+import StatusBar from '@/components/StatusBar.vue';
 import UserTabs from '@/components/UserTabs.vue';
 import { useItemStore, useUserSessions } from '@/store';
 import { storeToRefs } from 'pinia';
@@ -21,6 +22,7 @@ onMounted(async () => {
 
 <template>
 	<UserTabs current-tab="/" />
+	<StatusBar></StatusBar>
 	<div class="column-container px-2">
 		<v-col class="d-flex flex-column align-center pa-0">
 			<AvailableItemCard v-for="item in itemTypesEven" :key="item.id" :itemType="item" />
