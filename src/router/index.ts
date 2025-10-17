@@ -39,14 +39,17 @@ const routes: RouteRecordRaw[] = [
 		component: () => import('../pages/user/RentJournal.vue'),
 	},
 	{
-		path: '/debug',
-		component: () => import('../components/DebugPanel.vue'),
-	},
-	{
 		path: '/session/:sessionId',
 		component: () => import('../pages/user/UserSessionView.vue'),
 	},
 ];
+
+if (import.meta.env.MODE === 'development') {
+	routes.push({
+		path: '/debug',
+		component: () => import('../components/DebugPanel.vue'),
+	});
+}
 
 export const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),

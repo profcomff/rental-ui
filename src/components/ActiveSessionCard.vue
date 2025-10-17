@@ -94,7 +94,6 @@ async function handleDialogConfirm() {
 		<v-card-title>
 			<div class="d-flex justify-space-between align-center">
 				<p class="font-weight-bold text-wrap">{{ itemType?.name }}</p>
-				<v-btn icon="mdi-arrow-right" variant="flat" density="compact"></v-btn>
 			</div>
 		</v-card-title>
 
