@@ -13,9 +13,7 @@ const tab = ref(props.currentTab);
 		<v-tab value="/admin/requests">Заявки</v-tab>
 		<v-tab value="/admin/active">Текущие</v-tab>
 		<v-tab value="/admin/journal">Архив</v-tab>
-		<v-tab value="/admin/log">Журнал действий</v-tab>
 		<v-tab value="/admin/items">Айтемы</v-tab>
 		<v-tab value="/">Пользовательская</v-tab>
-		<v-tab v-if="import.meta.env.MODE === 'development'" value="/debug">Залогиниться</v-tab>
 	</v-tabs>
 </template>
