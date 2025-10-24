@@ -62,7 +62,7 @@ const activeAcceptDialog = ref(false);
 </script>
 
 <template>
-	<v-card class="my-2" @click="$router.push(`/admin/session/${session.id}`)">
+	<v-card class="my-2 mx-2" @click="$router.push(`/admin/session/${session.id}`)">
 		<template #prepend>
 			<div>
 				<v-img

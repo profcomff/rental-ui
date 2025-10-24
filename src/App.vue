@@ -28,5 +28,6 @@ onMounted(async () => {
 .main {
 	width: min(900px, 100%);
 	margin: 0 auto;
+	margin-top: 3rem;
 }
 </style>

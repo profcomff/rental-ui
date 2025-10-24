@@ -52,6 +52,10 @@ onBeforeMount(async () => {
 
 <template>
 	<UserTabs current-tab="/log" />
+	<div class="d-flex align-center mb-2" style="margin-top: 64px">
+		<v-btn class="mx-2" icon="mdi-chevron-left" density="compact" variant="flat" @click="$router.back()"></v-btn>
+		<h3>В журнал</h3>
+	</div>
 	<v-card variant="flat">
 		<template #prepend>
 			<div>

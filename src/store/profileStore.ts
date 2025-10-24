@@ -48,6 +48,7 @@ export const useProfileStore = defineStore('profile', () => {
 			'item_type.create',
 			'item_type.delete',
 			'item_type.update',
+			'session.create',
 			'session.admin',
 			'strike.create',
 			'strike.delete',

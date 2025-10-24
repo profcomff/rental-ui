@@ -40,7 +40,7 @@ export const useItemStore = defineStore('items', () => {
 	}
 
 	function constructPictureUrl(url: string | null | undefined) {
-		return url && url.includes('.jpg')
+		return url && ['.jpg', '.png', '.svg', '.webp'].some(ext => url.includes(ext))
 			? url
 			: 'https://pulsephotography.com.au/wp-content/uploads/2017/10/16x9-placeholder.jpg';
 	}

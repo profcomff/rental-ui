@@ -2,7 +2,7 @@
 
 <template>
 	<v-card
-		class="d-flex align-center justify-space-around elevated-1 px-2"
+		class="d-flex align-center justify-space-between elevated-1 px-2"
 		style="height: 60px; line-height: 20px"
 		rounded="0"
 	>
