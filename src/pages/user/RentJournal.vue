@@ -30,7 +30,7 @@ onMounted(async () => {
 <template>
 	<UserTabs current-tab="/log" />
 	<v-tabs
-		class="my-2"
+		style="margin-top: 64px"
 		align-tabs="center"
 		v-model="tab"
 		selected-class="bg-primary"
@@ -43,7 +43,7 @@ onMounted(async () => {
 		v-for="session in selectedItems"
 		:key="session.id"
 		:session="session"
-		class="my-2"
+		class="my-2 mx-2"
 		@click="$router.push(`/session/${session.id}`)"
 	/>
 </template>

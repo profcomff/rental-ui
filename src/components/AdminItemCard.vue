@@ -44,12 +44,11 @@ async function decrementItems() {
 </script>
 
 <template>
-	<v-card class="w-50 ma-2" max-width="350px">
+	<v-card class="ma-2" max-width="350px">
 		<v-card-title class="text-wrap">{{ itemType.name }}</v-card-title>
 		<v-img
 			cover
-			aspect-ratio="16/9"
-			:height="`${(30 * 9) / 16}vw`"
+			max-height="150px"
 			:src="useItemStore().constructPictureUrl(itemType.image_url)"
 		></v-img>
 		<v-card-actions>

@@ -3,6 +3,7 @@ import { router } from '@/router';
 import { useProfileStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import { ref, PropType } from 'vue';
+import StatusBar from './StatusBar.vue';
 
 type Tab = '/' | '/active' | '/log' | '/admin/';
 const props = defineProps({
@@ -20,10 +21,22 @@ async function sameTabClick(location: Tab) {
 </script>
 
 <template>
-	<v-tabs v-model="tab" bg-color="primary" grow @update:model-value="$router.push(tab)">
+	<v-tabs
+		class="position-fixed top-0 left-50"
+		style="z-index: 1000; width: min(100%, 900px)"
+		v-model="tab"
+		bg-color="primary"
+		grow
+		@update:model-value="$router.push(tab)"
+	>
 		<v-tab value="/" @click="sameTabClick('/')">Аренда</v-tab>
 		<v-tab value="/active" @click="sameTabClick('/active')">Текущие</v-tab>
 		<v-tab value="/log" @click="sameTabClick('/log')">Журнал</v-tab>
 		<v-tab v-if="isAdmin" value="/admin/">Админка</v-tab>
 	</v-tabs>
+	<StatusBar
+		v-if="tab === '/'"
+		class="position-fixed"
+		style="z-index: 2000; width: min(100%, 900px); top: 48px"
+	></StatusBar>
 </template>
