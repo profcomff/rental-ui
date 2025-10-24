@@ -44,7 +44,7 @@ async function decrementItems() {
 </script>
 
 <template>
-	<v-card width="45vw" class="ma-2">
+	<v-card class="w-50 ma-2" max-width="350px">
 		<v-card-title class="text-wrap">{{ itemType.name }}</v-card-title>
 		<v-img
 			cover

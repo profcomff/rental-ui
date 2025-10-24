@@ -72,27 +72,14 @@ async function handleDialogConfirm() {
 </script>
 
 <template>
-	<v-card
-		v-if="itemType.availability"
-		class="my-2 py-1"
-		min-width="min(40vw, 300px)"
-		max-width="344px"
-		rounded="lg"
-		variant="elevated"
-	>
+	<v-card v-if="itemType.availability" class="my-3 py-1 w-100" rounded="lg" variant="elevated">
 		<v-card-title>
 			<div class="d-flex justify-space-between align-center">
 				<p class="font-weight-bold text-wrap text-h6">{{ itemType.name }}</p>
 			</div>
 		</v-card-title>
 
-		<v-img
-			ref="itemImage"
-			:src="useItemStore().constructPictureUrl(itemType.image_url)"
-			cover
-			max-height="168.75px"
-			aspect-ratio="16/9"
-		></v-img>
+		<v-img class="w-100" max-width="100%" ref="itemImage" :src="useItemStore().constructPictureUrl(itemType.image_url)" aspect-ratio="1/1"></v-img>
 
 		<v-card-actions>
 			<div class="d-flex align-center w-100">

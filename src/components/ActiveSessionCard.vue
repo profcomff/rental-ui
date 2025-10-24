@@ -90,7 +90,7 @@ async function handleDialogConfirm() {
 </script>
 
 <template>
-	<v-card class="my-2 py-1" min-width="min(40vw, 300px)" max-width="344px" rounded="lg" variant="elevated">
+	<v-card class="my-3 py-1 w-100" rounded="lg" variant="elevated">
 		<v-card-title>
 			<div class="d-flex justify-space-between align-center">
 				<p class="font-weight-bold text-wrap">{{ itemType?.name }}</p>
@@ -98,14 +98,13 @@ async function handleDialogConfirm() {
 		</v-card-title>
 
 		<div>
-			<v-img
-				ref="itemImage"
-				:src="useItemStore().constructPictureUrl(itemType?.image_url)"
-				cover
-				max-height="168.75px"
-				aspect-ratio="16/9"
-			>
-				<StrikeChip class="position-relative" style="top: 3px; left: 3px" text="Просрочено"></StrikeChip>
+			<v-img ref="itemImage" :src="useItemStore().constructPictureUrl(itemType?.image_url)" aspect-ratio="1/1">
+				<StrikeChip
+					v-if="session.status === 'overdue'"
+					class="position-relative"
+					style="top: 3px; left: 3px"
+					text="Просрочено"
+				></StrikeChip>
 			</v-img>
 		</div>
 
