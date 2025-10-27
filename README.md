@@ -28,7 +28,15 @@
 
 Приложение будет доступно на http://localhost:5173.
 
+### Форматирование
 
+1. Открыть файл с расширением `.vue`.
+2. Открыть палитру команд (Help > Show All Commands или `Ctrl+Shift+P`)
+3. Ввести и выбрать `Format document with`.
+4. Выбрать `Configure Default Formatter`.
+5. Выбрать `Prettier`.
+
+Теперь можно форматировать файлы с помощью `Shift+Alt+F`. Еще можно настроить автоформатирование при сохранении файла (`File > Preferences > Settings`, Format on save).
 
 ### Локальная авторизация
 
