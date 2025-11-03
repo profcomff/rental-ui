@@ -7,7 +7,7 @@ import { computed, onMounted } from 'vue';
 
 const itemStore = useItemStore();
 const { itemTypes } = storeToRefs(itemStore);
-const availableItemTypes = computed(() => itemTypes.value.filter(i => i.availability === true));
+const availableItemTypes = computed(() => itemTypes.value);
 const itemTypesEven = computed(() => availableItemTypes.value.filter((_, idx) => idx % 2 === 0));
 const itemTypesOdd = computed(() => availableItemTypes.value.filter((_, idx) => idx % 2 === 1));
 

@@ -10,7 +10,7 @@
 			<v-icon class="mx-2" :icon="'mdi-emoticon-happy-outline'" size="24"></v-icon>
 			<span class="text-body-1">{{ 0 }}</span>
 		</div>
-		<span class="ml-2">Перед бронированием ознакомьтесь с <a>правилами</a></span>
+		<span class="ml-2 flex-grow-1">Перед бронированием ознакомьтесь с <a>правилами</a></span>
 	</v-card>
 </template>
 
