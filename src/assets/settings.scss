@@ -1,6 +1,8 @@
 @use 'sass:map';
 
 @use 'vuetify/settings' with (
+	$card-subtitle-opacity: 1,
+	$card-subtitle-padding: 0,
 	$typography: (
 		'h1': (
 			'size': 1.5rem,

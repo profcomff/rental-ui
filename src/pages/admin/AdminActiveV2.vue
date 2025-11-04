@@ -24,7 +24,8 @@ async function handleSearchById() {
 	<AdminTabs current-tab="/admin/active" />
 	<v-text-field
 		v-model="userId"
-		class="my-2 mx-3"
+		class="mb-2 mx-3"
+		style="margin-top: 58px;"
 		placeholder="Поиск студента (по id)"
 		:prepend-inner-icon="'mdi-magnify'"
 		variant="outlined"

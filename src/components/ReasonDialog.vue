@@ -33,18 +33,17 @@ function handleCancel() {
 </script>
 
 <template>
-	<v-dialog width="90vw" max-width="400px" v-model="model">
-		<v-card rounded="lg">
-			<v-card-title class="text-center font-weight-bold">{{ title }}</v-card-title>
-			<v-card-subtitle class="text-center">{{ description }}</v-card-subtitle>
+	<v-dialog width="90vw" max-width="358px" v-model="model">
+		<v-card class="px-2 py-3" rounded="lg">
+			<v-card-title class="text-center font-weight-bold py-1">{{ title }}</v-card-title>
+			<v-card-subtitle class="text-center py-0">{{ description }}</v-card-subtitle>
 			<v-card-text class="pa-2">
-				<v-chip-group selected-class="bg-primary" column class="text-caption">
-					<v-chip>Сломан</v-chip>
-					<v-chip>Украден</v-chip>
-					<v-chip>Просрочено</v-chip>
+				<v-chip-group selected-class="bg-primary" column class="text-caption" v-model="reason">
+					<v-chip value="Предмет был сломан">Сломаны</v-chip>
+					<v-chip value="Нет свободных предметов">Закончились</v-chip>
 				</v-chip-group>
-				<h4>Комментарий/другое</h4>
-				<v-text-field v-model="reason" hide-details="auto"></v-text-field>
+				<p class="text-body-1 font-weight-bold mb-1 mt-2">Комментарий/другое</p>
+				<v-text-field v-model="reason" hide-details="auto" placeholder="Текст комментария"></v-text-field>
 			</v-card-text>
 			<v-card-actions>
 				<div class="d-flex flex-column ga-2 w-100">
