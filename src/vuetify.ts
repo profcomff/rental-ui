@@ -2,6 +2,7 @@ import '@mdi/font/css/materialdesignicons.css';
 import 'vuetify/styles';
 import { createVuetify } from 'vuetify';
 import { aliases, mdi } from 'vuetify/iconsets/mdi';
+import 'unfonts.css';
 
 const profcomffLight = {
 	dark: false,
@@ -13,10 +14,13 @@ const profcomffLight = {
 		'on-secondary': 'rgb(255, 255, 255)',
 
 		danger: 'rgb(255, 0, 0)',
-		disabled: 'rgb(0, 0, 0)',
+		'on-danger': 'rgb(255, 255, 255)',
+
+		disabled: 'rgba(219, 219, 219, 1)',
+		'on-disabled': 'rgb(0, 255, 255)',
 
 		background: 'rgb(255, 255, 255)',
-		'on-background': 'rgb(0, 0, 0)',
+		'on-background': 'rgb(255, 0, 0)',
 
 		surface: 'rgb(255, 255, 255)',
 		'on-surface': 'rgb(0, 0, 0, 0.87)',

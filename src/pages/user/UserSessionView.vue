@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onBeforeMount } from 'vue';
+import { ref, onBeforeMount, computed } from 'vue';
 import apiClient from '@/api';
 import { RentalSession, Strike } from '@/models';
 import { useRoute } from 'vue-router';
@@ -47,6 +47,29 @@ onBeforeMount(async () => {
 	}
 
 	strike.value = strikeData[0];
+});
+
+const sessionStatus = computed(() => {
+	if (!session.value) return '';
+
+	switch (session.value.status) {
+		case 'reserved':
+			return 'Забронирована';
+		case 'active':
+			return 'Активна';
+		case 'overdue':
+			return 'Просрочена';
+		case 'canceled':
+			return 'Отменена';
+		case 'dismissed':
+			return 'Отменена админом';
+		case 'expired':
+			return 'Истекло бронирование';
+		case 'returned':
+			return !!session.value.strike_id ? 'Завершена со страйком' : 'Завершена';
+		default:
+			return '';
+	}
 });
 </script>
 
@@ -99,7 +122,7 @@ onBeforeMount(async () => {
 				</v-col>
 				<v-col>
 					<p class="font-weight-bold text-body-1">
-						{{ session?.strike_id === null ? 'Завершена' : 'Завершена со страйком' }}
+						{{ sessionStatus }}
 					</p>
 				</v-col>
 			</v-row>
@@ -110,10 +133,10 @@ onBeforeMount(async () => {
 				</v-col>
 				<v-col>
 					<p>Принял</p>
-					<p class="font-weight-bold text-body-1">{{ session?.admin_close_id }}</p>
+					<p class="font-weight-bold text-body-1">{{ session?.admin_close_id ?? '--' }}</p>
 				</v-col>
 			</v-row>
-			<v-row>
+			<v-row v-if="!!strike?.reason">
 				<v-col>
 					<p>Комментарий к сессии</p>
 					<p class="font-weight-bold text-body-1">{{ strike?.reason }}</p>

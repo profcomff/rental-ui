@@ -12,7 +12,7 @@ const props = defineProps<{
 
 const state = computed(() => {
 	if (!props.itemType.available_items_count) return 'unavailable';
-	return props.itemType.available_items_count > 0 ? 'available' : 'unavailable';
+	return props.itemType.availability ? 'available' : 'unavailable';
 });
 
 const { reserveItem } = useUserSessions();
@@ -64,7 +64,6 @@ async function handleDialogConfirm() {
 	switch (state.value) {
 		case 'available':
 			await reserveItem(props.itemType.id);
-			await useUserSessions().requestAvailable();
 			await useItemStore().requestItemTypes();
 			return;
 	}
@@ -72,21 +71,27 @@ async function handleDialogConfirm() {
 </script>
 
 <template>
-	<v-card v-if="itemType.availability" class="my-3 py-1 w-100" rounded="lg" variant="elevated">
+	<v-card class="my-3 py-1 w-100" rounded="lg" variant="elevated">
 		<v-card-title>
 			<div class="d-flex justify-space-between align-center">
 				<p class="font-weight-bold text-wrap text-h6">{{ itemType.name }}</p>
 			</div>
 		</v-card-title>
 
-		<v-img class="w-100" max-width="100%" ref="itemImage" :src="useItemStore().constructPictureUrl(itemType.image_url)" aspect-ratio="1/1"></v-img>
+		<v-img
+			class="w-100"
+			max-width="100%"
+			ref="itemImage"
+			:src="useItemStore().constructPictureUrl(itemType.image_url)"
+			aspect-ratio="1/1"
+		></v-img>
 
 		<v-card-actions>
 			<div class="d-flex align-center w-100">
 				<v-btn
-					class="font-weight-bold flex-grow-1"
+					class="flex-grow-1"
 					v-bind="buttonStates[state]"
-					variant="tonal"
+					:variant="state === 'unavailable' ? 'tonal' : 'tonal'"
 					@click="handleButtonClick"
 				></v-btn>
 				<v-btn

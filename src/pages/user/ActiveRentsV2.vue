@@ -32,7 +32,7 @@ onMounted(async () => {
 
 <template>
 	<UserTabs current-tab="/active" />
-	<div v-if="activePageSessions.length > 0" class="column-container px-2">
+	<div v-if="activePageSessions.length > 0" class="column-container" style="margin-top: 100px">
 		<v-col class="d-flex flex-column align-center pa-0">
 			<ActiveSessionCard v-for="s in evenActivePageSessions" :key="s.id" :session="s" />
 		</v-col>

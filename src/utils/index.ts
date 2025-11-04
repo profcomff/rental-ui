@@ -19,7 +19,7 @@ export function convertTsToDateTime(timestamp: string | null | undefined) {
 		hour12: false,
 		hour: '2-digit',
 		minute: '2-digit',
-	}).format(Date.parse(timestamp));
+	}).format(new Date(timestamp + 'Z'));
 	return dateTime;
 }
 

@@ -35,7 +35,8 @@ async function sameTabClick(location: Tab) {
 		<v-tab v-if="isAdmin" value="/admin/">Админка</v-tab>
 	</v-tabs>
 	<StatusBar
-		v-if="tab !== '/log'"
+		v-if="tab === '/' || tab === '/active'"
+		:location="tab"
 		class="position-fixed"
 		style="z-index: 2000; width: min(100%, 900px); top: 48px"
 	></StatusBar>

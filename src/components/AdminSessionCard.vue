@@ -128,12 +128,12 @@ const activeAcceptDialog = ref(false);
 		<template #actions>
 			<v-row v-if="location !== 'journal'">
 				<v-col class="d-flex justify-center pr-1">
-					<v-btn color="danger font-weight-bold " variant="tonal" block @click.stop="handleRefuseClick">
+					<v-btn color="danger" variant="tonal" block @click.stop="handleRefuseClick">
 						{{ location === 'requests' ? 'Отклонить' : 'Завершить со страйком' }}
 					</v-btn>
 				</v-col>
 				<v-col class="d-flex justify-center pl-1">
-					<v-btn color="primary font-weight-bold" variant="tonal" block @click.stop="handleAcceptClick">
+					<v-btn color="primary" variant="tonal" block @click.stop="handleAcceptClick">
 						{{ location === 'requests' ? 'Принять' : 'Завершить' }}
 					</v-btn>
 				</v-col>

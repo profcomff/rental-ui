@@ -1,0 +1,51 @@
+@use 'sass:map';
+
+@use 'vuetify/settings' with (
+	$typography: (
+		'h1': (
+			'size': 1.5rem,
+			'weight': 700,
+			'line-height': 1.5,
+			'letter-spacing': normal,
+			'text-transform': none,
+		),
+		'h2': (
+			'size': 1.25rem,
+			'weight': 700,
+			'line-height': 1.5,
+			'letter-spacing': normal,
+			'text-transform': none,
+		),
+		'h3': (
+			'size': 1.125rem,
+			'weight': 700,
+			'line-height': 1.5,
+			'letter-spacing': normal,
+			'text-transform': none,
+		),
+		'body-1': (
+			'size': 1rem,
+			'weight': 400,
+			'line-height': 1.25,
+			'letter-spacing': normal,
+			'text-transform': none,
+		),
+		'caption': (
+			'size': 0.75rem,
+			'weight': 400,
+			'line-height': 1.5,
+			'letter-spacing': normal,
+			'text-transform': none,
+		),
+		'button': (
+			'size': 0.75rem,
+			'weight': 700,
+			'line-height': 1.5,
+			'letter-spacing': normal,
+			'text-transform': uppercase,
+		),
+	),
+	$button-colored-disabled: false,
+	$button-disabled-opacity: 1,
+	$button-disabled-overlay: 1
+);
