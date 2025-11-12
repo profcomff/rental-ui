@@ -1,10 +1,10 @@
-
 import { defineConfig } from 'vite';
 import postcssPresetEnv from 'postcss-preset-env';
 import stylelint from 'vite-plugin-stylelint';
 import svgLoader from 'vite-svg-loader';
 import vue from '@vitejs/plugin-vue';
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify';
+import Unfonts from 'unplugin-fonts/vite';
 import { fileURLToPath } from 'url';
 
 export default defineConfig({
@@ -12,7 +12,18 @@ export default defineConfig({
 		vue({
 			template: { transformAssetUrls },
 		}),
-		vuetify({ autoImport: true }),
+		vuetify({ autoImport: true, styles: { configFile: './src/assets/settings.scss' } }),
+		Unfonts({
+			fontsource: {
+				families: [
+					{
+						name: 'Roboto',
+						weights: [100, 300, 400, 500, 700, 900],
+						styles: ['normal', 'italic'],
+					},
+				],
+			},
+		}) as Plugin,
 		svgLoader({
 			svgoConfig: {
 				floatPrecision: 2,

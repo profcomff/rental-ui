@@ -75,10 +75,13 @@ const activeAcceptDialog = ref(false);
 		</template>
 
 		<template #title>
-			<p class="text-wrap">{{ itemType?.name ?? 'Что-то' }}</p>
+			<p class="text-wrap text-body-1">{{ itemType?.name ?? 'Что-то' }}</p>
 		</template>
+
 		<template #subtitle>
-			<p class="text-wrap">{{ session?.user_fullname ?? `user ${session?.user_id ?? 'unkown'}` }}</p>
+			<p class="text-wrap text-h3 font-weight-bold text-black">
+				{{ session?.user_fullname ?? `user ${session?.user_id ?? 'unkown'}` }}
+			</p>
 		</template>
 		<template #item>N{{ session.id }}</template>
 
@@ -93,13 +96,15 @@ const activeAcceptDialog = ref(false);
 			<v-row>
 				<v-col cols="5">
 					<div>
-						<p>{{ dateTimeText }}</p>
+						<p class="text-caption">{{ dateTimeText }}</p>
 						<TextTimer
+							class="text-body-1 font-weight-bold"
 							v-if="session.status === 'reserved'"
 							:duration="RESERVATION_TIME_MS"
-							:start-time="new Date(Date.parse(session.reservation_ts))"
+							:start-time="new Date(session.reservation_ts + 'Z')"
 						/>
 						<TextTimer
+							class="text-body-1 font-weight-bold"
 							v-else-if="session.status === 'active'"
 							:duration="RESERVATION_TIME_MS * 2"
 							:start-time="new Date(Date.parse(session.start_ts ?? '0'))"
@@ -112,14 +117,14 @@ const activeAcceptDialog = ref(false);
 				</v-col>
 				<v-col v-if="location !== 'journal'" cols="3">
 					<div>
-						<p>Страйки</p>
-						<p class="font-weight-bold">{{ !!session.strike_id ? 'Да' : 'Нет' }}</p>
+						<p class="text-caption">Страйки</p>
+						<p class="text-body-1 font-weight-bold">{{ !!session.strike_id ? 'Да' : 'Нет' }}</p>
 					</div>
 				</v-col>
 				<v-col cols="4">
 					<div>
-						<p>В наличии</p>
-						<p class="font-weight-bold">{{ itemType?.available_items_count ?? 0 }}</p>
+						<p class="text-caption">В наличии</p>
+						<p class="text-body-1 font-weight-bold">{{ itemType?.available_items_count ?? 0 }}</p>
 					</div>
 				</v-col>
 			</v-row>
@@ -128,12 +133,12 @@ const activeAcceptDialog = ref(false);
 		<template #actions>
 			<v-row v-if="location !== 'journal'">
 				<v-col class="d-flex justify-center pr-1">
-					<v-btn color="danger font-weight-bold " variant="tonal" block @click.stop="handleRefuseClick">
+					<v-btn color="danger" variant="tonal" block @click.stop="handleRefuseClick">
 						{{ location === 'requests' ? 'Отклонить' : 'Завершить со страйком' }}
 					</v-btn>
 				</v-col>
 				<v-col class="d-flex justify-center pl-1">
-					<v-btn color="primary font-weight-bold" variant="tonal" block @click.stop="handleAcceptClick">
+					<v-btn color="primary" variant="tonal" block @click.stop="handleAcceptClick">
 						{{ location === 'requests' ? 'Принять' : 'Завершить' }}
 					</v-btn>
 				</v-col>
@@ -175,8 +180,10 @@ const activeAcceptDialog = ref(false);
 
 	<ReasonDialog
 		v-model="activeRefuseDialog"
-		title="Завершить прокат со страйком?"
-		:description="`Причина страйка для проката N${session.id}`"
+		title="Причина отказа"
+		:description="`Отказ для сессии N${session.id}`"
+		confirmText="Отказать"
+		cancelText="Отмена"
 		@cancel="activeRefuseDialog = false"
 		@confirm="
 			async reason => {
@@ -204,4 +211,4 @@ const activeAcceptDialog = ref(false);
 	/>
 </template>
 
-<style lang="css" scoped></style>
+<style lang="scss" scoped></style>

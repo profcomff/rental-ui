@@ -106,11 +106,11 @@ onBeforeMount(async () => {
 		</template>
 
 		<template #title>
-			<p class="text-body-2 font-weight-bold">{{ itemType?.name }}</p>
+			<p class="text-body-1">{{ itemType?.name }}</p>
 		</template>
 
 		<template #subtitle>
-			<p class="text-body-1 font-weight-bold text-black opacity-100">N{{ session ? session.id : '-' }}</p>
+			<p class="text-h3 font-weight-bold text-black">N{{ session ? session.id : '-' }}</p>
 		</template>
 
 		<template #item>
@@ -118,17 +118,37 @@ onBeforeMount(async () => {
 		</template>
 
 		<template #text>
-			<v-row>
+			<v-row class="mt-2" v-if="session?.status === 'reserved'">
 				<v-col>
-					<p>Дата и время брони</p>
+					<p class="text-caption">Дата и время брони</p>
 					<p class="font-weight-bold text-body-1">{{ convertTsToDateTime(session?.reservation_ts) }}</p>
 				</v-col>
 				<v-col>
-					<p>Дата и время окончания сессии</p>
+					<p сlass="text-caption">В наличии</p>
+					<p class="font-weight-bold text-body-1">{{ itemType?.available_items_count ?? '--' }}</p>
+				</v-col>
+			</v-row>
+			<v-row class="mt-2" v-else-if="session?.status === 'active'">
+				<v-col>
+					<p class="text-caption">Дата и время начала</p>
+					<p class="font-weight-bold text-body-1">{{ convertTsToDateTime(session?.start_ts) }}</p>
+				</v-col>
+				<v-col>
+					<p class="text-caption">Выдал</p>
+					<p class="font-weight-bold text-body-1">{{ session.admin_open_id }}</p>
+				</v-col>
+			</v-row>
+			<v-row class="mt-2" v-else>
+				<v-col>
+					<p class="text-caption">Дата и время брони</p>
+					<p class="font-weight-bold text-body-1">{{ convertTsToDateTime(session?.reservation_ts) }}</p>
+				</v-col>
+				<v-col>
+					<p class="text-caption">Дата и время окончания сессии</p>
 					<p class="font-weight-bold text-body-1">{{ convertTsToDateTime(session?.end_ts) }}</p>
 				</v-col>
 			</v-row>
-			<v-row>
+			<v-row v-if="session?.status !== 'reserved' && session?.status !== 'active'">
 				<v-col>
 					<p>Статус сессии</p>
 				</v-col>
@@ -138,7 +158,7 @@ onBeforeMount(async () => {
 					</p>
 				</v-col>
 			</v-row>
-			<v-row>
+			<v-row v-if="session?.status !== 'reserved' && session?.status !== 'active'">
 				<v-col>
 					<p>Выдал</p>
 					<p class="font-weight-bold text-body-1">{{ session?.admin_open_id }}</p>
@@ -150,7 +170,7 @@ onBeforeMount(async () => {
 			</v-row>
 			<v-row>
 				<v-col>
-					<v-card block>
+					<v-card block my-0>
 						<template #prepend></template>
 
 						<template #title>{{ session?.user_fullname ?? 'Неизвестен' }}</template>
@@ -172,7 +192,7 @@ onBeforeMount(async () => {
 					</v-card>
 				</v-col>
 			</v-row>
-			<v-row>
+			<v-row v-if="session?.status !== 'reserved' && session?.status !== 'active'">
 				<v-col>
 					<p>Комментарий к сессии</p>
 					<p class="font-weight-bold text-body-1">{{ strike?.reason }}</p>
@@ -181,16 +201,16 @@ onBeforeMount(async () => {
 		</template>
 
 		<template #actions>
-			<div v-if="session?.status === 'reserved'">
-				<v-btn color="primary" text="Выдать" @click="handleAccept"></v-btn>
-				<v-btn color="danger" text="Отказать" @click="handleRefuse"></v-btn>
+			<div class="d-flex flex-column w-100 ga-2 mt-0" v-if="session?.status === 'reserved'">
+				<v-btn block color="primary" text="Выдать" variant="tonal" @click="handleAccept"></v-btn>
+				<v-btn block color="danger" text="Отказать" variant="tonal" @click="handleRefuse"></v-btn>
 			</div>
 			<div v-else-if="session?.status === 'active'">
-				<v-btn color="primary" text="Завершить" @click="handleAccept"></v-btn>
-				<v-btn color="danger" text="Завершить со страйком" @click="handleRefuse"></v-btn>
+				<v-btn color="primary" text="Завершить" variant="tonal" @click="handleAccept"></v-btn>
+				<v-btn color="danger" text="Завершить со страйком" variant="tonal" @click="handleRefuse"></v-btn>
 			</div>
 			<div v-else-if="session?.status === 'overdue'">
-				<v-btn color="danger" text="Завершить со страйком" @click="handleRefuse"></v-btn>
+				<v-btn color="danger" text="Завершить со страйком" variant="tonal" @click="handleRefuse"></v-btn>
 			</div>
 		</template>
 	</v-card>

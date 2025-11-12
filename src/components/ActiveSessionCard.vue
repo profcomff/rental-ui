@@ -15,18 +15,7 @@ const props = defineProps<{
 
 const itemType = computed(() => useItemStore().itemTypes.find(i => i.id === props.session.item_type_id));
 
-const state = computed(() => {
-	switch (props.session.status) {
-		case 'active':
-			return 'active';
-		case 'overdue':
-			return 'overdue';
-		case 'reserved':
-			return 'reserved';
-		default:
-			return 'active';
-	}
-});
+const state = computed(() => props.session.status);
 
 const { cancelReservation } = useUserSessions();
 
@@ -37,19 +26,23 @@ const buttonStates = {
 		tooltip: 'Нажмите, чтобы отменить бронь',
 		disabled: false,
 	},
-	active: {
-		text: 'Завершить аренду',
-		color: 'danger',
-		tooltip: null,
-		disabled: false,
-	},
-	overdue: {
-		text: 'Просрочен',
-		color: 'danger',
-		tooltip: 'Капец',
-		disabled: false,
-	},
 };
+
+const timerText = computed(() => {
+	switch (state.value) {
+		case 'reserved': {
+			return 'До окончания:';
+		}
+		case 'active': {
+			return 'До окончания:';
+		}
+		case 'overdue': {
+			return 'Прошло:';
+		}
+		default:
+			return '';
+	}
+});
 
 const dialogActive = ref(false);
 const dialogTitle = ref('');
@@ -57,14 +50,6 @@ const dialogSubitle = ref<string | undefined>();
 
 async function handleButtonClick() {
 	switch (state.value) {
-		case 'active':
-		case 'overdue':
-			toastStore.warning({
-				title: 'Для завершения сессии обратитесь в 2-39',
-				description: `Назовите админку код сессии ${props.session?.id}`,
-			});
-			await useUserSessions().requestActive();
-			return;
 		case 'reserved':
 			dialogTitle.value = 'Отменить бронь?';
 			dialogSubitle.value = 'Повторно забронировать вы сможете только через 15 минут';
@@ -108,20 +93,36 @@ async function handleDialogConfirm() {
 			</v-img>
 		</div>
 
-		<v-card-subtitle>
-			<div v-if="state === 'reserved'" class="d-flex justify-space-between align-center mt-2">
-				<p>{{ state === 'reserved' ? 'До окончания' : 'Бронь через' }}:</p>
+		<v-card-subtitle :opacity="1">
+			<div
+				v-if="['reserved', 'active', 'overdue'].includes(state)"
+				class="d-flex justify-space-between align-center my-2"
+			>
+				<p class="text-caption">{{ timerText }}</p>
 				<TextTimer
+					class="text-body-1"
+					v-if="state === 'reserved'"
+					:start-time="new Date(session.reservation_ts + 'Z')"
 					:duration="RESERVATION_TIME_MS"
-					:start-time="new Date(Date.parse(session?.reservation_ts ?? '0'))"
+				/>
+				<TextTimer
+					class="text-body-1"
+					v-else-if="state === 'active'"
+					:deadline="new Date(session.deadline_ts + 'Z')"
+				/>
+				<TextTimer
+					class="text-body-1"
+					v-else-if="state === 'overdue'"
+					:start-time="new Date(session.deadline_ts + 'Z')"
+					mode="count-up"
 				/>
 			</div>
 		</v-card-subtitle>
 
-		<v-card-actions>
+		<v-card-actions v-if="state === 'reserved'">
 			<div class="d-flex align-center w-100">
 				<v-btn
-					class="font-weight-bold flex-grow-1"
+					class="flex-grow-1"
 					v-bind="buttonStates[state]"
 					variant="tonal"
 					@click="handleButtonClick"

@@ -4,10 +4,17 @@ import AdminTabs from '@/components/AdminTabs.vue';
 import { useAdminStore } from '@/store';
 import { getCurrentTs } from '@/utils';
 import { storeToRefs } from 'pinia';
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
+
+let intervalId: NodeJS.Timeout | null = null;
 
 onMounted(async () => {
 	await requestReservedPageSessions();
+	intervalId = setInterval(async () => await requestReservedPageSessions(), 5000);
+});
+
+onUnmounted(() => {
+	if (!!intervalId) clearInterval(intervalId);
 });
 
 const adminStore = useAdminStore();

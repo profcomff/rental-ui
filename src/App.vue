@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import ToastQueue from './components/ToastQueue.vue';
-import { useProfileStore, useItemStore } from './store';
+import { useProfileStore } from './store';
 import { onMounted } from 'vue';
 
-const itemStore = useItemStore();
 const profileStore = useProfileStore();
 
 onMounted(async () => {
 	profileStore.fromUrl();
 	if (import.meta.env.MODE === 'development') await profileStore.setupDevAdminSession(null); // uncomment if debugging
-	await itemStore.requestItemTypes();
 });
 </script>
 
@@ -24,10 +22,11 @@ onMounted(async () => {
 	<ToastQueue />
 </template>
 
-<style scoped>
+<style>
 .main {
 	width: min(900px, 100%);
 	margin: 0 auto;
 	margin-top: 3rem;
+	user-select: none;
 }
 </style>

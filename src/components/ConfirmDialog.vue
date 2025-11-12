@@ -9,8 +9,8 @@ withDefaults(
 		cancelText?: string;
 	}>(),
 	{
-		confirmText: 'Подтверить',
-		cancelText: 'Отменить',
+		confirmText: 'Да',
+		cancelText: 'Нет',
 	},
 );
 
@@ -27,13 +27,17 @@ function handleCancel() {
 
 <template>
 	<v-dialog width="90vw" max-width="300px" v-model="model">
-		<v-card rounded="lg">
-			<v-card-title class="text-center font-weight-bold">{{ title }}</v-card-title>
-			<v-card-subtitle class="text-center text-wrap">{{ description }}</v-card-subtitle>
+		<v-card class="px-2 py-3" rounded="lg">
+			<v-card-title class="text-center font-weight-bold mb-2 pb-0">{{ title }}</v-card-title>
+			<v-card-subtitle opacity="1" class="text-center text-wrap">{{ description }}</v-card-subtitle>
 			<v-card-actions>
 				<div class="d-flex flex-column ga-2 mt-2 w-100">
-					<v-btn block color="primary" variant="flat" @click="handleConfirm">{{ confirmText }}</v-btn>
-					<v-btn block color="primary" varinat="tonal" @click="handleCancel">{{ cancelText }}</v-btn>
+					<v-btn height="44" block color="primary" variant="flat" rounded="lg" @click="handleConfirm">{{
+						confirmText
+					}}</v-btn>
+					<v-btn height="44" block color="primary" variant="tonal" rounded="lg" @click="handleCancel">{{
+						cancelText
+					}}</v-btn>
 				</div>
 			</v-card-actions>
 		</v-card>
