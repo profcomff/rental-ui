@@ -25,7 +25,7 @@ async function handleSearchById() {
 	<v-text-field
 		v-model="userId"
 		class="mb-2 mx-3"
-		style="margin-top: 58px;"
+		style="margin-top: 58px"
 		placeholder="Поиск студента (по id)"
 		:prepend-inner-icon="'mdi-magnify'"
 		variant="outlined"

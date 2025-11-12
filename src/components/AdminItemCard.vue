@@ -46,11 +46,7 @@ async function decrementItems() {
 <template>
 	<v-card class="ma-2" max-width="350px">
 		<v-card-title class="text-wrap">{{ itemType.name }}</v-card-title>
-		<v-img
-			cover
-			max-height="150px"
-			:src="useItemStore().constructPictureUrl(itemType.image_url)"
-		></v-img>
+		<v-img cover max-height="150px" :src="useItemStore().constructPictureUrl(itemType.image_url)"></v-img>
 		<v-card-actions>
 			<div class="d-flex justify-center w-100">
 				<v-btn icon="mdi-minus" rounded="sm" @click="decrementItems"></v-btn>
