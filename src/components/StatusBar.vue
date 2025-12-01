@@ -15,7 +15,8 @@ defineProps({
 			<span class="text-body-1">{{ 0 }}</span>
 		</div>
 		<span v-if="location === '/'" class="ml-2 flex-grow-1"
-			>Перед бронированием ознакомьтесь с <a>правилами</a></span
+			>Перед бронированием ознакомьтесь с
+			<a href="https://pages.profcomff.com/rent-rules" target="_blank">правилами</a></span
 		>
 		<span v-if="location === '/active'" class="ml-2 flex-grow-1"
 			>Для начала и завершения аренды подойдите в каб. 2-39</span
