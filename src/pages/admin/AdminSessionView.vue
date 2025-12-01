@@ -40,7 +40,7 @@ const reserveAcceptDialog = ref(false);
 const activeRefuseDialog = ref(false);
 const activeAcceptDialog = ref(false);
 
-onBeforeMount(async () => {
+async function fetchSessionData() {
 	const { params } = useRoute();
 	const session_id = params.sessionId instanceof Array ? Number(params.sessionId[0]) : Number(params.sessionId);
 	const { data, error } = await apiClient.GET('/rental/rental-sessions/{session_id}', {
@@ -80,7 +80,9 @@ onBeforeMount(async () => {
 	}
 
 	hasStrikes.value = userStrikes.length;
-});
+}
+
+onBeforeMount(() => fetchSessionData);
 </script>
 
 <template>
