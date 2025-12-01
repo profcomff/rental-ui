@@ -9,6 +9,7 @@ import { RESERVATION_TIME_MS } from '@/constants';
 import { convertTsToDateTime } from '@/utils';
 import ReasonDialog from './ReasonDialog.vue';
 import ConfirmDialog from './ConfirmDialog.vue';
+import apiClient from '@/api';
 
 const props = defineProps<{
 	location: 'requests' | 'active' | 'journal';
@@ -16,17 +17,27 @@ const props = defineProps<{
 }>();
 
 onMounted(async () => {
-	await itemStore.requestItemTypes();
+	itemStore.requestItemTypes();
+	const { data } = await apiClient.GET('/rental/strike/user/{user_id}', {
+		params: { path: { user_id: props.session.user_id } },
+	});
+	userStrikes.value = (data as unknown[]) ?? [];
 });
 
 onUpdated(async () => {
-	await itemStore.requestItemTypes();
+	itemStore.requestItemTypes();
 });
 
 const itemStore = useItemStore();
 const { itemTypes } = storeToRefs(itemStore);
 const itemType = computed(() => itemTypes.value.find(i => i.id === props.session.item_type_id));
 const adminStore = useAdminStore();
+
+const userStrikes = ref<unknown[]>([]);
+
+const userHasStrikes = computed(() => {
+	return userStrikes.value.length > 0;
+});
 
 const statusToDateTimeText = {
 	reserved: 'До конца брони',
@@ -87,15 +98,17 @@ const activeAcceptDialog = ref(false);
 
 		<template #append>
 			<div>
-				<StrikeChip v-if="session.status === 'overdue'" text="Просроч" />
 				<StrikeChip v-if="!!session.strike_id" text="Страйк" />
 			</div>
 		</template>
 
 		<template #text>
 			<v-row>
+				<v-col v-if="location == 'active' && session.status === 'overdue'">
+					<StrikeChip text="Просрочено" />
+				</v-col>
 				<v-col cols="5">
-					<div>
+					<div class="d-flex flex-column ga-1">
 						<p class="text-caption">{{ dateTimeText }}</p>
 						<TextTimer
 							class="text-body-1 font-weight-bold"
@@ -106,7 +119,7 @@ const activeAcceptDialog = ref(false);
 						<TextTimer
 							class="text-body-1 font-weight-bold"
 							v-else-if="session.status === 'active'"
-							:duration="RESERVATION_TIME_MS * 2"
+							:deadline="new Date(session.deadline_ts + 'Z')"
 							:start-time="new Date(Date.parse(session.start_ts ?? '0'))"
 						/>
 						<p v-else-if="session.status === 'overdue'" class="font-weight-bold">
@@ -115,13 +128,13 @@ const activeAcceptDialog = ref(false);
 						<p v-else class="font-weight-bold">{{ convertTsToDateTime(session.end_ts) }}</p>
 					</div>
 				</v-col>
-				<v-col v-if="location !== 'journal'" cols="3">
-					<div>
+				<v-col v-if="location == 'requests'" cols="3">
+					<div class="d-flex flex-column ga-1">
 						<p class="text-caption">Страйки</p>
-						<p class="text-body-1 font-weight-bold">{{ !!session.strike_id ? 'Да' : 'Нет' }}</p>
+						<p class="text-body-1 font-weight-bold">{{ userHasStrikes ? 'Да' : 'Нет' }}</p>
 					</div>
 				</v-col>
-				<v-col cols="4">
+				<v-col v-if="location == 'requests'" cols="3">
 					<div>
 						<p class="text-caption">В наличии</p>
 						<p class="text-body-1 font-weight-bold">{{ itemType?.available_items_count ?? 0 }}</p>
@@ -184,6 +197,10 @@ const activeAcceptDialog = ref(false);
 		:description="`Отказ для сессии N${session.id}`"
 		confirmText="Отказать"
 		cancelText="Отмена"
+		:reasons="[
+			{ chip: 'Сломаны', value: 'Все предметы сломаны' },
+			{ chip: 'Закончились', value: 'Предметы закончились' },
+		]"
 		@cancel="activeRefuseDialog = false"
 		@confirm="
 			async reason => {

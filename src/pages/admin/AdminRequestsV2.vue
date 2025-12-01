@@ -27,4 +27,5 @@ getCurrentTs();
 <template>
 	<AdminTabs current-tab="/admin/requests" />
 	<AdminSessionCard v-for="s in reservedPageSessions" :key="s.id" :session="s" location="requests" />
+	<p v-if="reservedPageSessions.length === 0" class="py-2">Новых заявок нет</p>
 </template>
