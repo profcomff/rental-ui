@@ -10,7 +10,6 @@ import { useAdminStore, useItemStore, useToastStore } from '@/store';
 import AdminTabs from '@/components/AdminTabs.vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import ReasonDialog from '@/components/ReasonDialog.vue';
-import { router } from '@/router';
 
 const toastStore = useToastStore();
 const adminStore = useAdminStore();
@@ -219,7 +218,6 @@ onBeforeMount(async () => {
 				if (session?.status === 'reserved') await adminStore.requestReservedPageSessions();
 				if (session?.status === 'active') await adminStore.requestActivePageSessions();
 				reserveRefuseDialog = false;
-				router.push('/admin/');
 			}
 		"
 	/>
@@ -239,7 +237,6 @@ onBeforeMount(async () => {
 				if (session?.status === 'reserved') await adminStore.requestReservedPageSessions();
 				if (session?.status === 'active') await adminStore.requestActivePageSessions();
 				reserveAcceptDialog = false;
-				router.push('/admin/');
 			}
 		"
 	/>
@@ -265,7 +262,6 @@ onBeforeMount(async () => {
 				if (session?.status === 'reserved') await adminStore.requestReservedPageSessions();
 				if (session?.status === 'active') await adminStore.requestActivePageSessions();
 				activeRefuseDialog = false;
-				router.push('/admin/active');
 			}
 		"
 	/>
@@ -286,7 +282,6 @@ onBeforeMount(async () => {
 				if (session?.status === 'reserved') await adminStore.requestReservedPageSessions();
 				if (session?.status === 'active') await adminStore.requestActivePageSessions();
 				activeAcceptDialog = false;
-				router.push('/admin/active');
 			}
 		"
 	/>

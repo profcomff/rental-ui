@@ -162,10 +162,14 @@ const activeAcceptDialog = ref(false);
 		</template>
 	</v-card>
 
-	<ConfirmDialog
+	<ReasonDialog
 		v-model="requestRefuseDialog"
 		title="Причина отказа"
 		:description="`Отказ для сессии N${session.id}`"
+		:reasons="[
+			{ chip: 'Сломаны', value: 'Все предметы сломаны' },
+			{ chip: 'Закончились', value: 'Предметы закончились' },
+		]"
 		@cancel="requestRefuseDialog = false"
 		@confirm="
 			async () => {
@@ -193,13 +197,14 @@ const activeAcceptDialog = ref(false);
 
 	<ReasonDialog
 		v-model="activeRefuseDialog"
-		title="Причина отказа"
-		:description="`Отказ для сессии N${session.id}`"
+		:title="`Завершить со страйком?`"
+		:description="`Завершить сессию N${session.id} со страйком`"
 		confirmText="Отказать"
 		cancelText="Отмена"
 		:reasons="[
-			{ chip: 'Сломаны', value: 'Все предметы сломаны' },
-			{ chip: 'Закончились', value: 'Предметы закончились' },
+			{ chip: 'Сломан', value: 'Предмет был поврежден' },
+			{ chip: 'Украден', value: 'Предмет был украден' },
+			{ chip: 'Просрочен', value: 'Просрочено время возврата' },
 		]"
 		@cancel="activeRefuseDialog = false"
 		@confirm="
