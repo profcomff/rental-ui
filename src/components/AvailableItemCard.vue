@@ -52,7 +52,7 @@ async function handleButtonClick() {
 	switch (state.value) {
 		case 'available':
 			dialogTitle.value = 'Забронировать?';
-			dialogSubitle.value = 'Забрать вещь нужно будет в течение 15 минут';
+			dialogSubitle.value = 'Забрать вещь нужно будет в течение 15 минут.';
 			dialogActive.value = true;
 			return;
 		default:
