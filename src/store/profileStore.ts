@@ -73,9 +73,6 @@ export const useProfileStore = defineStore('profile', () => {
 		sessionScopes.value = data.session_scopes ?? [];
 
 		setupAuth(data.token || '');
-
-		toastStore.success({ title: 'Админская сессия начата успешно, токен в консоли' });
-		console.log(token);
 	}
 
 	async function setupDevUserSession(tvff_token: string | null) {
