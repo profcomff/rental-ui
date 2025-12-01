@@ -10,10 +10,6 @@ defineProps({
 		style="height: 60px; line-height: 20px"
 		rounded="0"
 	>
-		<div class="d-flex pr-4 py-2 mr-4 border-e-md text-green align-center">
-			<v-icon class="mx-2" :icon="'mdi-emoticon-happy-outline'" size="24"></v-icon>
-			<span class="text-body-1">{{ 0 }}</span>
-		</div>
 		<span v-if="location === '/'" class="ml-2 flex-grow-1"
 			>Перед бронированием ознакомьтесь с
 			<a href="https://pages.profcomff.com/rent-rules" target="_blank">правилами</a></span
