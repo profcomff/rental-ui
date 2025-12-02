@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import AdminTabs from '@/components/AdminTabs.vue';
-import { useAdminStore } from '@/store';
+import { useAdminStore, useItemStore } from '@/store';
 import { onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import AdminSessionCard from '@/components/AdminSessionCard.vue';
 
 onMounted(async () => {
-	await requestActivePageSessions();
+	requestActivePageSessions();
+	useItemStore().requestItemTypes();
 });
 
 const adminStore = useAdminStore();

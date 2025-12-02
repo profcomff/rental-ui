@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onBeforeMount } from 'vue';
+import { ref, onMounted } from 'vue';
 import apiClient from '@/api';
 import { RentalSession, Strike } from '@/models';
 import { useRoute } from 'vue-router';
@@ -82,7 +82,9 @@ async function fetchSessionData() {
 	hasStrikes.value = userStrikes.length;
 }
 
-onBeforeMount(() => fetchSessionData);
+onMounted(() => {
+	fetchSessionData();
+});
 </script>
 
 <template>
@@ -128,6 +130,7 @@ onBeforeMount(() => fetchSessionData);
 					<p class="font-weight-bold text-body-1">{{ itemType?.available_items_count ?? '--' }}</p>
 				</v-col>
 			</v-row>
+
 			<v-row class="mt-2" v-else-if="session?.status === 'active'">
 				<v-col>
 					<p class="text-caption">Дата и время начала</p>
@@ -138,6 +141,7 @@ onBeforeMount(() => fetchSessionData);
 					<p class="font-weight-bold text-body-1">{{ session.admin_open_id }}</p>
 				</v-col>
 			</v-row>
+
 			<v-row class="mt-2" v-else>
 				<v-col>
 					<p class="text-caption">Дата и время брони</p>
@@ -148,6 +152,7 @@ onBeforeMount(() => fetchSessionData);
 					<p class="font-weight-bold text-body-1">{{ convertTsToDateTime(session?.end_ts) }}</p>
 				</v-col>
 			</v-row>
+
 			<v-row v-if="session?.status !== 'reserved' && session?.status !== 'active'">
 				<v-col>
 					<p>Статус сессии</p>
@@ -158,6 +163,7 @@ onBeforeMount(() => fetchSessionData);
 					</p>
 				</v-col>
 			</v-row>
+
 			<v-row v-if="session?.status !== 'reserved' && session?.status !== 'active'">
 				<v-col>
 					<p>Выдал</p>
@@ -168,6 +174,7 @@ onBeforeMount(() => fetchSessionData);
 					<p class="font-weight-bold text-body-1">{{ session?.admin_close_id }}</p>
 				</v-col>
 			</v-row>
+
 			<v-row>
 				<v-col class="px-0">
 					<v-card class="w-100">
@@ -181,7 +188,8 @@ onBeforeMount(() => fetchSessionData);
 					</v-card>
 				</v-col>
 			</v-row>
-			<v-row v-if="session?.status !== 'reserved' && session?.status !== 'active'">
+
+			<v-row v-if="session?.status !== 'reserved' && session?.status !== 'active' && !!strike?.reason">
 				<v-col>
 					<p>Комментарий к сессии</p>
 					<p class="font-weight-bold text-body-1">{{ strike?.reason }}</p>
@@ -204,10 +212,14 @@ onBeforeMount(() => fetchSessionData);
 		</template>
 	</v-card>
 
-	<ConfirmDialog
+	<ReasonDialog
 		v-model="reserveRefuseDialog"
 		title="Отказать в выдаче"
 		:description="`Отказ для сессии N${session?.id}`"
+		:reasons="[
+			{ chip: 'Сломаны', value: 'Все предметы сломаны' },
+			{ chip: 'Закончились', value: 'Предметы закончились' },
+		]"
 		@cancel="reserveRefuseDialog = false"
 		@confirm="
 			async () => {
@@ -220,6 +232,7 @@ onBeforeMount(() => fetchSessionData);
 				if (session?.status === 'reserved') await adminStore.requestReservedPageSessions();
 				if (session?.status === 'active') await adminStore.requestActivePageSessions();
 				reserveRefuseDialog = false;
+				fetchSessionData();
 			}
 		"
 	/>
@@ -239,6 +252,7 @@ onBeforeMount(() => fetchSessionData);
 				if (session?.status === 'reserved') await adminStore.requestReservedPageSessions();
 				if (session?.status === 'active') await adminStore.requestActivePageSessions();
 				reserveAcceptDialog = false;
+				fetchSessionData();
 			}
 		"
 	/>
@@ -264,6 +278,7 @@ onBeforeMount(() => fetchSessionData);
 				if (session?.status === 'reserved') await adminStore.requestReservedPageSessions();
 				if (session?.status === 'active') await adminStore.requestActivePageSessions();
 				activeRefuseDialog = false;
+				fetchSessionData();
 			}
 		"
 	/>
@@ -284,6 +299,7 @@ onBeforeMount(() => fetchSessionData);
 				if (session?.status === 'reserved') await adminStore.requestReservedPageSessions();
 				if (session?.status === 'active') await adminStore.requestActivePageSessions();
 				activeAcceptDialog = false;
+				fetchSessionData();
 			}
 		"
 	/>

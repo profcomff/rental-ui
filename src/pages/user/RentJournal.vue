@@ -2,7 +2,7 @@
 import UserSessionCard from '@/components/UserSessionCard.vue';
 import UserTabs from '@/components/UserTabs.vue';
 
-import { useUserSessions } from '@/store';
+import { useItemStore, useUserSessions } from '@/store';
 import { storeToRefs } from 'pinia';
 import { computed, onMounted, ref } from 'vue';
 
@@ -22,7 +22,8 @@ function switchMode(value: 'all' | 'strikes') {
 }
 
 onMounted(async () => {
-	await userSession.requestJournal();
+	userSession.requestJournal();
+	useItemStore().requestItemTypes();
 	selectedItems.value = journalPageSessions.value;
 });
 </script>

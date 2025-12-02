@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import AdminSessionCard from '@/components/AdminSessionCard.vue';
 import AdminTabs from '@/components/AdminTabs.vue';
-import { useAdminStore } from '@/store';
+import { useAdminStore, useItemStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import { computed, onBeforeMount, ref } from 'vue';
 
 onBeforeMount(async () => {
 	requestFinishedPageSessions();
 	requestCancelledPageSessions();
+	useItemStore().requestItemTypes();
 });
 
 const adminStore = useAdminStore();
@@ -15,8 +16,8 @@ const { requestFinishedPageSessions, requestCancelledPageSessions } = adminStore
 const { finishedPageSessions, cancelledPageSessions } = storeToRefs(adminStore);
 
 const selectedSessions = computed(() => {
-	if (tab.value === 'finished') return finishedPageSessions;
-	else return cancelledPageSessions;
+	if (tab.value === 'finished') return finishedPageSessions.value;
+	else return cancelledPageSessions.value;
 });
 
 const userId = ref<string>();
@@ -43,5 +44,5 @@ const tab = ref<'finished' | 'cancelled'>('finished');
 		<v-tab variant="elevated" value="finished">Завершенные</v-tab>
 		<v-tab variant="elevated" value="cancelled">Отмененные</v-tab>
 	</v-tabs>
-	<AdminSessionCard v-for="s in selectedSessions" :key="s" :session="s" location="journal" />
+	<AdminSessionCard v-for="s in selectedSessions" :key="s.id" :session="s" location="journal" />
 </template>

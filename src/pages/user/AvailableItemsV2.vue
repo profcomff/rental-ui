@@ -12,7 +12,7 @@ const itemTypesEven = computed(() => availableItemTypes.value.filter((_, idx) =>
 const itemTypesOdd = computed(() => availableItemTypes.value.filter((_, idx) => idx % 2 === 1));
 
 onMounted(async () => {
-	await itemStore.requestItemTypes();
+	itemStore.requestItemTypes();
 });
 </script>
 

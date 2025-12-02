@@ -20,7 +20,7 @@ const itemType = computed(() => itemStore.itemTypes.find(i => i.id === props.ses
 					aspect-ratio="1"
 					cover
 					min-width="100px"
-					:src="useItemStore().constructPictureUrl(itemType?.image_url)"
+					:src="itemStore.constructPictureUrl(itemType?.image_url)"
 				></v-img>
 			</div>
 		</template>

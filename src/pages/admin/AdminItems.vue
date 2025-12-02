@@ -11,7 +11,7 @@ const { itemTypes } = storeToRefs(itemStore);
 <template>
 	<AdminTabs current-tab="/admin/items" />
 	<div class="d-flex flex-wrap justify-center">
-		<AdminItemCard class="w-49" v-for="i in itemTypes" :key="i.id" :item-type="i" />
+		<AdminItemCard class="flex-grow-1 flex-shrink-1" v-for="i in itemTypes" :key="i.id" :item-type="i" />
 	</div>
 </template>
 

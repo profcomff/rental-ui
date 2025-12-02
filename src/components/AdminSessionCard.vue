@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RentalSession } from '@/models';
 import StrikeChip from './StrikeChip.vue';
-import { computed, onMounted, onUpdated, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useAdminStore, useItemStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import TextTimer from './TextTimer.vue';
@@ -17,15 +17,11 @@ const props = defineProps<{
 }>();
 
 onMounted(async () => {
-	itemStore.requestItemTypes();
+	if (props.location === 'journal') return;
 	const { data } = await apiClient.GET('/rental/strike/user/{user_id}', {
 		params: { path: { user_id: props.session.user_id } },
 	});
 	userStrikes.value = (data as unknown[]) ?? [];
-});
-
-onUpdated(async () => {
-	itemStore.requestItemTypes();
 });
 
 const itemStore = useItemStore();
@@ -103,62 +99,52 @@ const activeAcceptDialog = ref(false);
 		</template>
 
 		<template #text>
-			<v-row>
-				<v-col v-if="location == 'active' && session.status === 'overdue'">
+			<div class="d-flex justify-space-between justify-md-start align-center ga-4 align-start">
+				<div v-if="location == 'active' && session.status === 'overdue'">
 					<StrikeChip text="Просрочено" />
-				</v-col>
-				<v-col cols="5">
-					<div class="d-flex flex-column ga-1">
-						<p class="text-caption">{{ dateTimeText }}</p>
-						<TextTimer
-							class="text-body-1 font-weight-bold"
-							v-if="session.status === 'reserved'"
-							:duration="RESERVATION_TIME_MS"
-							:start-time="new Date(session.reservation_ts + 'Z')"
-						/>
-						<TextTimer
-							class="text-body-1 font-weight-bold"
-							v-else-if="session.status === 'active'"
-							:deadline="new Date(session.deadline_ts + 'Z')"
-							:start-time="new Date(Date.parse(session.start_ts ?? '0'))"
-						/>
-						<p v-else-if="session.status === 'overdue'" class="font-weight-bold">
-							{{ convertTsToDateTime(session.deadline_ts) }}
-						</p>
-						<p v-else class="font-weight-bold">{{ convertTsToDateTime(session.end_ts) }}</p>
-					</div>
-				</v-col>
-				<v-col v-if="location == 'requests'" cols="3">
-					<div class="d-flex flex-column ga-1">
-						<p class="text-caption">Страйки</p>
-						<p class="text-body-1 font-weight-bold">{{ userHasStrikes ? 'Да' : 'Нет' }}</p>
-					</div>
-				</v-col>
-				<v-col v-if="location == 'requests'" cols="3">
-					<div>
-						<p class="text-caption">В наличии</p>
-						<p class="text-body-1 font-weight-bold">{{ itemType?.available_items_count ?? 0 }}</p>
-					</div>
-				</v-col>
-			</v-row>
+				</div>
+
+				<div class="d-flex flex-column ga-1">
+					<p class="text-caption">{{ dateTimeText }}</p>
+					<TextTimer
+						v-if="session.status === 'reserved'"
+						class="text-body-1 font-weight-bold"
+						:duration="RESERVATION_TIME_MS"
+						:start-time="new Date(session.reservation_ts + 'Z')"
+					/>
+					<TextTimer
+						v-else-if="session.status === 'active'"
+						class="text-body-1 font-weight-bold"
+						:deadline="new Date(session.deadline_ts + 'Z')"
+						:start-time="new Date(Date.parse(session.start_ts ?? '0'))"
+					/>
+					<p v-else-if="session.status === 'overdue'" class="font-weight-bold">
+						{{ convertTsToDateTime(session.deadline_ts) }}
+					</p>
+					<p v-else class="font-weight-bold">{{ convertTsToDateTime(session.end_ts) }}</p>
+				</div>
+
+				<div v-if="location == 'requests'" class="d-flex flex-column ga-1">
+					<p class="text-caption">Страйки</p>
+					<p class="text-body-1 font-weight-bold">{{ userHasStrikes ? 'Да' : 'Нет' }}</p>
+				</div>
+
+				<div v-if="location == 'requests'" class="d-flex flex-column ga-1">
+					<p class="text-caption">В наличии</p>
+					<p class="text-body-1 font-weight-bold">{{ itemType?.available_items_count ?? 0 }}</p>
+				</div>
+			</div>
 		</template>
 
-		<template #actions>
-			<v-row v-if="location !== 'journal'">
-				<v-col class="d-flex justify-center pr-1">
-					<v-btn color="danger" variant="tonal" block @click.stop="handleRefuseClick">
-						{{ location === 'requests' ? 'Отклонить' : 'Завершить со страйком' }}
-					</v-btn>
-				</v-col>
-				<v-col class="d-flex justify-center pl-1">
-					<v-btn color="primary" variant="tonal" block @click.stop="handleAcceptClick">
-						{{ location === 'requests' ? 'Принять' : 'Завершить' }}
-					</v-btn>
-				</v-col>
-			</v-row>
-			<v-btn v-else block color="primary" variant="tonal" @click="$router.push(`/admin/session/${session.id}`)"
-				>Подробнее</v-btn
-			>
+		<template v-if="location !== 'journal'" #actions>
+			<div class="d-flex ga-2 w-100 w-sm-auto">
+				<v-btn class="flex-grow-1" color="danger" variant="tonal" @click.stop="handleRefuseClick">
+					{{ location === 'requests' ? 'Отклонить' : 'Завершить со страйком' }}
+				</v-btn>
+				<v-btn class="flex-grow-1" color="primary" variant="tonal" @click.stop="handleAcceptClick">
+					{{ location === 'requests' ? 'Принять' : 'Завершить' }}
+				</v-btn>
+			</div>
 		</template>
 	</v-card>
 
