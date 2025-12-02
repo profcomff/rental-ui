@@ -3,9 +3,12 @@ import AdminItemCard from '@/components/AdminItemCard.vue';
 import AdminTabs from '@/components/AdminTabs.vue';
 import { useItemStore } from '@/store';
 import { storeToRefs } from 'pinia';
+import { onMounted } from 'vue';
 
 const itemStore = useItemStore();
 const { itemTypes } = storeToRefs(itemStore);
+
+onMounted(itemStore.requestItemTypes);
 </script>
 
 <template>
