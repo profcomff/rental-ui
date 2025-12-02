@@ -76,7 +76,7 @@ export const useUserSessions = defineStore('user-sessions', () => {
 			toastStore.error({ title: 'error when requesting user sessions', description: error.detail });
 			return [];
 		}
-		return (data as RentalSession[]).sort((a, b) => Date.parse(b.reservation_ts) - Date.parse(a.reservation_ts));
+		return data;
 	}
 
 	return {
