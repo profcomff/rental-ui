@@ -6,24 +6,26 @@ import { useItemStore, useUserSessions } from '@/store';
 import { storeToRefs } from 'pinia';
 import { computed, onMounted, ref } from 'vue';
 
-const tab = ref<'all' | 'strikes'>('all');
+const tab = ref<'all' | 'cancelled'>('all');
 const userSession = useUserSessions();
 const { journalPageSessions } = storeToRefs(userSession);
-const strikedSessions = computed(() => journalPageSessions.value.filter(i => !!i.strike_id));
+const cancelledSesssions = computed(() =>
+	journalPageSessions.value.filter(i => ['canceled', 'dismissed'].includes(i.status)),
+);
 
 const selectedItems = ref(journalPageSessions.value);
 
-function switchMode(value: 'all' | 'strikes') {
+function switchMode(value: 'all' | 'cancelled') {
 	if (value === 'all') {
 		selectedItems.value = journalPageSessions.value;
-	} else if (value === 'strikes') {
-		selectedItems.value = strikedSessions.value;
+	} else if (value === 'cancelled') {
+		selectedItems.value = cancelledSesssions.value;
 	}
 }
 
 onMounted(async () => {
-	userSession.requestJournal();
 	useItemStore().requestItemTypes();
+	await userSession.requestJournal();
 	selectedItems.value = journalPageSessions.value;
 });
 </script>
@@ -38,7 +40,7 @@ onMounted(async () => {
 		@update:model-value="switchMode(tab)"
 	>
 		<v-tab variant="elevated" value="all">Все</v-tab>
-		<v-tab variant="elevated" value="strikes">Страйки</v-tab>
+		<v-tab variant="elevated" value="cancelled">Отмененные</v-tab>
 	</v-tabs>
 	<UserSessionCard
 		v-for="session in selectedItems"
