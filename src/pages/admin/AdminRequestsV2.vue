@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AdminSessionCard from '@/components/AdminSessionCard.vue';
 import AdminTabs from '@/components/AdminTabs.vue';
-import { useAdminStore } from '@/store';
+import { useAdminStore, useItemStore } from '@/store';
 import { getCurrentTs } from '@/utils';
 import { storeToRefs } from 'pinia';
 import { onMounted, onUnmounted } from 'vue';
@@ -9,7 +9,8 @@ import { onMounted, onUnmounted } from 'vue';
 let intervalId: NodeJS.Timeout | null = null;
 
 onMounted(async () => {
-	await requestReservedPageSessions();
+	requestReservedPageSessions();
+	useItemStore().requestItemTypes();
 	intervalId = setInterval(async () => await requestReservedPageSessions(), 5000);
 });
 
@@ -27,4 +28,5 @@ getCurrentTs();
 <template>
 	<AdminTabs current-tab="/admin/requests" />
 	<AdminSessionCard v-for="s in reservedPageSessions" :key="s.id" :session="s" location="requests" />
+	<p v-if="reservedPageSessions.length === 0" class="py-2">Новых заявок нет</p>
 </template>

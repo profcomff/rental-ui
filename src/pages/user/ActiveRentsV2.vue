@@ -6,17 +6,6 @@ import { storeToRefs } from 'pinia';
 import { computed, onMounted } from 'vue';
 
 const itemStore = useItemStore();
-// const { itemTypes, itemTypeLatestSession } = storeToRefs(itemStore);
-// const activeItemTypes = computed(() => {
-// 	return itemTypes.value.filter(item => {
-// 		const latestSession = itemTypeLatestSession.value[item.id];
-// 		if (latestSession) return ['active', 'reserved', 'overdue'].includes(latestSession.status);
-// 		return false;
-// 	});
-// });
-// const itemTypesEven = computed(() => activeItemTypes.value.filter(i => i.id % 2 == 0));
-// const itemTypesOdd = computed(() => activeItemTypes.value.filter(i => i.id % 2 == 1));
-
 const userSessions = useUserSessions();
 const { activePageSessions } = storeToRefs(userSessions);
 
@@ -24,9 +13,8 @@ const evenActivePageSessions = computed(() => activePageSessions.value.filter((_
 const oddActivePageSessions = computed(() => activePageSessions.value.filter((_, idx) => idx % 2 === 1));
 
 onMounted(async () => {
-	await itemStore.requestItemTypes();
-	await userSessions.requestActive();
-	console.log(activePageSessions.value);
+	itemStore.requestItemTypes();
+	userSessions.requestActive();
 });
 </script>
 

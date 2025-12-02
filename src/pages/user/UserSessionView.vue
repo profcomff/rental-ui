@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onBeforeMount, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import apiClient from '@/api';
 import { RentalSession, Strike } from '@/models';
 import { useRoute } from 'vue-router';
@@ -15,7 +15,7 @@ const session = ref<RentalSession>();
 const itemType = ref<ItemType>();
 const strike = ref<Strike>();
 
-onBeforeMount(async () => {
+onMounted(async () => {
 	const { params } = useRoute();
 	const session_id = params.sessionId instanceof Array ? Number(params.sessionId[0]) : Number(params.sessionId);
 	const { data, error } = await apiClient.GET('/rental/rental-sessions/{session_id}', {

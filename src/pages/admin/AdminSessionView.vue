@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onBeforeMount } from 'vue';
+import { ref, onMounted } from 'vue';
 import apiClient from '@/api';
 import { RentalSession, Strike } from '@/models';
 import { useRoute } from 'vue-router';
@@ -17,7 +17,7 @@ const adminStore = useAdminStore();
 const session = ref<RentalSession>();
 const itemType = ref<ItemType>();
 const strike = ref<Strike>();
-const hasStrikes = ref(false);
+const hasStrikes = ref(0);
 
 function handleRefuse() {
 	if (session?.value && session.value.status === 'reserved') {
@@ -40,7 +40,7 @@ const reserveAcceptDialog = ref(false);
 const activeRefuseDialog = ref(false);
 const activeAcceptDialog = ref(false);
 
-onBeforeMount(async () => {
+async function fetchSessionData() {
 	const { params } = useRoute();
 	const session_id = params.sessionId instanceof Array ? Number(params.sessionId[0]) : Number(params.sessionId);
 	const { data, error } = await apiClient.GET('/rental/rental-sessions/{session_id}', {
@@ -58,7 +58,6 @@ onBeforeMount(async () => {
 	});
 	if (itemError) {
 		toastStore.error({ title: 'Ошибка при попытке запроса предмета:', description: itemError.detail });
-		return;
 	}
 
 	itemType.value = itemData as ItemType;
@@ -68,10 +67,9 @@ onBeforeMount(async () => {
 	});
 	if (strikeError) {
 		toastStore.error({ title: 'Ошибка при попытке запроса страйка', description: strikeError.detail });
-		return;
 	}
 
-	strike.value = strikeData[0];
+	strike.value = strikeData?.at(0);
 
 	const { data: userStrikes, error: userError } = await apiClient.GET('/rental/strike/user/{user_id}', {
 		params: { path: { user_id: session.value.user_id } },
@@ -81,7 +79,11 @@ onBeforeMount(async () => {
 		return;
 	}
 
-	hasStrikes.value = userStrikes.length > 0;
+	hasStrikes.value = userStrikes.length;
+}
+
+onMounted(() => {
+	fetchSessionData();
 });
 </script>
 
@@ -128,6 +130,7 @@ onBeforeMount(async () => {
 					<p class="font-weight-bold text-body-1">{{ itemType?.available_items_count ?? '--' }}</p>
 				</v-col>
 			</v-row>
+
 			<v-row class="mt-2" v-else-if="session?.status === 'active'">
 				<v-col>
 					<p class="text-caption">Дата и время начала</p>
@@ -138,6 +141,7 @@ onBeforeMount(async () => {
 					<p class="font-weight-bold text-body-1">{{ session.admin_open_id }}</p>
 				</v-col>
 			</v-row>
+
 			<v-row class="mt-2" v-else>
 				<v-col>
 					<p class="text-caption">Дата и время брони</p>
@@ -148,6 +152,7 @@ onBeforeMount(async () => {
 					<p class="font-weight-bold text-body-1">{{ convertTsToDateTime(session?.end_ts) }}</p>
 				</v-col>
 			</v-row>
+
 			<v-row v-if="session?.status !== 'reserved' && session?.status !== 'active'">
 				<v-col>
 					<p>Статус сессии</p>
@@ -158,6 +163,7 @@ onBeforeMount(async () => {
 					</p>
 				</v-col>
 			</v-row>
+
 			<v-row v-if="session?.status !== 'reserved' && session?.status !== 'active'">
 				<v-col>
 					<p>Выдал</p>
@@ -168,31 +174,22 @@ onBeforeMount(async () => {
 					<p class="font-weight-bold text-body-1">{{ session?.admin_close_id }}</p>
 				</v-col>
 			</v-row>
+
 			<v-row>
-				<v-col>
-					<v-card block my-0>
+				<v-col class="px-0">
+					<v-card class="w-100">
 						<template #prepend></template>
 
 						<template #title>{{ session?.user_fullname ?? 'Неизвестен' }}</template>
-						<template #subtitle>ID1234 {{ session?.user_phone ?? 'Нет телефона' }}</template>
-						<template #item>Страйки: {{ hasStrikes ? 'да' : 'нет' }}</template>
-
-						<template #text>
-							<v-row>
-								<v-col>Запись 1</v-col>
-								<v-col>N1234567</v-col>
-								<v-col></v-col>
-							</v-row>
-							<v-row>
-								<v-col>Запись 2</v-col>
-								<v-col>N1234567</v-col>
-								<v-col><StrikeChip text="страйк" /></v-col>
-							</v-row>
-						</template>
+						<template #subtitle
+							>ID {{ session?.user_id ?? '-' }} | {{ session?.user_phone ?? 'Нет телефона' }}</template
+						>
+						<template #item>Страйки: {{ hasStrikes }}</template>
 					</v-card>
 				</v-col>
 			</v-row>
-			<v-row v-if="session?.status !== 'reserved' && session?.status !== 'active'">
+
+			<v-row v-if="session?.status !== 'reserved' && session?.status !== 'active' && !!strike?.reason">
 				<v-col>
 					<p>Комментарий к сессии</p>
 					<p class="font-weight-bold text-body-1">{{ strike?.reason }}</p>
@@ -201,11 +198,11 @@ onBeforeMount(async () => {
 		</template>
 
 		<template #actions>
-			<div class="d-flex flex-column w-100 ga-2 mt-0" v-if="session?.status === 'reserved'">
+			<div v-if="session?.status === 'reserved'" class="d-flex flex-column w-100 ga-2 mt-0">
 				<v-btn block color="primary" text="Выдать" variant="tonal" @click="handleAccept"></v-btn>
 				<v-btn block color="danger" text="Отказать" variant="tonal" @click="handleRefuse"></v-btn>
 			</div>
-			<div v-else-if="session?.status === 'active'">
+			<div v-else-if="session?.status === 'active'" class="d-flex flex-column w-100 ga-2 mt-0">
 				<v-btn color="primary" text="Завершить" variant="tonal" @click="handleAccept"></v-btn>
 				<v-btn color="danger" text="Завершить со страйком" variant="tonal" @click="handleRefuse"></v-btn>
 			</div>
@@ -215,10 +212,14 @@ onBeforeMount(async () => {
 		</template>
 	</v-card>
 
-	<ConfirmDialog
+	<ReasonDialog
 		v-model="reserveRefuseDialog"
-		title="Причина отказа"
+		title="Отказать в выдаче"
 		:description="`Отказ для сессии N${session?.id}`"
+		:reasons="[
+			{ chip: 'Сломаны', value: 'Все предметы сломаны' },
+			{ chip: 'Закончились', value: 'Предметы закончились' },
+		]"
 		@cancel="reserveRefuseDialog = false"
 		@confirm="
 			async () => {
@@ -231,6 +232,7 @@ onBeforeMount(async () => {
 				if (session?.status === 'reserved') await adminStore.requestReservedPageSessions();
 				if (session?.status === 'active') await adminStore.requestActivePageSessions();
 				reserveRefuseDialog = false;
+				fetchSessionData();
 			}
 		"
 	/>
@@ -250,6 +252,7 @@ onBeforeMount(async () => {
 				if (session?.status === 'reserved') await adminStore.requestReservedPageSessions();
 				if (session?.status === 'active') await adminStore.requestActivePageSessions();
 				reserveAcceptDialog = false;
+				fetchSessionData();
 			}
 		"
 	/>
@@ -258,6 +261,11 @@ onBeforeMount(async () => {
 		v-model="activeRefuseDialog"
 		title="Завершить прокат со страйком?"
 		:description="`Причина страйка для проката N${session?.id}`"
+		:reasons="[
+			{ chip: 'Сломан', value: 'Предмет был поврежден' },
+			{ chip: 'Украден', value: 'Предмет был украден' },
+			{ chip: 'Просрочен', value: 'Просрочено время возврата' },
+		]"
 		@cancel="activeRefuseDialog = false"
 		@confirm="
 			async (reason: string) => {
@@ -270,6 +278,7 @@ onBeforeMount(async () => {
 				if (session?.status === 'reserved') await adminStore.requestReservedPageSessions();
 				if (session?.status === 'active') await adminStore.requestActivePageSessions();
 				activeRefuseDialog = false;
+				fetchSessionData();
 			}
 		"
 	/>
@@ -290,6 +299,7 @@ onBeforeMount(async () => {
 				if (session?.status === 'reserved') await adminStore.requestReservedPageSessions();
 				if (session?.status === 'active') await adminStore.requestActivePageSessions();
 				activeAcceptDialog = false;
+				fetchSessionData();
 			}
 		"
 	/>

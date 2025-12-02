@@ -52,7 +52,8 @@ async function handleButtonClick() {
 	switch (state.value) {
 		case 'reserved':
 			dialogTitle.value = 'Отменить бронь?';
-			dialogSubitle.value = 'Повторно забронировать вы сможете только через 15 минут';
+			dialogSubitle.value =
+				'Повторно забронировать этот предмет вы сможете только 1 раз. После второй отмены новая бронь будет доступна через 30 минут.';
 			dialogActive.value = true;
 			return;
 		default:
@@ -96,7 +97,7 @@ async function handleDialogConfirm() {
 		<v-card-subtitle :opacity="1">
 			<div
 				v-if="['reserved', 'active', 'overdue'].includes(state)"
-				class="d-flex justify-space-between align-center my-2"
+				class="d-flex justify-space-between align-center ma-2"
 			>
 				<p class="text-caption">{{ timerText }}</p>
 				<TextTimer
