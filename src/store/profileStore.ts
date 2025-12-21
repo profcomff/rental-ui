@@ -56,6 +56,7 @@ export const useProfileStore = defineStore('profile', () => {
 		];
 		const serviceName = 'rental';
 		const scopes = serviceScopes.map(value => `${serviceName}.${value}`);
+		scopes.push('userdata.info.admin');
 
 		const { data, error } = await apiClient.POST('/auth/session', {
 			body: {

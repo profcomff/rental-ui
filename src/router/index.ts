@@ -23,6 +23,10 @@ const routes: RouteRecordRaw[] = [
 		component: () => import('@/pages/admin/AdminLog.vue'),
 	},
 	{
+		path: '/admin/userdata',
+		component: () => import('@/pages/admin/userdata/UserdataView.vue'),
+	},
+	{
 		path: '/admin/session/:sessionId',
 		component: () => import('@/pages/admin/AdminSessionView.vue'),
 	},
