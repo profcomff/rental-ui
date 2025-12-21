@@ -56,7 +56,7 @@ export const useProfileStore = defineStore('profile', () => {
 		];
 		const serviceName = 'rental';
 		const scopes = serviceScopes.map(value => `${serviceName}.${value}`);
-		scopes.push('userdata.info.admin');
+		scopes.push('userdata.info.admin', 'userdata.category.personal.write', 'userdata.category.study.write');
 
 		const { data, error } = await apiClient.POST('/auth/session', {
 			body: {

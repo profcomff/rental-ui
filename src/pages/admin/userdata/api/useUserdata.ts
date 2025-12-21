@@ -35,7 +35,11 @@ export const useUserdata = () => {
 		}
 	}
 
-	async function patchUserById(user_id: number, full_name: string, student_card_number: string) {
+	async function patchUserById(
+		user_id: number,
+		full_name: string | null | undefined,
+		student_card_number: string | null | undefined,
+	) {
 		const { response, data, error } = await apiClient.PATCH('/userdata/admin/user/{user_id}', {
 			params: { path: { user_id } },
 			body: {
