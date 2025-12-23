@@ -19,6 +19,7 @@ const tab = ref(props.currentTab);
 		<v-tab value="/admin/requests">Заявки</v-tab>
 		<v-tab value="/admin/active">Текущие</v-tab>
 		<v-tab value="/admin/journal">Архив</v-tab>
+		<v-tab value="/admin/userdata">Данные</v-tab>
 		<v-tab value="/admin/items">Айтемы</v-tab>
 		<v-tab value="/">Пользовательская</v-tab>
 	</v-tabs>
