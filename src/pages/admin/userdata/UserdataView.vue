@@ -1,5 +1,5 @@
 <template>
-	<AdminTabs current-tab="/admin/journal" />
+	<AdminTabs current-tab="/admin/userdata" />
 	<v-text-field
 		v-model="userId"
 		class="my-2 py-2 mx-2"

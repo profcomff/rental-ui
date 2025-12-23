@@ -32,6 +32,6 @@ onMounted(async () => {
 .column-container {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
-	grid-column-gap: 8px;
+	column-gap: 8px;
 }
 </style>
