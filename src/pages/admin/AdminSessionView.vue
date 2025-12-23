@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import apiClient from '@/api';
 import { RentalSession, Strike } from '@/models';
 import { useRoute } from 'vue-router';
@@ -85,6 +85,30 @@ async function fetchSessionData() {
 onMounted(() => {
 	fetchSessionData();
 });
+
+const statusToText = computed(() => {
+	if (!session.value) return '';
+
+	switch (session.value.status) {
+		case 'reserved':
+			return 'Забронирована';
+		case 'active':
+			return 'Активна';
+		case 'overdue':
+			return 'Просрочена';
+		case 'canceled':
+			return 'Отменена';
+		case 'dismissed':
+			return 'Отменена админом';
+		case 'expired':
+			return 'Истекло бронирование';
+		case 'returned':
+			return 'Завершена';
+		//	return !!session.value.strike_id ? 'Завершена со страйком' : 'Завершена';
+		default:
+			return '';
+	}
+});
 </script>
 
 <template>
@@ -159,7 +183,7 @@ onMounted(() => {
 				</v-col>
 				<v-col>
 					<p class="font-weight-bold text-body-1">
-						{{ session?.strike_id === null ? 'Завершена' : 'Завершена со страйком' }}
+						{{ session?.strike_id === null ? statusToText : 'Завершена со страйком' }}
 					</p>
 				</v-col>
 			</v-row>
