@@ -14,12 +14,13 @@ export default defineConfig({
 		}),
 		vuetify({ autoImport: true, styles: { configFile: './src/assets/settings.scss' } }),
 		Unfonts({
-			fontsource: {
+			google: {
+				preconnect: false,
 				families: [
 					{
 						name: 'Roboto',
-						weights: [100, 300, 400, 500, 700, 900],
-						styles: ['normal', 'italic'],
+						styles: 'wght@100..900',
+						defer: true,
 					},
 				],
 			},
