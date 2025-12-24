@@ -18,12 +18,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { UserData, useUserdata } from '../api/useUserdata';
 
 const props = defineProps<UserData>();
+const emit = defineEmits<{
+	'data-updated': [];
+}>();
+
 const full_name_model = ref(props.full_name);
 const student_card_number_model = ref(props.student_card_number);
+
+watch(props, () => {
+	full_name_model.value = props.full_name;
+	student_card_number_model.value = props.student_card_number;
+});
 
 const open = defineModel<boolean>({ default: false });
 
@@ -34,7 +43,7 @@ async function handleSave() {
 		student_card_number_model.value,
 	);
 	if (!!data) {
-		useUserdata().getUserById(props.user_id);
+		emit('data-updated');
 		open.value = false;
 	}
 }

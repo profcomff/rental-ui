@@ -1,11 +1,14 @@
 import apiClient from '@/api';
 import { useToastStore } from '@/store/toastStore';
 import { components } from '@profcomff/api-uilib/src/openapi/userdata';
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
 
 export type UserData = components['schemas']['UserCardGet'];
 
-export const useUserdata = () => {
+export const useUserdata = defineStore('userdata', () => {
 	const toastStore = useToastStore();
+	const userdata = ref<UserData | null>(null);
 
 	async function getUserById(user_id: number) {
 		try {
@@ -26,11 +29,14 @@ export const useUserdata = () => {
 						});
 					}
 				}
+				userdata.value = null;
 				return;
 			}
+			userdata.value = data;
 			return data;
 		} catch {
 			toastStore.error({ title: `Что-то пошло не так на сервере` });
+			userdata.value = null;
 			return;
 		}
 	}
@@ -66,7 +72,8 @@ export const useUserdata = () => {
 	}
 
 	return {
+		userdata,
 		getUserById,
 		patchUserById,
 	};
-};
+});
