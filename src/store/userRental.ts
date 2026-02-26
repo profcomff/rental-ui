@@ -63,7 +63,6 @@ export const useUserSessions = defineStore('user-sessions', () => {
 		for (const status of statuses) {
 			result[`is_${status}` as keyof _StatusOptions] = true;
 		}
-		console.log(result);
 		return result;
 	}
 
@@ -72,7 +71,6 @@ export const useUserSessions = defineStore('user-sessions', () => {
 			params: { query: { ..._createOptions(statuses) } as never },
 		});
 		if (error) {
-			console.log(error);
 			toastStore.error({ title: 'error when requesting user sessions', description: error.detail });
 			return [];
 		}

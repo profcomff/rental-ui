@@ -41,7 +41,7 @@ const activeRefuseDialog = ref(false);
 const activeAcceptDialog = ref(false);
 
 async function fetchSessionData() {
-	const { params } = useRoute();
+	const { params } = useRoute() ?? { params: { sessionId: document.location.href.split('/').at(-1) } };
 	const session_id = params.sessionId instanceof Array ? Number(params.sessionId[0]) : Number(params.sessionId);
 	const { data, error } = await apiClient.GET('/rental/rental-sessions/{session_id}', {
 		params: { path: { session_id } },
