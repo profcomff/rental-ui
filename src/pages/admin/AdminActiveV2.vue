@@ -15,10 +15,29 @@ const { requestActivePageSessions } = adminStore;
 const { activePageSessions } = storeToRefs(adminStore);
 
 const userId = ref<string>();
+const searchTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
 
-async function handleSearchById() {
+async function executeSearch() {
 	await requestActivePageSessions(userId.value === '' ? undefined : Number(userId.value));
 }
+
+function handleSearchInput() {
+	if (searchTimeout.value) {
+		clearTimeout(searchTimeout.value);
+	}
+
+	searchTimeout.value = setTimeout(() => {
+		executeSearch();
+	}, 500);
+}
+
+onMounted(() => {
+	return () => {
+		if (searchTimeout.value) {
+			clearTimeout(searchTimeout.value);
+		}
+	};
+});
 </script>
 
 <template>
@@ -30,7 +49,7 @@ async function handleSearchById() {
 		placeholder="Поиск студента (по id)"
 		:prepend-inner-icon="'mdi-magnify'"
 		variant="outlined"
-		@update:model-value="handleSearchById"
+		@update:model-value="handleSearchInput"
 	></v-text-field>
 	<AdminSessionCard v-for="s in activePageSessions" :key="s.id" location="active" :session="s" />
 </template>

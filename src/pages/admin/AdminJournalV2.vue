@@ -3,7 +3,7 @@ import AdminSessionCard from '@/components/AdminSessionCard.vue';
 import AdminTabs from '@/components/AdminTabs.vue';
 import { useAdminStore, useItemStore } from '@/store';
 import { storeToRefs } from 'pinia';
-import { computed, onBeforeMount, ref } from 'vue';
+import { computed, onBeforeMount, ref, onMounted } from 'vue';
 
 onBeforeMount(async () => {
 	requestFinishedPageSessions();
@@ -22,10 +22,30 @@ const selectedSessions = computed(() => {
 
 const userId = ref<string>();
 
-async function handleSearchById() {
-	requestFinishedPageSessions(userId.value === '' ? undefined : Number(userId.value));
-	requestCancelledPageSessions(userId.value === '' ? undefined : Number(userId.value));
+const searchTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
+
+async function executeSearch() {
+	const id = userId.value === '' ? undefined : Number(userId.value);
+	await Promise.all([requestFinishedPageSessions(id), requestCancelledPageSessions(id)]);
 }
+
+function handleSearchInput() {
+	if (searchTimeout.value) {
+		clearTimeout(searchTimeout.value);
+	}
+
+	searchTimeout.value = setTimeout(() => {
+		executeSearch();
+	}, 500);
+}
+
+onMounted(() => {
+	return () => {
+		if (searchTimeout.value) {
+			clearTimeout(searchTimeout.value);
+		}
+	};
+});
 
 const tab = ref<'finished' | 'cancelled'>('finished');
 </script>
@@ -38,7 +58,7 @@ const tab = ref<'finished' | 'cancelled'>('finished');
 		placeholder="Поиск студента (по id)"
 		:prepend-inner-icon="'mdi-magnify'"
 		variant="outlined"
-		@update:model-value="handleSearchById"
+		@update:model-value="handleSearchInput"
 	></v-text-field>
 	<v-tabs class="my-2" align-tabs="center" v-model="tab" selected-class="bg-primary">
 		<v-tab variant="elevated" value="finished">Завершенные</v-tab>
