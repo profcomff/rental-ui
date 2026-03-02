@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AdminTabs from '@/components/AdminTabs.vue';
 import { useAdminStore, useItemStore } from '@/store';
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import AdminSessionCard from '@/components/AdminSessionCard.vue';
 
@@ -15,28 +15,26 @@ const { requestActivePageSessions } = adminStore;
 const { activePageSessions } = storeToRefs(adminStore);
 
 const userId = ref<string>();
-const searchTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
+let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 
 async function executeSearch() {
 	await requestActivePageSessions(userId.value === '' ? undefined : Number(userId.value));
 }
 
 function handleSearchInput() {
-	if (searchTimeout.value) {
-		clearTimeout(searchTimeout.value);
+	if (searchTimeout) {
+		clearTimeout(searchTimeout);
 	}
 
-	searchTimeout.value = setTimeout(() => {
+	searchTimeout = setTimeout(() => {
 		executeSearch();
 	}, 500);
 }
 
-onMounted(() => {
-	return () => {
-		if (searchTimeout.value) {
-			clearTimeout(searchTimeout.value);
-		}
-	};
+onUnmounted(() => {
+	if (searchTimeout) {
+		clearTimeout(searchTimeout);
+	}
 });
 </script>
 

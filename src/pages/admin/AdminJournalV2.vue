@@ -3,7 +3,7 @@ import AdminSessionCard from '@/components/AdminSessionCard.vue';
 import AdminTabs from '@/components/AdminTabs.vue';
 import { useAdminStore, useItemStore } from '@/store';
 import { storeToRefs } from 'pinia';
-import { computed, onBeforeMount, ref, onMounted } from 'vue';
+import { computed, onBeforeMount, ref, onUnmounted } from 'vue';
 
 onBeforeMount(async () => {
 	requestFinishedPageSessions();
@@ -22,7 +22,7 @@ const selectedSessions = computed(() => {
 
 const userId = ref<string>();
 
-const searchTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
+let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 
 async function executeSearch() {
 	const id = userId.value === '' ? undefined : Number(userId.value);
@@ -30,21 +30,19 @@ async function executeSearch() {
 }
 
 function handleSearchInput() {
-	if (searchTimeout.value) {
-		clearTimeout(searchTimeout.value);
+	if (searchTimeout) {
+		clearTimeout(searchTimeout);
 	}
 
-	searchTimeout.value = setTimeout(() => {
+	searchTimeout = setTimeout(() => {
 		executeSearch();
 	}, 500);
 }
 
-onMounted(() => {
-	return () => {
-		if (searchTimeout.value) {
-			clearTimeout(searchTimeout.value);
-		}
-	};
+onUnmounted(() => {
+	if (searchTimeout) {
+		clearTimeout(searchTimeout);
+	}
 });
 
 const tab = ref<'finished' | 'cancelled'>('finished');
