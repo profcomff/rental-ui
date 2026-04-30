@@ -25,8 +25,6 @@ const { userdata } = storeToRefs(userdataStore);
 
 const userId = ref<string>();
 const editDialog = ref(false);
-//const adminStore = AdminStore();
-//const { requestActivePageSessions } = userdataStore;
 let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 
 async function executeSearch() {
@@ -40,7 +38,6 @@ async function handleSearchById() {
 	searchTimeout = setTimeout(() => {
 		executeSearch();
 	}, 500);
-	//await userdataStore.getUserById(userId.value);
 }
 
 function handleEdit() {
