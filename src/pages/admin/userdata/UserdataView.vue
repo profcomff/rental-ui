@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { useUserdata } from '@/pages/admin/userdata/api/useUserdata';
-import { ref } from 'vue';
+import { onUnmounted, ref } from 'vue';
 import AdminTabs from '@/components/AdminTabs.vue';
 import UserdataCard from './components/UserdataCard.vue';
 import UserdataEdit from './components/UserdataEdit.vue';
@@ -23,16 +23,32 @@ import { storeToRefs } from 'pinia';
 const userdataStore = useUserdata();
 const { userdata } = storeToRefs(userdataStore);
 
-const userId = ref();
+const userId = ref<string>();
 const editDialog = ref(false);
+let searchTimeout: ReturnType<typeof setTimeout> | null = null;
+
+async function executeSearch() {
+	await userdataStore.getUserById(userId.value === '' ? -1 : Number(userId.value));
+}
 
 async function handleSearchById() {
-	await userdataStore.getUserById(userId.value);
+	if (searchTimeout) {
+		clearTimeout(searchTimeout);
+	}
+	searchTimeout = setTimeout(() => {
+		executeSearch();
+	}, 500);
 }
 
 function handleEdit() {
 	editDialog.value = true;
 }
+
+onUnmounted(() => {
+	if (searchTimeout) {
+		clearTimeout(searchTimeout);
+	}
+});
 </script>
 
 <style lang="css" scoped></style>
